@@ -1,0 +1,234 @@
+import ast
+import gc
+import os
+from openai import OpenAI
+
+client = OpenAI()
+
+def load_llm(user_input, prompt_instructions):
+    prompt = f"{user_input}"
+    print(prompt)
+    response = client.chat.completions.create(            
+                    model="gpt-4o",
+                    messages=[
+                        {
+                        "role": "user",
+                        "content": f"{prompt_instructions}  {prompt}"
+                        }
+                    ],
+                    temperature=1,
+                    max_tokens=3000,
+                    top_p=1,
+                    frequency_penalty=0,
+                    presence_penalty=0
+                    )
+    
+    return response.choices[0].message.content
+# Call the LLM and store its output
+def call_llm_and_cleanup(user_input, store = False, inventory = False):    
+    prompt_instructions = f"{initial_prompt_instructions} {store_description}"    
+    
+
+    llm_output = load_llm(user_input, prompt_instructions)
+    llm_output = "".join(llm_output)
+    print(llm_output)
+    llm_output = ast.literal_eval(llm_output)
+    gc.collect()
+    # llm_output is still available for use here
+    return llm_output
+  
+def convert_to_dict(string):
+    # Check if the input is already a dictionary
+    if isinstance(string, dict):
+        print("Input is already a dictionary.")
+        return string
+
+    # Function to try parsing the string to a dictionary
+    def try_parse(s):
+        try:
+            result = ast.literal_eval(s)
+            if isinstance(result, dict):
+                print("Item dictionary is valid")
+                return result
+        except SyntaxError as e:
+          error_message = str(e)
+          print("Syntax Error:", error_message)
+          # Check if the error message indicates an unclosed '{'
+          if "'{' was never closed" in error_message:
+              return try_parse(s + '}')  # Attempt to fix by adding a closing '}'
+        except ValueError as e:
+            print("Value Error:", e)
+        return None 
+
+    # First, try parsing the original string
+    result = try_parse(string)
+    if result is not None:
+        return result
+
+    # Check if braces are missing
+    if not string.startswith('{'):
+        string = '{' + string
+    if not string.endswith('}'):
+        string = string + '}'
+
+    # Try parsing again with added braces
+    return try_parse(string) or "Dictionary not valid"
+        
+  
+
+# Instructions past 4 are not time tested and may need to be removed.
+### Meta prompted : 
+initial_prompt_instructions = """ **Purpose**: ONLY Generate a structured json following the provided format. The job is to generate a store with character, style, detail, and a healthy splash of fun, fantasy, and weird. You do not need to stick strictly to the rules and mechanics of the game, if it fits the style and flavor of the user input, get weird, scary, or silly with the details. You will also be writing interesting flavor text and description of the location and it's atmopshere, and a brief one sentence image generation prompts. Us a wide range of words, you have certain words you use too often, avoid them ex : "whimsical", "unwavering".
+
+Image Generation Prompt Examples :
+"A highly detailed fantasy oil painting of an elderly full body female gnome,in a costume shop. The gnome is wearing a costume with wings, with a costume hat . The gnome has distinct fantasy features, such as pointed ears and a small, sturdy build.  "
+
+"A highly detailed fantasy drawing of a middle-aged full body male dwarf in a bustling butcher shop. The dwarf is wearing a bloodstained apron and a butcher's hat. The shop is filled with hanging meats, freshly cut steaks, and various sausages. The dwarf has distinct fantasy features, such as a long braided beard and a stout, muscular build. The background shows the hustle and bustle of Market Square outside the shop window."
+
+"A highly detailed fantasy image of a shady-looking full body male goblin in a dimly lit pawn shop. The goblin is wearing a patched vest and a tattered hat. The shop is cluttered with various items, including old weapons, dusty artifacts, and strange trinkets. The goblin has distinct fantasy features, such as green skin, sharp teeth, and pointed ears. The background is filled with shadows and the glint of hidden treasures."
+
+"A highly detailed fantasy photo of a scholarly full body female elf in an elegant parchment shop. The elf is wearing a flowing robe and a delicate circlet. The shop is filled with scrolls, quills, and ancient tomes. The elf has distinct fantasy features, such as pointed ears and a slender, graceful build. The background shows the interior of the shop with shelves lined with parchment and ink bottles, and a large window letting in natural light."
+
+"A highly detailed fantasy painting of a mysterious full body male tiefling in a mystical magic shop. The tiefling is wearing a long cloak and a hood, with glowing runes on his hands. The shop is filled with potions, spellbooks, and enchanted artifacts. The tiefling has distinct fantasy features, such as red skin, horns, and a tail. The background is filled with a magical aura, with various mystical items floating in the air and a crystal ball on the counter."
+
+1. Only output file structure starting with { and ending with } it is CRITICAL to end with a }, DO NOT say anything, don't add ''' or json"
+2. DO NOT use null, use "". 
+3. All keys and values MUST be enclosed in double quotes. ""
+4. Services and specialties should have name, description, and prices.
+"""
+ 
+
+
+
+store_description = {
+    "store_name": "",
+    "location": {
+        "town": "",
+        "district": "",
+        "street": ""
+    },
+    "type": "",
+    "size": "",
+    "description": "",
+    "sd_prompt": "",
+    "owners": [
+        {
+            "name": "",
+            "species": "",
+            "class": "",
+            "description": "",
+            "personality": "",
+            "secrets": []
+        }
+    ],
+    "employees": [
+        {
+            "name": "",
+            "role": "",
+            "species": "",
+            "description": "",
+            "personality": ""
+        }
+    ],
+    "reputation": "",
+    "related_quests": [
+        {
+            "name": "",
+            "description": "",
+            "reward": ""
+        }
+    ],
+    "background_story": "",
+    "notable_customers": [
+        {
+            "name": "",
+            "description": "",
+            "influence": ""
+        }
+    ],
+    "rumors": [],
+    "security_measures": [
+        {
+            "name": "",
+            "description": "",
+            "statistics": ""
+        }
+    ],
+    "store_hours": "",
+    "services": [
+        {
+            "name": "",
+            "description": "",
+            "price": ""
+        }
+    ],
+    "specialties": [
+        {
+            "name": "",
+            "description": "",
+            "price": ""
+        }
+    ]
+}
+
+inventory_description = {
+    "inventory": {
+        "core_inventory":[],
+        "weapons": [
+            {
+                "name": "",
+                "type": "",
+                "cost": "",
+                "properties": []
+            }
+        ],
+        "armor": [
+            {
+                "name": "",
+                "type": "",
+                "cost": "",
+                "properties": []
+            }
+        ],
+        "potions": [
+            {
+                "name": "",
+                "type": "",
+                "cost": "",
+                "properties": []
+            }
+        ],
+        "scrolls": [
+            {
+                "name": "",
+                "type": "",
+                "cost": "",
+                "properties": []
+            }
+        ],
+        "magical_items": [
+            {
+                "name": "",
+                "type": "",
+                "cost": "",
+                "properties": []
+            }
+        ],
+        "mundane_items": [
+            {
+                "name": "",
+                "type": "",
+                "cost": "",
+                "properties": []
+            }
+        ],
+        "miscellaneous_items": [
+            {
+                "name": "",
+                "type": "",
+                "cost": "",
+                "properties": []
+            }
+        ]
+    }
+}
