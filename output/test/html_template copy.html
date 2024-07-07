@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="../../dependencies/all.css" rel="stylesheet" />
+    <link href="../../dependencies/css.css?family=Open+Sans:400,300,600,700" rel="stylesheet" type="text/css" />
+    <link href='../../dependencies/bundle.css' rel='stylesheet' />
+    <link rel="icon" href="../../dependencies/favicon.ico" type="image/x-icon" />
+    <title>Morgor’s Meaty Marvels</title>
+    <link href='../../dependencies/style.css' rel='stylesheet' />
+    <link href='../../dependencies/5ePHBstyle.css' rel='stylesheet' />
+    <link href="../../dependencies/themes/V3/Blank/style.css" type="text/css" rel="stylesheet">
+    <link href="../../dependencies/themes/V3/5ePHB/style.css" type="text/css" rel="stylesheet">
+    <style>
+        .page {
+            width: 100%;
+            height: 100%;
+            page-break-after: always; /* Ensure each page is treated separately */
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .grid-item {
+            page-break-inside: avoid; /* Avoid page break within items */
+            break-inside: avoid;
+        }
+
+        .column-split {
+            grid-column: span 2;
+            height: 20px;
+        }
+
+        .blank {
+            height: 50px; /* Adjust as needed for the amount of whitespace */
+        }
+
+        p {
+            margin-bottom: 20px; /* Ensure space at the bottom of paragraphs */
+        }
+
+        .dynamic-image {
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class='brewRenderer'>
+        <div class="frame-content">
+            <div class="brewRenderer" style="height: 750;">
+                <div class="popups"></div>
+                <div class="pages" lang="en">
+                    <div class="page" id="page1">
+                        <div class="grid-container" id="grid-container-page1">
+                            <!-- Place all content initially within page 1 -->
+                            <div class="grid-item">
+                                <h1 id="morgors-meaty-marvels">Morgor’s Meaty Marvels</h1>
+                                <p><img class="" style="width:300px; mix-blend-mode:multiply;" src="https://raw.githubusercontent.com/Drakosfire/StoreGenerator/master/galleries/test_images/morgor_meaty_marvels.png" alt="shop"></p>
+                                <p>A clandestine butcher shop tucked away in the narrow, winding alleyways of Grimborough. The shop boasts a thrilling array of exotic meats, from subterranean lizard tail to basilisk flank. Dimly lit and pungent with the metallic scent of freshly cut meat, the shop is an intoxicating blend of mystery and carnivorous delight.</p>
+                                <p>Morgor Bloodclaw’s journey from a petty thief in Goblintown to the notorious butcher of Grimborough is the stuff of legend. His knack for procuring the most exotic meats has earned him a shadowy but well-regarded status.</p>
+                            </div>
+                            <div class="column-split"></div>
+                            <div class="grid-item">
+                                <h2 id="owner">Owner</h2>
+                                <h3 id="morgor-bloodclaw">Morgor Bloodclaw</h3>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th align="center"></th>
+                                            <th align="center"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td align="center"><strong>Species</strong></td>
+                                            <td align="center">Goblin</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center"><strong>Class</strong></td>
+                                            <td align="center">Rogue</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center"><strong>Description</strong></td>
+                                            <td align="center">Morgor is a scruffy goblin with green skin, sharp teeth, and a greasy apron stained with the remnants of his work. His eyes gleam with a cunning intelligence.</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center"><strong>Personality</strong></td>
+                                            <td align="center">Shrewd and opportunistic, Morgor knows how to make a deal that benefits him the most. He has a sharp wit and a knack for making customers feel both uneasy and intrigued.</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center"><strong>Secrets</strong></td>
+                                            <td align="center">Morgor secretly supplies meat to a clandestine fighting ring., He once was part of a notorious thieves’ guild and still holds connections in the underworld.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <p><img class="" style="width:330px; mix-blend-mode:multiply;" src="https://raw.githubusercontent.com/Drakosfire/StoreGenerator/master/galleries/test_images/Morgor_bloodclaw.png" alt="Owner"></p>
+                            </div>
+                            <div class="grid-item">
+                                <h2 id="employees">Employees</h2>
+                                <h3 id="brega">Brega</h3>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th align="center"></th>
+                                            <th align="center"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td align="center"><strong>Species</strong></td>
+                                            <td align="center">Half-Orc</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center"><strong>Class</strong></td>
+                                            <td align="center">Assistant Butcher</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center"><strong>Description</strong></td>
+                                            <td align="center">A burly half-orc with a kind face and a perpetual smudge of blood on his cheek. Brega handles the heavy lifting and cutting of larger beasts.</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center"><strong>Personality</strong></td>
+                                            <td align="center">Soft-spoken and gentle despite his imposing appearance, Brega is loyal to Morgor and respects his cunning. He has a soft spot for stray animals.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Additional pages will be added dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const pagesContainer = document.querySelector('.pages');
+            const maxPageHeight = document.getElementById('page1').clientHeight;
+
+            function createNewPage() {
+                const newPage = document.createElement('div');
+                newPage.classList.add('page');
+                newPage.id = `page${pagesContainer.children.length + 1}`;
+                pagesContainer.appendChild(newPage);
+
+                const newGridContainer = document.createElement('div');
+                newGridContainer.classList.add('grid-container');
+                newGridContainer.id = `grid-container-page${pagesContainer.children.length}`;
+                newPage.appendChild(newGridContainer);
+
+                return newGridContainer;
+            }
+
+            function moveOverflowContent() {
+                let currentGridContainer = document.getElementById('grid-container-page1');
+                let currentColumn = 1;
+                const totalColumns = 2;
+                let itemsToMove = Array.from(currentGridContainer.children);
+
+                for (let item of itemsToMove) {
+                    if (currentGridContainer.scrollHeight > maxPageHeight) {
+                        if (currentColumn < totalColumns) {
+                            currentColumn++;
+                        } else {
+                            currentGridContainer = createNewPage();
+                            currentColumn = 1;
+                        }
+                        currentGridContainer.appendChild(item);
+                    }
+                }
+            }
+
+            moveOverflowContent();
+
+            window.addEventListener('resize', moveOverflowContent);
+        });
+    </script>
+</body>
+</html>
