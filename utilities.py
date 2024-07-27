@@ -4,7 +4,6 @@ import os
 import gc
 import torch
 
-
 # Utility scripts for all modules
 
 # List for file locations to point at
@@ -36,7 +35,6 @@ def reclaim_mem():
     print(f"Memory Allocated after del {mem_alloc}")
     print(f"Memory Cached after del {mem_cache}")
 
-
 def generate_datetime():
     now = datetime.now()
     date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
@@ -59,7 +57,6 @@ def make_image_name(name):
     image_name_list.append(image_name)
     print("Image name is : " + image_name_list[-1])
     return image_name
-
     
 # Create a unique time stamped file name
 def gen_file_name(mon_name):
