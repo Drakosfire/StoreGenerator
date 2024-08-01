@@ -1,6 +1,7 @@
+from flask import Flask, request, jsonify
+from flask_cors import CORS 
 import ast
 import gc
-import os
 from openai import OpenAI
 
 client = OpenAI()
@@ -9,7 +10,7 @@ def load_llm(user_input, prompt_instructions):
     prompt = f"{user_input}"
     print(prompt)
     response = client.chat.completions.create(            
-                    model="gpt-4o",
+                    model="gpt-4o-2024-05-13",
                     messages=[
                         {
                         "role": "user",
@@ -22,7 +23,7 @@ def load_llm(user_input, prompt_instructions):
                     frequency_penalty=0,
                     presence_penalty=0
                     )
-    
+    print(f"Model : {response.model}")
     return response.choices[0].message.content
 # Call the LLM and store its output
 def call_llm_and_cleanup(user_input, inventory = False): 
@@ -34,7 +35,7 @@ def call_llm_and_cleanup(user_input, inventory = False):
     llm_output = load_llm(user_input, prompt_instructions)
     llm_output = "".join(llm_output)
     print(llm_output)
-    llm_output = ast.literal_eval(llm_output)
+    llm_output = convert_to_dict(llm_output)
     gc.collect()
     # llm_output is still available for use here
     return llm_output
@@ -104,18 +105,19 @@ Image Generation Prompt Examples :
 
 store_description = {
     "store_name": "",
-    "description": "",
-    "reputation": "",
-    "backstory": "",
-    "location": {
+    "store_description": "",
+    "store_reputation": "",
+    "store_backstory": "",
+    "storefront_sd_prompt": "",    
+    "store_type": "",
+    "store_size": "", 
+    "store_hours": "", 
+    "store_location": {
         "town": "",
         "district": "",
         "street": ""
-    },
-    "type": "",
-    "size": "",    
-    "store_sd_prompt": "",
-    "owners": [
+    }, 
+    "store_owners": [
         {
             "name": "",
             "species": "",
@@ -126,7 +128,7 @@ store_description = {
             "sd_prompt":""
         }
     ],
-    "employees": [
+    "store_employees": [
         {
             "name": "",
             "role": "",
@@ -137,7 +139,7 @@ store_description = {
         }
     ],
     
-    "related_quests": [
+    "store_quests": [
         {
             "name": "",
             "description": "",
@@ -145,30 +147,30 @@ store_description = {
         }
     ],
     
-    "notable_customers": [
+    "store_customers": [
         {
             "name": "",
             "description": "",
             "influence": ""
         }
     ],
-    "rumors": [],
-    "security_measures": [
+    "store_rumors": [],
+    "store_security": [
         {
             "name": "",
             "description": "",
-            "statistics": ""
+            "mechanics": ""
         }
     ],
-    "store_hours": "",
-    "services": [
+    
+    "store_services": [
         {
             "name": "",
             "description": "",
             "price": ""
         }
     ],
-    "specialties": [
+    "store_specialties": [
         {
             "name": "",
             "description": "",
@@ -256,3 +258,4 @@ inventory_description = {
         ]
     }
 }
+
