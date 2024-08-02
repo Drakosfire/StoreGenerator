@@ -123,6 +123,10 @@
     height: auto;
     cursor: pointer;
 }
+.page .classTable.frame{
+    margin-right:0.1cm;
+    margin-left: 0.1cm;
+}
 
 /* Ensure the h1 tag is constrained within its column */
 .block-content h1 {
@@ -248,6 +252,7 @@ input[type="text"]:focus, textarea:focus {
     
 }
 .title-textarea{
+    height:30px;
     margin-bottom: .19cm;
     column-span: all;
     font-size: .89cm;
@@ -275,7 +280,7 @@ div[contenteditable="true"] p::first-letter {
   float: left;
   padding-bottom: 2px;
   padding-left: 40px;
-  margin-top: -0.3cm;
+  margin-top: 0cm;
   margin-bottom: -20px;
   margin-left: -40px;
   font-family: "SolberaImitationRemake";
@@ -875,6 +880,12 @@ div[contenteditable="true"] p::first-letter {
                 const originalPageId = e.dataTransfer.getData('data-page-id');
                 const innerHTML = e.dataTransfer.getData('text/plain');
                 console.log(`Drop event for block ID: ${blockId} from page ID: ${originalPageId}`);
+
+                // Ensure we are not dropping into a textarea or another block
+                if (event.target.classList.contains('block-item', 'block-content') || event.target.tagName === 'TEXTAREA') {
+                    console.log('Cannot drop block inside another block or textarea');
+                    return;
+    }
                 
                 if (blockId && originalPageId) {
                     const originalBlock = document.querySelector(`[data-block-id="${blockId}"]`);
@@ -1119,24 +1130,6 @@ div[contenteditable="true"] p::first-letter {
                     const nextPageId = parseInt(currentPage.getAttribute('data-page-id').split('-')[1]) + 1;
                     return document.querySelector(`[data-page-id="page-${nextPageId}"]`);
                 }
-
-
-            let blockCounter = 1;
-
-            function createNewBlock(pageId, content) {
-                const newBlock = document.createElement('div');
-                newBlock.classList.add('block-item');
-                newBlock.setAttribute('data-block-id', `block-${blockCounter}`);
-                newBlock.setAttribute('data-page-id', pageId);
-                newBlock.innerHTML = content; // Add the content to the block
-
-                newBlock.setAttribute('draggable', true);
-                newBlock.addEventListener('dragstart', handleDragStart);
-                newBlock.addEventListener('dragend', handleDragEnd);
-
-                blockCounter++;
-                return newBlock;
-            }
 
             function moveBlockToPage(block, newPageId) {
                 block.setAttribute('data-page-id', newPageId);
