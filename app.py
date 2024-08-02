@@ -41,7 +41,10 @@ def process_description():
 @app.route('/generate-image', methods=['POST'])
 def generate_image():
     data = request.get_json()
+    image_subject = data.get('store_name')
     sd_prompt = data.get('sd_prompt')
+    image_subject_name = data.get('store_front_sd_prompt')
+
     if not sd_prompt:
         return jsonify({'error': 'Missing sd_prompt'}), 400
     image_subject = data.get('image_subject')
@@ -49,7 +52,7 @@ def generate_image():
         return jsonify({'error': 'Missing sd_prompt'}), 400
 
     try:
-        image_url = sd.preview_and_generate_image(image_subject, sd_prompt)
+        image_url = sd.preview_and_generate_image(image_subject,image_subject_name, sd_prompt)
         return jsonify({'image_url': image_url})
     except Exception as e:
         return jsonify({'error': str(e)}), 500

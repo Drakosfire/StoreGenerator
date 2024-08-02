@@ -1,30 +1,14 @@
-import time
-import replicate
+import fal_client
+def preview_and_generate_image(image_subject, image_subject_name ,sd_prompt):   
+    handler = fal_client.submit(
+        "fal-ai/flux/dev",
+        arguments={
+            "prompt": f"A fantasy image of a {image_subject} in a fantasy world, the name of the store is {image_subject_name} it looks likes {sd_prompt}",
+            "num_inference_steps": 28,
+            "guidance_scale": 3.5,
 
+        },
+    )
 
-
-start_time = time.time()
-temp_image_path = "./image_temp/"
-
-def preview_and_generate_image(image_subject ,sd_prompt):    
-    
-    output = replicate.run(
-    "stability-ai/stable-diffusion-3",
-    input={
-        "cfg": 3.5,
-        "steps": 28,
-        "prompt": f"This is a {image_subject} it looks likes {sd_prompt} ",
-        "aspect_ratio": "1:1",
-        "output_format": "webp",
-        "output_quality": 90,
-        "negative_prompt": "",
-        "prompt_strength": 0.85
-    }
-)
-    print(output)
-    image_url = output[0]  # Assume the first output is the image URL
-    
-    return image_url
-   
-
-
+    result = handler.get()
+    return result['images'][0]['url']
