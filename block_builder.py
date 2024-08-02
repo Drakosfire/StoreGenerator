@@ -11,6 +11,7 @@ def build_blocks(user_input, block_id):
     block_id = block_id + 1
     list_of_blocks.append(title_block)
     store_image_block = build_image_block(user_input['storefront_sd_prompt'], block_id)
+    block_id = block_id + 1
     list_of_blocks.append(store_image_block)
     store_properties_block = build_store_properties_block(store_type= user_input['store_type'],
                                                           store_size= user_input['store_size'],
@@ -23,6 +24,7 @@ def build_blocks(user_input, block_id):
                                                           store_reputation= user_input['store_reputation'],
                                                           store_rumors= user_input['store_rumors'],
                                                           block_id= block_id)
+    block_id = block_id + 1
     list_of_blocks.append(store_properties_block)
     
     
