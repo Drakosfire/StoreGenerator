@@ -64,7 +64,8 @@ def build_store_properties_block(store_type,
                                  store_reputation,
                                  store_rumors,
                                  block_id):
-    store_properties_block_html = f"""
+    
+    store_properties_base_html = f"""
     <div class="block-item" data-block-id="{block_id}">
     <div class="block classTable frame decoration">
         <table>
@@ -78,83 +79,97 @@ def build_store_properties_block(store_type,
             <tbody>
                 <tr> 
                     <td align="left"><strong>Size</strong></td>
-                    <td align="right"><textarea class="string-stat-textarea" id="user-store-size-{block_id}"
+                    <td align="right"><textarea class="string-action-description-textarea" id="user-store-size-{block_id}"
                   hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-size-{block_id}t" hx-swap="outerHTML"
                   title="Store Size">{store_size}</textarea></td>
                 </tr>
                 <tr>
                     <td align="left"><strong>Town</strong></td>
-                    <td align="right"><textarea class="string-stat-textarea" id="user-store-town-{block_id}"
+                    <td align="right"><textarea class="string-action-description-textarea" id="user-store-town-{block_id}"
                   hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-town-{block_id}t" hx-swap="outerHTML"
                   title="Store Size">{store_location['town']}</textarea></td>
                 </tr>
                 <tr>
                     <td align="left"><strong>District</strong></td>
-                    <td align="right"><textarea class="string-stat-textarea" id="user-store-district-{block_id}"
+                    <td align="right"><textarea class="string-action-description-textarea" id="user-store-district-{block_id}"
                   hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-district-{block_id}t" hx-swap="outerHTML"
                   title="Store Size">{store_location['district']}</textarea></</td>
                 </tr>
                 <tr>
                     <td align="left"><strong>Street</strong></td>
-                    <td align="right"><textarea class="string-stat-textarea" id="user-store-street-{block_id}"
+                    <td align="right"><textarea class="string-action-description-textarea" id="user-store-street-{block_id}"
                   hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-street-{block_id}t" hx-swap="outerHTML"
                   title="Store Size">{store_location['street']}</textarea></</td>
                 </tr>
                 <tr>
                     <td align="left"><strong>Type</strong></td>
-                    <td align="right"><textarea class="string-stat-textarea" id="user-store-type-{block_id}"
+                    <td align="right"><textarea class="string-action-description-textarea" id="user-store-type-{block_id}"
                   hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-type-{block_id}t" hx-swap="outerHTML"
                   title="Store Size">{store_type}</textarea></</td>
                 </tr>
                 <tr>
-                    <td align="left"><strong>Store Owners</strong></td>
-                    <td align="right"><textarea class="string-stat-textarea" id="user-store-owners-{block_id}"
-                  hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-owners-{block_id}t" hx-swap="outerHTML"
-                  title="Store Size">{store_owners[0]['name']}</textarea></td>
-                </tr>
-                <tr>
-                    <td align="left"><strong>Store Employees</strong></td>
-                    <td align="right"><textarea class="string-stat-textarea" id="user-store-employees-{block_id}"
-                  hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-employees-{block_id}t" hx-swap="outerHTML"
-                  title="Store Size">{store_employees[0]['name']}</textarea></td>
-                </tr>
-                <tr>
+                 <tr>
                     <td align="left"><strong>Store Hours</strong></td>
-                    <td align="right"><textarea class="string-stat-textarea" id="user-store-hours-{block_id}"
+                    <td align="right"><textarea class="string-action-description-textarea" id="user-store-hours-{block_id}"
                   hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-hours-{block_id}t" hx-swap="outerHTML"
                   title="Store Size">{store_hours}</textarea></td>
-                </tr>
-                <tr>
-                    <td align="left"><strong>Store Services</strong></td>
-                    <td align="right"><textarea class="string-stat-textarea" id="user-store-services-{block_id}"
-                  hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-services-{block_id}t" hx-swap="outerHTML"
-                  title="Store Size">{store_services}</textarea></td>
-                </tr>
-                <tr>
-                    <td align="left"><strong>Store Specialties</strong></td>
-                    <td align="right"><textarea class="string-stat-textarea" id="user-store-specialties-{block_id}"
-                  hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-specialties-{block_id}t" hx-swap="outerHTML"
-                  title="Store Size">{store_specialties}</textarea></td>
-                </tr>
+                </tr> """
+    store_owners = []
+    store_employees = []
+
+    def process_iterable_into_html(iterable_type, iterable, block_id):
+        iterable_html = f""""""
+        for item in iterable:
+            item_html = f"""<tr>
+                    <td align="left"><strong>{iterable_type}</strong></td>
+                    <td align="right"><textarea class="string-action-description-textarea" id="user-store-owners-{block_id}"
+                  hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-owners-{block_id}t" hx-swap="outerHTML"
+                  title="Store Size">{item['name']}</textarea></td>
+                </tr>"""
+            iterable_html += item_html
+        return iterable_html
+    def process_rumors_into_html(rumors, block_id):
+        rumors_html = f""""""
+        for rumor in rumors:
+            rumor_html = f"""<tr>
+                    <td align="left"><strong>Store Rumors</strong></td>
+                    <td align="right"><textarea class="string-action-description-textarea" id="user-store-rumors-{block_id}"
+                  hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-rumors-{block_id}t" hx-swap="outerHTML"
+                  title="Store Size">{rumor}</textarea></td>
+                </tr>"""
+            rumors_html += rumor_html
+        return rumors_html
+    
+    owners_html = process_iterable_into_html('Store Owners', store_owners, block_id)
+    employees_html = process_iterable_into_html('Store Employees', store_employees, block_id)
+    store_specialties_html = process_iterable_into_html('Store Specialties', store_specialties, block_id)
+    store_services_html = process_iterable_into_html('Store Services', store_services, block_id)
+    store_rumors_html = process_rumors_into_html(store_rumors, block_id)
+         
+    store_iterables_html = f"""
+                {owners_html}
+                {employees_html}
+                {store_services_html}
+                {store_specialties_html}
+                {store_rumors_html}
+                """
+    store_end_html = f"""
                 <tr>
                     <td align="left"><strong>Store Reputation</strong></td>
-                    <td align="right"><textarea class="string-stat-textarea" id="user-store-reputation-{block_id}"
+                    <td align="right"><textarea class="string-action-description-textarea" id="user-store-reputation-{block_id}"
                   hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-reputation-{block_id}t" hx-swap="outerHTML"
                   title="Store Size">{store_reputation}</textarea></td>
-                </tr>
-                <tr>
-                    <td align="left"><strong>Store Rumors</strong></td>
-                    <td align="right"><textarea class="string-stat-textarea" id="user-store-rumors-{block_id}"
-                  hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-rumors-{block_id}t" hx-swap="outerHTML"
-                  title="Store Size">{store_rumors}</textarea></td>
                 </tr>
             </tbody>
         </table>
     </div>
     </div>
     """
-
+    store_properties_block_html = f"""{store_properties_base_html}
+                {store_iterables_html}
+                {store_end_html}"""
     return store_properties_block_html
+
 def list_names_to_str(data):  
         list_of_names = []
         for i in data:

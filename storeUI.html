@@ -420,7 +420,7 @@ div[contenteditable="true"] p::first-letter {
 
 .string-action-description-textarea {
     width: 100%;
-    height:30px;
+    height:16px;
     font-size: .318cm;
     font-weight: 400;
     line-height: 1.2em;
@@ -436,9 +436,6 @@ div[contenteditable="true"] p::first-letter {
     background: none;
     resize: none; /* Prevents the textarea from being manually resizable */
     overflow: hidden; /* Hide scrollbars */
-    
-
-    
 }
 
 .block.monster.frame.wide {
@@ -676,6 +673,7 @@ div[contenteditable="true"] p::first-letter {
                    
                 });
                 // console.log('Final state of blockContainer:', blockContainer.innerHTML);
+                initializeTextareaResizing();
             }
 
             storeInitialPositions();
@@ -685,24 +683,34 @@ div[contenteditable="true"] p::first-letter {
                 el.style.height = (el.scrollHeight) + 'px';
             }
 
-            const classes = [
-                'description-textarea',
-                'user-description-textarea',
-                'heading-textarea',
-                'properties-textarea',
-                'string-stat-textarea',
-                'string-action-description-textarea'
-            ];
+            function initializeTextareaResizing() {
+                const classes = [
+                    'description-textarea',
+                    'user-description-textarea',
+                    'heading-textarea',
+                    'properties-textarea',
+                    'string-stat-textarea',
+                    'string-action-description-textarea',
+                ];
 
-            classes.forEach(className => {
-                const textareas = document.querySelectorAll(`.${className}`);
-                textareas.forEach(textarea => {
-                    adjustTextareaHeight(textarea);
-                    textarea.addEventListener('input', function() {
+                classes.forEach(className => {
+                    const textareas = document.querySelectorAll(`.${className}`);
+                    console.log(`Textareas found for ${className}:`, textareas.length); // Debugging line
+                    textareas.forEach(textarea => {
+                        // Adjust height on page load
                         adjustTextareaHeight(textarea);
+                        // Adjust height on input
+                        textarea.addEventListener('input', function() {
+                            adjustTextareaHeight(textarea);
+                            console.log('Input event triggered for:', textarea.id); // Debugging line
+                        });
                     });
                 });
-            });
+            }
+
+            // Initial run on page load
+            initializeTextareaResizing();
+
 
             async function extractBlocks() {
                 
@@ -749,7 +757,7 @@ div[contenteditable="true"] p::first-letter {
                     const blockId = event.target.getAttribute('data-block-id');
                     generateImage(blockId);
                 }
-            });
+                });
 
             // Function to generate image
             function generateImage(blockId) {
@@ -927,7 +935,7 @@ div[contenteditable="true"] p::first-letter {
                     // Reset opacity of dragged element
                     newBlockContent.style.opacity = '1';
                     console.log(`Moved existing block with ID: ${blockId} to page ID: ${newPageId}`);
-
+                    initializeTextareaResizing();
                     // Adjust layouts
                     if (originalPageId !== 'block-container') {
                         adjustPageLayout(originalPageId);
@@ -1227,6 +1235,7 @@ div[contenteditable="true"] p::first-letter {
                 // Remove the "over" class and reset the background image
                 trashArea.classList.remove('over');
                 trashArea.style.backgroundImage = "url('./closed-mimic-trashcan.png')";
+                initializeTextareaResizing();
             }
 
             function handleTrashOver(e) {
@@ -1311,6 +1320,7 @@ div[contenteditable="true"] p::first-letter {
                 createNewPage();
 
                 console.log('Reset complete, all blocks moved back to block-container');
+                initializeTextareaResizing();
             }
 
             pageContainer.addEventListener('dragover', handleDragOver);
