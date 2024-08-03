@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./dependencies/all.css" rel="stylesheet" />
+    <link href="./dependencies/css.css?family=Open+Sans:400,300,600,700" rel="stylesheet" type="text/css" />
+    <link href='./dependencies/bundle.css' rel='stylesheet' />
+    <link href="./dependencies/style.css" rel='stylesheet' />
+    <link href="./dependencies/5ePHBstyle.css" rel='stylesheet' />
+    <title>Template</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/htmx.org@1.7.0/dist/htmx.min.js"></script>
+</head>
+<style>
+    :root {
+  --HB_Color_Background: #EEE5CE;
+  --HB_Color_Accent: #E0E5C1;
+  --HB_Color_HeaderUnderline: #C0AD6A;
+  --HB_Color_HorizontalRule: #9C2B1B;
+  --HB_Color_HeaderText: #58180D;
+  --HB_Color_MonsterStatBackground: #F2E5B5;
+  --HB_Color_CaptionText: #766649;
+  --HB_Color_WatercolorStain: #BBAD82;
+  --HB_Color_Footnotes: #C9AD6A;
+    }
+    input[type="text"], textarea {
+    width: auto;
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+.grid-container {
+            display: grid;
+            grid-template-columns: 1fr 3fr; /* Two columns with the second column being three times as wide */
+            grid-gap: 20px;
+            padding: 20px;
+            height: 100vh;
+        }
+        .block-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+            border-right: 1px solid #ccc;
+            padding-right: 20px;
+        }
+        .block-item {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .block-item:hover {
+            transform: translateY(-5px);
+        }
+.page .monster hr:last-of-type + * {
+  margin-top: .1cm;
+}
+.page * + h4 {
+  margin-top: .1cm;
+}
+.page h4 + * {
+  margin-top: .1cm;
+}
+.page dl + * {
+  margin-top: .1cm;
+}
+.page p + * {
+    margin-top: .1cm;
+}
+.columnWrapper {
+    column-gap: inherit;
+    max-height: 100%;
+    column-span: all;
+    columns: inherit;
+    height: 100%; /* Ensure it takes full height of the parent */
+    box-sizing: border-box; /* Ensures padding and border are included in the element's total width and height */
+}
+input[type="text"]:focus, textarea:focus {
+    background-color: #e9e9e9;
+    border-color: #aaa;
+    outline: none;
+}
+
+/* Specific styles for different textboxes */
+
+.user-description-textarea {
+    width: 400px;
+    height: 40px; /* Adjust as needed for 3 lines */
+    resize: vertical;
+    background: none;
+    font-family: "ScalySansRemake";
+    font-weight: 800;
+    
+}
+/* Focus styles for description textbox */
+.user-description-textarea:focus {
+    background-color: #e9e9e9;
+    border-color: #aaa;
+    outline: none;
+}
+
+.heading-textarea {
+    width: 100%;
+    font-size: .458cm; /* Matches the font size of an h4 heading */
+    line-height: .7em;
+    font-weight: 800;
+    border: none;
+    background: none;
+    margin: 0;
+    padding: 0;
+    resize: none; /* Prevents the textarea from being resizable */
+    overflow: hidden; /* Prevents scrollbars */
+    outline: none; /* Removes the focus outline */
+    font-family: "MrEavesRemake"; /* Ensures font family is inherited */
+    color: var(--HB_Color_HeaderText)
+}
+.properties-textarea {
+    width: 100%;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: .7em;
+    margin-bottom: 0;
+    font-style: italic;
+    box-sizing: border-box;
+    border: 0;
+    font-family: "ScalySansRemake";
+    vertical-align: baseline;
+    margin: 0;
+    padding: 0;
+    overflow-wrap: break-word;
+    text-rendering: optimizeLegibility;
+    background: none;
+    resize: none; /* Prevents the textarea from being resizable */
+
+}
+
+.description-textarea {
+    width: 100%;
+    height: 125px; 
+    font-size: .318cm;
+    font-weight: 400;
+    line-height: .9em;
+    margin-bottom: 0;
+    font-style: italic;
+    box-sizing: border-box;
+    border: 0;
+    font-family: "ScalySansSmallCapsRemake";
+    vertical-align: baseline;
+    margin: 0;
+    padding: 0;
+    overflow-wrap: break-word;
+    text-rendering: optimizeLegibility;
+    background: none;
+    resize: none; /* Prevents the textarea from being manually resizable */
+    overflow: hidden; /* Hide scrollbars */
+}
+
+.red-integer-stat-textarea {
+    width: 20px;
+    height:13px;
+    font-size: .318cm;
+    font-weight: 400;
+    line-height: 1.2em;
+    margin-bottom: 0;
+    font-style: italic;
+    box-sizing: border-box;
+    border: 0;
+    font-family: "ScalySansSmallCapsRemake";
+    vertical-align: baseline;
+    margin: 0;
+    padding: 0;
+    overflow-wrap: break-word;
+    text-rendering: optimizeLegibility;
+    background: none;
+    resize: none; /* Prevents the textarea from being manually resizable */
+    overflow: hidden; /* Hide scrollbars */
+    color: var(--HB_Color_HeaderText);
+    white-space: pre-line;
+}
+
+.integer-stat-textarea {
+    width: 20px;
+    height:13px;
+    font-size: .318cm;
+    font-weight: 400;
+    line-height: 1.2em;
+    margin-bottom: 0;
+    font-style: italic;
+    box-sizing: border-box;
+    border: 0;
+    font-family: "ScalySansRemake";
+    vertical-align: baseline;
+    margin: 0;
+    padding: 0;
+    overflow-wrap: break-word;
+    text-rendering: optimizeLegibility;
+    background: none;
+    resize: none; /* Prevents the textarea from being manually resizable */
+    overflow: hidden; /* Hide scrollbars */
+    white-space: pre-line;
+}
+
+.string-stat-textarea {
+    width: 200px;
+    height:13px;
+    font-size: .318cm;
+    font-weight: 400;
+    line-height: 1.2em;
+    margin-bottom: 0;
+    font-style: italic;
+    box-sizing: border-box;
+    border: 0;
+    font-family: "ScalySansRemake";
+    vertical-align: baseline;
+    margin: 0;
+    padding: 0;
+    overflow-wrap: break-word;
+    text-rendering: optimizeLegibility;
+    background: none;
+    resize: none; /* Prevents the textarea from being manually resizable */
+    overflow: hidden; /* Hide scrollbars */
+    white-space: pre-wrap;
+}
+
+.string-action-name-textarea {
+    width: 100%;
+    height:13px;
+    font-size: .318cm;
+    font-style: italic;
+    font-weight: bold;
+    line-height: 1.2em;
+    margin-bottom: 0;
+    font-style: italic;
+    box-sizing: border-box;
+    border: 0;
+    font-family: "ScalySansRemake";
+    vertical-align: baseline;
+    margin: 0;
+    padding: 0;
+    overflow-wrap: break-word;
+    text-rendering: optimizeLegibility;
+    background: none;
+    resize: none; /* Prevents the textarea from being manually resizable */
+    overflow: hidden; /* Hide scrollbars */
+    
+}
+
+.string-action-description-textarea {
+    width: 100%;
+    height:30px;
+    font-size: .318cm;
+    font-weight: 400;
+    line-height: 1.2em;
+    margin-bottom: 0;
+    box-sizing: border-box;
+    border: 0;
+    font-family: "ScalySansRemake";
+    vertical-align: baseline;
+    margin: 0;
+    padding: 0;
+    overflow-wrap: break-word;
+    text-rendering: optimizeLegibility;
+    background: none;
+    resize: none; /* Prevents the textarea from being manually resizable */
+    overflow: hidden; /* Hide scrollbars */
+    white-space: pre-wrap;
+
+    
+}
+
+.name-textbox {
+    width: 50px;
+    font-size: 1.5em;
+    padding: 10px;
+}
+
+.stat-textbox {
+    width: 50px;
+    text-align: center;
+    font-size: 1em;
+    padding: 5px;
+}
+</style>
+<body>
+    <div class="brewRenderer">
+        <div class="pages">
+            <div class="page" id="p1" key="0">
+                <div class="columnWrapper">
+                    <div class="block monster frame wide">
+                        <div class="Block_1">
+                            <textarea class="heading-textarea" id="user-monster-name" hx-post="/update-stats" hx-trigger="change" hx-target="#user-monster-name" hx-swap="outerHTML" title=" Name of creature">Ebony, the Twisted Fairy</textarea>
+                        </div>
+                        <div class="Block_2">
+                            <p>
+                                <textarea class="properties-textarea" id="user-monster-properties" hx-post="/update-stats" hx-trigger="change" 
+                            hx-target="#user-monster-properties" hx-swap="outerHTML" title=" Size, Type, Alignment">Tiny, Fey, Chaotic Evil</textarea>
+                            </p> 
+                        </div>
+                        <div class="Block_3">
+                            <p>
+                                <img class="monster-image" id="monster-image" style="width:300px; height:300px; mix-blend-mode:multiply; border:3px solid black;" 
+                                src="Ebony,%20the%20Twisted%20Fairy_files/out.png" alt="image" 
+                                hx-get="/get-new-image" hx-trigger="load" hx-target="#monster-image" hx-swap="outerHTML">
+                            </p>
+                        </div>
+                        <div class="Block_4">
+                            <div class="block descriptive">
+                                <textarea class="description-textarea" id="user-monster-description" hx-post="/update-stats" hx-trigger="change" 
+                                hx-target="#user-monster-description" hx-swap="outerHTML" title="Any amount or style of description">Once a cheerful and benign spirit of the forest, Ebony has been corrupted by dark magic, transforming her into a sinister force of malevolence. Despite her tiny stature, her powers have grown exponentially. Her once fairy-like aura now radiates dread, and she is capable of casting deadly spells that can reduce any foe to dust. Ebony delights in tormenting the innocent and disrupting the natural balance of the world.</textarea></h5>
+                            </div>
+                        </div>  
+                        <div class="Block_5"><hr>
+                            <dl><strong>Armor Class : </strong><textarea class="integer-stat-textarea" id="user-monster-armor-class" hx-post="/update-stats" hx-trigger="change" 
+                                    hx-target="#user-monster-armor-class" hx-swap="outerHTML" title="Integer">14</textarea>
+                                <strong>Hit Points : </strong><textarea class="integer-stat-textarea" id="user-monster-hit-points" hx-post="/update-stats" hx-trigger="change" 
+                                    hx-target="#user-monster-hit-points" hx-swap="outerHTML" title="Integer">75</textarea>
+                                <strong>Speed : </strong> Walk: <textarea class="integer-stat-textarea" id="user-monster-speed-walk" hx-post="/update-stats" hx-trigger="change" 
+                                    hx-target="#user-monster-speed" hx-swap="outerHTML" title="Integer">10</textarea> Fly :<textarea class="integer-stat-textarea" id="user-monster-speed-fly" hx-post="/update-stats" hx-trigger="change" 
+                                    hx-target="#user-monster-speed" hx-swap="outerHTML" title="Integer">60</textarea>
+                            </dl>
+                            </div>   
+                        <div class="Block_6"><hr>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th align="center">STR</th>
+                                        <th align="center">DEX</th>
+                                        <th align="center">CON</th>
+                                        <th align="center">INT</th>
+                                        <th align="center">WIS</th>
+                                        <th align="center">CHA</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td align="center"><textarea class="red-integer-stat-textarea" id="user-monster-strength" hx-post="/update-stats" hx-trigger="change" 
+                                            hx-target="#user-monster-strength" hx-swap="outerHTML" title="Integer">5</textarea></td>
+                                        <td align="center"><textarea class="red-integer-stat-textarea" id="user-monster-dexterity" hx-post="/update-stats" hx-trigger="change" 
+                                            hx-target="#user-monster-dexterity" hx-swap="outerHTML" title="Integer">18</textarea></td>
+                                        <td align="center"><textarea class="red-integer-stat-textarea" id="user-monster-constitution" hx-post="/update-stats" hx-trigger="change" 
+                                            hx-target="#user-monster-constitution" hx-swap="outerHTML" title="Integer">14</textarea></td>
+                                        <td align="center"><textarea class="red-integer-stat-textarea" id="user-monster-intellgience" hx-post="/update-stats" hx-trigger="change" 
+                                            hx-target="#user-monster-intelligence" hx-swap="outerHTML" title="Integer">16</textarea></td>
+                                        <td align="center"><textarea class="red-integer-stat-textarea" id="user-monster-wisdom" hx-post="/update-stats" hx-trigger="change" 
+                                            hx-target="#user-monster-wisdom" hx-swap="outerHTML" title="Integer">12</textarea></td>
+                                        <td align="center"><textarea class="red-integer-stat-textarea" id="user-monster-charisma" hx-post="/update-stats" hx-trigger="change" 
+                                            hx-target="#user-monster-charisma" hx-swap="outerHTML" title="Integer">20</textarea></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="Block_7">
+                            <hr>
+                            <strong>Saving Throws</strong> 
+                            <textarea class="string-stat-textarea" id="user-monster-saves" hx-post="/update-stats" hx-trigger="change" 
+                            hx-target="#user-monster-saves" hx-swap="outerHTML" title="[Stat colon integer 2x space] STR: 2  DEX: 7">STR: 2   DEX: 7   WIS: 5</textarea> 
+                            <br><strong>Resistances :</strong> <textarea class="string-stat-textarea" id="user-monster-wis-save" hx-post="/update-stats" hx-trigger="change" 
+                            hx-target="#user-monster-wis-save" hx-swap="outerHTML" title="Integer">None</textarea> 
+                            <br><strong>Senses :</strong><textarea class="string-stat-textarea" id="user-monster-senses" hx-post="/update-stats" hx-trigger="change" 
+                            hx-target="#user-monster-senses" hx-swap="outerHTML" title="[Sense colon integer] Darkvision: 60">Darkvision: 60</textarea> 
+                            <br><strong>Languages :</strong><textarea class="string-stat-textarea" id="user-monster-languages" hx-post="/update-stats" hx-trigger="change" 
+                            hx-target="#user-monster-languages" hx-swap="outerHTML" title="[language comma space] Common, Sylvan">Common, Sylvan</textarea> 
+                            <br><strong>Challenge Rating :</strong><textarea class="string-stat-textarea" id="user-monster-languages" hx-post="/update-stats" hx-trigger="change" 
+                            hx-target="#user-monster-cr" hx-swap="outerHTML" title="[CR space parenthesis XP parenthesis] 6 (2300)">6 (2300)</textarea>   
+                        </div> 
+                        <div class="Block_8">
+                            <hr>
+                            <h4 id="actions">Actions</h4>                        
+                            <strong>
+                                <textarea class="string-action-name-textarea" 
+                                id="user-monster-action_name_1" 
+                                hx-post="/update-stats" 
+                                hx-trigger="change" 
+                                hx-target="#user-monster-action_name_1" 
+                                hx-swap="outerHTML" 
+                                title="[Action Name colon] Fairy Bolt:">Fairy Bolt: </textarea> 
+                            </strong>
+                                <textarea class="string-action-description-textarea"
+                                    id="user-monster-action_details_1" 
+                                    hx-post="/update-stats" 
+                                    hx-trigger="change" 
+                                    hx-target="#user-monster-action_details_1" 
+                                    hx-swap="outerHTML" 
+                                    title="[Action Type colon to hit bonus comma range comma number of targets space Hit colon damage parenthesis damage dice parenthesis damage type] Ranged Spell Attack: +7 to hit, range 60 ft., one target. Hit: 21 (3d10 + 4) radiant damage.">Ranged Spell Attack: +7 to hit, range 60 ft., one target. Hit: 21 (3d10 + 4) radiant damage.</textarea>      
+                            <strong>
+                                <textarea class="string-action-name-textarea" 
+                                    id="user-monster-action_name_2" 
+                                    hx-post="/update-stats" hx-trigger="change" 
+                                    hx-target="#user-monster-action_name_2" 
+                                    hx-swap="outerHTML" 
+                                    title="[Action Name colon] Fairy Bolt:">Poison Dust: </textarea> 
+                            </strong>
+                            <textarea class="string-action-description-textarea"
+                                id="user-monster-action_details_1" 
+                                hx-post="/update-stats" 
+                                hx-trigger="change" 
+                                hx-target="#user-monster-action_details_1" 
+                                hx-swap="outerHTML" 
+                                title="[Action Type colon to hit bonus comma range comma number of targets space Hit colon damage parenthesis damage dice parenthesis damage type] Ranged Spell Attack: +7 to hit, range 60 ft., one target. Hit: 21 (3d10 + 4) radiant damage.">Ebony releases a cloud of toxic dust in a 10-foot radius. Each creature within the area must succeed on a DC 15 Constitution saving throw or take 15 (3d8) poison damage and become poisoned for 1 minute. The poisoned creature can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success.</textarea>   
+                        </div>                     
+                        <div class="Block_9">
+                            <h4 id="cantrips">Cantrips</h4>
+                            <strong>
+                                <textarea class="string-action-name-textarea" 
+                                    id="user-monster-action_name_2" 
+                                    hx-post="/update-stats" hx-trigger="change" 
+                                    hx-target="#user-monster-action_name_2" 
+                                    hx-swap="outerHTML" 
+                                    title="[Action Name colon] Fairy Bolt:">Eldritch Blast: </textarea> 
+                            </strong>
+                            <textarea class="string-action-description-textarea"
+                                id="user-monster-action_details_1" 
+                                hx-post="/update-stats" 
+                                hx-trigger="change" 
+                                hx-target="#user-monster-action_details_1" 
+                                hx-swap="outerHTML" 
+                                title="[Action description range mechanics effect] Ranged Spell Attack: +7 to hit, range 60 ft., one target. Hit: 21 (3d10 + 4) radiant damage.">A beam of crackling energy streaks toward a creature within range. Make a ranged spell attack against the target. On a hit, the target takes 1d10 force damage.</textarea>
+                        </div>                     
+                        <div class="Block_10">
+                            <h4 id="spell slots">Spell Slots</h4>
+                        <dl><dt><em><strong>1st level</strong></em>:</dt><dd><textarea class="integer-stat-textarea" id="level-1-slots" hx-post="/update-stats" hx-trigger="change" 
+                            hx-target="#user-monster-armor-class" hx-swap="outerHTML" title="Integer">4</textarea></dd></dl>
+                            <dl><dt><em><strong>2nd level</strong></em>:</dt><dd><textarea class="integer-stat-textarea" id="level-2-slots" hx-post="/update-stats" hx-trigger="change" 
+                                hx-target="#user-monster-armor-class" hx-swap="outerHTML" title="Integer">4</textarea></dd></dl>
+                                <dl><dt><em><strong>3rd level</strong></em>:</dt><dd><textarea class="integer-stat-textarea" id="level-3-slots" hx-post="/update-stats" hx-trigger="change" 
+                                    hx-target="#user-monster-armor-class" hx-swap="outerHTML" title="Integer">4</textarea></dd></dl>
+                        <h4 id="known spells">Known Spells</h4>
+                        <strong>
+                            <textarea class="string-action-name-textarea" 
+                                id="user-monster-action_name_2" 
+                                hx-post="/update-stats" hx-trigger="change" 
+                                hx-target="#user-monster-action_name_2" 
+                                hx-swap="outerHTML" 
+                                title="[Action Name colon] Fairy Bolt:">Charm Person: </textarea> 
+                        </strong>
+                        <textarea class="string-action-description-textarea"
+                            id="user-monster-action_details_1" 
+                            hx-post="/update-stats" 
+                            hx-trigger="change" 
+                            hx-target="#user-monster-action_details_1" 
+                            hx-swap="outerHTML" 
+                            title="[Level colon description range mechanics effect] Level: 2nd. A creature you touch becomes invisible until the spell ends. Anything the target is wearing or carrying is invisible as long as it is on the target's person..">Level: 1st. You attempt to charm a humanoid you can see within range. It must make a Wisdom saving throw, and does so with advantage if you or your companions are fighting it. If it fails the saving throw, it is charmed by you until the spell ends or until you or your companions do anything harmful to it.</textarea> 
+                        <strong>
+                            <textarea class="string-action-name-textarea" 
+                                id="user-monster-action_name_2" 
+                                hx-post="/update-stats" hx-trigger="change" 
+                                hx-target="#user-monster-action_name_2" 
+                                hx-swap="outerHTML" 
+                                title="[Action Name colon] Fairy Bolt:">Invisibility: </textarea> 
+                        </strong>
+                        <textarea class="string-action-description-textarea"
+                            id="user-monster-action_details_1" 
+                            hx-post="/update-stats" 
+                            hx-trigger="change" 
+                            hx-target="#user-monster-action_details_1" 
+                            hx-swap="outerHTML" 
+                            title="[Level colon description range mechanics effect] Level: 2nd. A creature you touch becomes invisible until the spell ends. Anything the target is wearing or carrying is invisible as long as it is on the target's person.">Level: 2nd. A creature you touch becomes invisible until the spell ends. Anything the target is wearing or carrying is invisible as long as it is on the target's person.</textarea> 
+                        <strong>
+                            <textarea class="string-action-name-textarea" 
+                                id="user-monster-action_name_2" 
+                                hx-post="/update-stats" hx-trigger="change" 
+                                hx-target="#user-monster-action_name_2" 
+                                hx-swap="outerHTML" 
+                                title="[Action Name colon] Fairy Bolt:">Fireball: </textarea> 
+                        </strong>
+                        <textarea class="string-action-description-textarea"
+                            id="user-monster-action_details_1" 
+                            hx-post="/update-stats" 
+                            hx-trigger="change" 
+                            hx-target="#user-monster-action_details_1" 
+                            hx-swap="outerHTML" 
+                            title="[Level colon description range mechanics effect] Level: 2nd. A creature you touch becomes invisible until the spell ends. Anything the target is wearing or carrying is invisible as long as it is on the target's person.">Level: 3rd. A bright streak flashes from your pointing finger to a point you choose within range and then blossoms with a low roar into an explosion of flame. Each creature in a 20-foot radius sphere centered on that point must make a Dexterity saving throw. A target takes 8d6 fire damage on a failed save, or half as much damage on a successful one.</textarea>
+                    </div>
+                    <div class="Block_9">
+                        <h4 id="legendary actions">Legendary Actions</h4>
+                        <textarea class="string-action-description-textarea"
+                            id="user-monster-action_details_1" 
+                            hx-post="/update-stats" 
+                            hx-trigger="change" 
+                            hx-target="#user-monster-action_details_1" 
+                            hx-swap="outerHTML" 
+                            title="[Number of legendary actions period How many actions per turn and when to play period Action regain rules] Ebony can take 3 legendary actions, choosing from the options below. Only one legendary action can be used at a time and only at the end of another creature's turn. Ebony regains spent legendary actions at the start of her turn.">Ebony can take 3 legendary actions, choosing from the options below. Only one legendary action can be used at a time and only at the end of another creature's turn. Ebony regains spent legendary actions at the start of her turn.</textarea>
+                            <strong>
+                                <textarea class="string-action-name-textarea" 
+                                    id="user-monster-action_name_2" 
+                                    hx-post="/update-stats" hx-trigger="change" 
+                                    hx-target="#user-monster-action_name_2" 
+                                    hx-swap="outerHTML" 
+                                    title="[Action Name colon] Fairy Bolt:">Dark Whispers: </textarea> 
+                            </strong>
+                            <textarea class="string-action-description-textarea"
+                                id="user-monster-action_details_1" 
+                                hx-post="/update-stats" 
+                                hx-trigger="change" 
+                                hx-target="#user-monster-action_details_1" 
+                                hx-swap="outerHTML" 
+                                title="[Level colon description range mechanics effect] Level: 2nd. A creature you touch becomes invisible until the spell ends. Anything the target is wearing or carrying is invisible as long as it is on the target's person.">Ebony whispers insidiously to a target within 30 feet. The target must succeed on a DC 16 Wisdom saving throw or take 10 (3d6) psychic damage and become frightened until the end of its next turn.</textarea> 
+                            <strong>
+                                <textarea class="string-action-name-textarea" 
+                                    id="user-monster-action_name_2" 
+                                    hx-post="/update-stats" hx-trigger="change" 
+                                    hx-target="#user-monster-action_name_2" 
+                                    hx-swap="outerHTML" 
+                                    title="[Action Name colon] Fairy Bolt:">Teleport: </textarea> 
+                            </strong>
+                            <textarea class="string-action-description-textarea"
+                                id="user-monster-action_details_1" 
+                                hx-post="/update-stats" 
+                                hx-trigger="change" 
+                                hx-target="#user-monster-action_details_1" 
+                                hx-swap="outerHTML" 
+                                title="[Level colon description range mechanics effect] Level: 2nd. A creature you touch becomes invisible until the spell ends. Anything the target is wearing or carrying is invisible as long as it is on the target's person.">Ebony magically teleports, along with any equipment she is wearing or carrying, up to 60 feet to an unoccupied space she can see.</textarea> 
+                            <strong>
+                                <textarea class="string-action-name-textarea" 
+                                    id="user-monster-action_name_2" 
+                                    hx-post="/update-stats" hx-trigger="change" 
+                                    hx-target="#user-monster-action_name_2" 
+                                    hx-swap="outerHTML" 
+                                    title="[Action Name colon] Fairy Bolt:">Fairy Glow: </textarea> 
+                            </strong>
+                            <textarea class="string-action-description-textarea"
+                                id="user-monster-action_details_1" 
+                                hx-post="/update-stats" 
+                                hx-trigger="change" 
+                                hx-target="#user-monster-action_details_1" 
+                                hx-swap="outerHTML" 
+                                title="[Level colon description range mechanics effect] Level: 2nd. A creature you touch becomes invisible until the spell ends. Anything the target is wearing or carrying is invisible as long as it is on the target's person.">Ebony emits a burst of glowing lights. Each creature of her choice within 20 feet of her must succeed on a DC 16 Dexterity saving throw or be blinded until the end of Ebony's next turn.</textarea> 
+                    </div> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            function adjustTextareaHeight(el) {
+                console.log('Start height:', el.scrollHeight);
+                if (el.scrollHeight > 16) {
+                    el.style.height = 'auto'; // Reset the height
+                    console.log('Auto height:', el.scrollHeight);
+                    console.log('Adjusting height for:', el.id); // Debugging line
+                    el.style.height = (el.scrollHeight) + 'px'; // Set it to the scroll height
+                    console.log('New height:', el.style.height);
+                }
+            }
+        
+            const classes = [
+                'description-textarea',
+                'user-description-textarea',
+                'heading-textarea', 
+                'properties-textarea', 
+                'string-stat-textarea',
+                'string-action-description-textarea'
+            ];
+        
+            classes.forEach(className => {
+                const textareas = document.querySelectorAll(`.${className}`);
+                console.log(`Textareas found for ${className}:`, textareas.length); // Debugging line
+                textareas.forEach(textarea => {
+                    // Adjust height on page load
+                    adjustTextareaHeight(textarea);
+                    // Adjust height on input
+                    textarea.addEventListener('input', function() {
+                        adjustTextareaHeight(textarea);
+                        console.log('Input event triggered for:', textarea.id); // Debugging line
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
