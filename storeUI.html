@@ -426,9 +426,9 @@ div[contenteditable="true"] p::first-letter {
 .string-action-description-textarea {
     width: 100%;
     height:16px;
-    font-size: .318cm;
+    font-size: 14px;
     font-weight: 400;
-    line-height: 1.2em;
+    line-height: 16px;
     margin-bottom: 0;
     box-sizing: border-box;
     border: 0;
@@ -684,8 +684,11 @@ div[contenteditable="true"] p::first-letter {
             storeInitialPositions();
 
             function adjustTextareaHeight(el) {
-                el.style.height = 'auto';
-                el.style.height = (el.scrollHeight) + 'px';
+                if (el.scrollHeight > 16){
+                    el.style.height = 'auto';
+                    el.style.height = (el.scrollHeight) + 'px';
+                }
+                console.log('Original height:', el.style.height);
             }
 
             function initializeTextareaResizing() {
@@ -701,7 +704,12 @@ div[contenteditable="true"] p::first-letter {
                 classes.forEach(className => {
                     const textareas = document.querySelectorAll(`.${className}`);
                     console.log(`Textareas found for ${className}:`, textareas.length); // Debugging line
-                    textareas.forEach(textarea => {
+                    textareas.forEach(textarea => {                                            
+                    console.log('scrollHeight:', textarea.scrollHeight);
+                    console.log('clientHeight:', textarea.clientHeight);
+                    console.log('offsetHeight:', textarea.offsetHeight);
+                    console.log('Computed line-height:', window.getComputedStyle(textarea).lineHeight);
+
                         // Adjust height on page load
                         adjustTextareaHeight(textarea);
                         // Adjust height on input
