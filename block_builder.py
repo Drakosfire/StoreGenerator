@@ -26,11 +26,27 @@ def build_blocks(user_input, block_id):
                                                           block_id= block_id)
     block_id = block_id + 1
     list_of_blocks.append(store_properties_block)
+    # Iterate over owners and generate owner image and details block
+    for owner in user_input['store_owners']:
+        owner_block = build_owner_block(owner, block_id)
+        block_id = block_id + 1
+        list_of_blocks.append(owner_block)
     
     
     
 
     return list_of_blocks
+def process_iterable_into_html(iterable_type, iterable, block_id):
+    iterable_html = f""""""
+    for item in iterable:
+        item_html = f"""<tr>
+                <td align="left"><strong>{iterable_type}</strong></td>
+                <td align="right"><textarea class="string-action-description-textarea" id="user-store-owners-{block_id}"
+                hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-owners-{block_id}t" hx-swap="outerHTML"
+                title="Store Size">{item['name']}</textarea></td>
+            </tr>"""
+        iterable_html += item_html
+    return iterable_html
 
 def build_title_block(title,description,backstory,reputation):
      title_block_html = f"""<div class="block-item" data-block-id = {block_id}><h1><textarea class="title-textarea" id="user-store-title" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-name" hx-swap="outerHTML" title="Name of store">{title}</textarea></h1><div contenteditable="true" class="description-textarea" id="user-store-description"
@@ -119,17 +135,7 @@ def build_store_properties_block(store_type,
     store_owners = []
     store_employees = []
 
-    def process_iterable_into_html(iterable_type, iterable, block_id):
-        iterable_html = f""""""
-        for item in iterable:
-            item_html = f"""<tr>
-                    <td align="left"><strong>{iterable_type}</strong></td>
-                    <td align="right"><textarea class="string-action-description-textarea" id="user-store-owners-{block_id}"
-                  hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-owners-{block_id}t" hx-swap="outerHTML"
-                  title="Store Size">{item['name']}</textarea></td>
-                </tr>"""
-            iterable_html += item_html
-        return iterable_html
+ 
     def process_rumors_into_html(rumors, block_id):
         rumors_html = f""""""
         for rumor in rumors:
@@ -146,7 +152,17 @@ def build_store_properties_block(store_type,
     employees_html = process_iterable_into_html('Store Employees', store_employees, block_id)
     store_specialties_html = process_iterable_into_html('Store Specialties', store_specialties, block_id)
     store_services_html = process_iterable_into_html('Store Services', store_services, block_id)
-    store_rumors_html = process_rumors_into_html(store_rumors, block_id)
+    def process_secrets_into_html(secrets, block_id):
+        secrets_html = f""""""
+        for secret in secrets:
+            secret_html = f"""<tr>
+                    <td align="left"><strong>Secrets</strong></td>
+                    <td align="right"><textarea class="string-action-description-textarea" id="user-store-rumors-{block_id}"
+                  hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-rumors-{block_id}t" hx-swap="outerHTML"
+                  title="Store Size">{secret}</textarea></td>
+                </tr>"""
+            secrets_html += secret_html
+        return secrets_html
          
     store_iterables_html = f"""
                 {owners_html}
@@ -172,6 +188,49 @@ def build_store_properties_block(store_type,
                 {store_end_html}"""
     return store_properties_block_html
 
+def build_owner_block(owner, owner_id,block_id):
+     # Owner block with values : Name, Race, Class, Description, Personality, Secrets, sd-prompt
+    owner_name_html = process_iterable_into_html('Owner', [owner['name']], block_id)
+    owner_race_html = process_iterable_into_html('Race', [owner['race']], block_id)
+    owner_class_html = process_iterable_into_html('Class', [owner['class']], block_id)
+    owner_description_html = process_iterable_into_html('Description', [owner['description']], block_id)
+    owner_personality_html = process_iterable_into_html('Personality', [owner['personality']], block_id)
+    owner_secrets_html = process_iterable_into_html('Secrets', [owner['secrets']], block_id)
+    owner_block_html = f"""
+    <div class="block-item" data-block-id="{block_id}">
+                            <h3 id="owner_{owner_id}">F{owner['name']}</h3>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th align="center"></th>
+                                        <th align="center"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td align="center"><strong>Species</strong></td>
+                                        <td align="right">{owner['species']}</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center"><strong>Class</strong></td>
+                                        <td align="right">{owner['class']}</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center"><strong>Description</strong></td>
+                                        <td align="left">{}</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center"><strong>Personality</strong></td>
+                                        <td align="left">Joyful, playful, and a tad mischievous.</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center"><strong>Secrets</strong></td>
+                                        <td align="left">Fizzwidget once performed a jester act for the Queen of Faerun.<br> He has a hidden collection of practical jokes for special customers.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>
+    """
 def list_names_to_str(data):  
         list_of_names = []
         for i in data:
