@@ -44,6 +44,20 @@ def build_blocks(user_input, block_id):
         block_id = block_id + 1
         list_of_blocks.append(owner_block)
         owner_id += 1
+    employee_id = 1
+    # Iterate over employees and generate employee image and details block
+    employee_title = "Employee"
+    if len(user_input['store_employees']) > 1:
+        employee_title = "Employees"
+    employee_title_block = f"""<h2 id="employee">{employee_title}</h2>"""
+    for employee in user_input['store_employees']:
+        employee_image_block = build_image_block(employee['sd_prompt'], block_id)
+        block_id = block_id + 1
+        list_of_blocks.append(employee_image_block)
+        employee_block = build_employee_block(employee, employee_id, employee_title_block, block_id)
+        block_id = block_id + 1
+        list_of_blocks.append(employee_block)
+        employee_id += 1
     return list_of_blocks
 
 # Take in a specific item type and item, and return the html for that item
@@ -209,7 +223,8 @@ def build_store_properties_block(store_type,
                 {store_iterables_html}
                 {store_end_html}"""
     return store_properties_block_html
-# Block that build owner table
+
+# Block of owner table
 def build_owner_block(owner, owner_id, owner_title_block, block_id):
     # Owner block with values : Name, Race, Class, Description, Personality, Secrets, sd-prompt
     
@@ -248,6 +263,40 @@ def build_owner_block(owner, owner_id, owner_title_block, block_id):
     """
     return owner_block_html
 
+# Block of employee table
+def build_employee_block(employee, employee_id, employee_title_block, block_id):
+    # Employee block with name, role, species, description, personality, sd-prompt
+    # Process employee values into html
+    employee_name_html = process_into_html('Employee', employee['name'], block_id)
+    employee_role_html = process_into_html('Role', employee['role'], block_id)
+    employee_species_html = process_into_html('Species', employee['species'], block_id)
+    employee_description_html = process_into_html('Description', employee['description'], block_id)
+    employee_personality_html = process_into_html('Personality', employee['personality'], block_id)
+    # Build employee block html
+
+    employee_block_html = f""""""
+    employee_block_html += f"""<div class="block-item" data-block-id="{block_id}">"""
+    if employee_id == 1:
+        employee_block_html += employee_title_block
+    employee_block_html += f"""<h3 id="employee_{employee_id}">{employee['name']}</h3>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th align="center"></th>
+                                            <th align="center"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {employee_name_html}
+                                        {employee_role_html}
+                                        {employee_species_html}
+                                        {employee_description_html}
+                                        {employee_personality_html}
+                                    </tbody>
+                                </table>
+                                </div>
+    """
+    return employee_block_html
 
 
 
