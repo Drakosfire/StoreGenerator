@@ -27,11 +27,9 @@ def load_llm(user_input, prompt_instructions):
     return response.choices[0].message.content
 # Call the LLM and store its output
 def call_llm_and_cleanup(user_input, inventory = False): 
-    if not inventory :   
-        prompt_instructions = f"{initial_prompt_instructions} {store_description}"
-    else : prompt_instructions = f"{inventory_prompt_instructions} {inventory_description}"    
     
-
+    prompt_instructions = f"{initial_prompt_instructions} {store_description}"
+    
     llm_output = load_llm(user_input, prompt_instructions)
     llm_output = "".join(llm_output)
     print(llm_output)
@@ -101,6 +99,11 @@ Image Generation Prompt Examples :
 5. sd_prompts should specify race or species
 6. quests MUST be detailed, and interesting, preferably unexpected, delightful and memorable. 
 7. The reward for the quest MUST be specific and detailed!
+
+Inventory Instructions:
+1. Core Inventory should include at least five items.
+2.Many categories of items wont make sense for most stores. IE Butchers Shops do not need magic items and potions. They might have them, but they would be very specific and probably not for sale at a reasonable price. Similarly a weapon shop does not need to sell basic traveling goods. 
+3.. ALL items have "properties :" 
 """
 
 store_description = {
@@ -176,12 +179,78 @@ store_description = {
             "description": "",
             "price": ""
         }
-    ]
+    ],
+    
+    "inventory": {
+        "core_inventory":[
+            {
+                "name": "",
+                "type": "",
+                "cost": "",
+                "properties": []
+            }
+        ],
+        "weapons": [
+            {
+                "name": "",
+                "type": "",
+                "cost": "",
+                "properties": []
+            }
+        ],
+        "armor": [
+            {
+                "name": "",
+                "type": "",
+                "cost": "",
+                "properties": []
+            }
+        ],
+        "potions": [
+            {
+                "name": "",
+                "type": "",
+                "cost": "",
+                "properties": []
+            }
+        ],
+        "scrolls": [
+            {
+                "name": "",
+                "type": "",
+                "cost": "",
+                "properties": []
+            }
+        ],
+        "magical_items": [
+            {
+                "name": "",
+                "type": "",
+                "cost": "",
+                "properties": []
+            }
+        ],
+        "mundane_items": [
+            {
+                "name": "",
+                "type": "",
+                "cost": "",
+                "properties": []
+            }
+        ],
+        "miscellaneous_items": [
+            {
+                "name": "",
+                "type": "",
+                "cost": "",
+                "properties": []
+            }
+        ]
+    }
 }
 
 inventory_prompt_instructions = """
-ONLY Generate a structured json following the provided format. The job is to generate a store inventory of about 10 items. How mundane or extravagent they are is influenced by the shop and merchant. It is always okay to have style, detail, and a healthy splash of fun, fantasy, and weird. You do not need to stick strictly to the rules and mechanics of the game, if it fits the style and flavor of the store or merchant, get weird, scary, or silly with the details. 
-Core Inventory is a simple list of the very standard things a shop might carry. 
+
 
 1. Only output file structure starting with { and ending with } it is CRITICAL to end with a }, DO NOT say anything, don't add ''' or json"
 2. DO NOT use null, use "". 
