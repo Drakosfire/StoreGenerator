@@ -38,7 +38,6 @@ def build_blocks(user_input, block_id):
     owner_title_block = f"""<h2 id="owner">{owner_title}</h2>"""    
 
     for owner in user_input['store_owners']:
-        
         owner_image_block = build_image_block(owner['sd_prompt'], block_id)
         block_id = block_id + 1
         list_of_blocks.append(owner_image_block)
@@ -54,6 +53,7 @@ def build_blocks(user_input, block_id):
         employee_title = "Employees"
     employee_title_block = f"""<h2 id="employee">{employee_title}</h2>"""
     for employee in user_input['store_employees']:
+
         employee_image_block = build_image_block(employee['sd_prompt'], block_id)
         block_id = block_id + 1
         list_of_blocks.append(employee_image_block)
@@ -64,10 +64,38 @@ def build_blocks(user_input, block_id):
     
     customer_id = 1
     for customer in user_input['store_customers']:
-        customers_block = build_customers_block(customer, customer_id, block_id)
+        customers_block = build_section_entry_block('Customers',customer, customer_id, block_id)
         block_id = block_id + 1
         customer_id += 1
         list_of_blocks.append(customers_block)
+
+    quest_id = 1
+    for quest in user_input['store_quests']:
+        quests_block = build_section_entry_block('Store Quests', quest, quest_id, block_id)
+        block_id = block_id + 1
+        quest_id += 1
+        list_of_blocks.append(quests_block)
+    
+    services_id = 1
+    for service in user_input['store_services']:
+        services_block = build_section_entry_block('Services', service, services_id, block_id)
+        block_id = block_id + 1
+        services_id += 1
+        list_of_blocks.append(services_block)
+
+    specialties_id = 1
+    for specialty in user_input['store_specialties']:
+        specialty_block = build_section_entry_block('Specialties', specialty, specialties_id, block_id)
+        block_id = block_id + 1
+        specialties_id += 1
+        list_of_blocks.append(specialty_block)
+    
+    security_id = 1
+    for security in user_input['store_security']:
+        security_block = build_section_entry_block('Security', security, security_id, block_id)
+        block_id = block_id + 1
+        security_id += 1
+        list_of_blocks.append(security_block)
 
 
     return list_of_blocks
@@ -159,7 +187,8 @@ def build_store_properties_block(store_type,
                                  store_reputation,
                                  store_rumors,
                                  block_id):
-    # This could be a function since each block is identical. 
+    
+    # This could be the iterable block function with additional flexibility
     store_properties_base_html = f"""
     <div class="block-item" data-block-id="{block_id}">
     <div class="block classTable frame decoration">
@@ -258,9 +287,9 @@ def build_owner_block(owner, owner_id, owner_title_block, block_id):
     owner_block_html += f"""<div class="block-item" data-block-id="{block_id}">"""
     if owner_id == 1:
         owner_block_html+= owner_title_block
-    owner_block_html += f"""<h3 id="owner_{owner_id}"><textarea class="title-textarea" id="user-store-rumors-{block_id}"
+    owner_block_html += f"""<h3 id="owner_{owner_id}"><textarea class="subtitle-textarea" id="user-store-rumors-{block_id}"
                   hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-rumors-{block_id}t" hx-swap="outerHTML"
-                  title="Owner Name">{owner['name']}</textarea><</h3>"""
+                  title="Owner Name">{owner['name']}</textarea></h3>"""
     owner_block_html += f"""<table>
                                 <thead>
                                     <tr>
@@ -296,7 +325,10 @@ def build_employee_block(employee, employee_id, employee_title_block, block_id):
     employee_block_html += f"""<div class="block-item" data-block-id="{block_id}">"""
     if employee_id == 1:
         employee_block_html += employee_title_block
-    employee_block_html += f"""<h3 id="employee_{employee_id}">{employee['name']}</h3>
+    employee_block_html += f"""<h3 id="owner_{employee_id}"><textarea class="subtitle-textarea" id="user-store-rumors-{block_id}"
+                                    hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-rumors-{block_id}t" hx-swap="outerHTML"
+                                    title="Owner Name">{employee['name']}</textarea>
+                                </h3>
                                 <table>
                                     <thead>
                                         <tr>
@@ -316,36 +348,29 @@ def build_employee_block(employee, employee_id, employee_title_block, block_id):
     """
     return employee_block_html
 
-# Customers block with name, description, influence
-def build_customers_block(customer, customer_id, block_id):
-    customer_block_html = f""""""
-    customer_block_html += f"""<div class="block-item" data-block-id="{block_id}">"""
-    if customer_id == 1:
-        customer_block_html += f"""<h1 id="notable-customers">Notable Customers</h1> """
-    customer_block_html += f""" <div class="block note">
-            <h3 id="owner_{customer_id}"><textarea class="title-textarea" id="user-store-rumors-{block_id}"
-                  hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-rumors-{block_id}t" hx-swap="outerHTML"
-                  title="Owner Name">{customer['name']}</textarea></h3>
-            <p>{customer['description']}</p>
-            <p>{customer['influence']}</p>
-        </div>"""
+# Section to take in a section name, entry, entry_id, and block_id and return the html for that section
+def build_section_entry_block(section, entry, entry_id, block_id):
+    section_block_html = f""""""
+    section_block_html += f"""<div class="block-item" data-block-id="{block_id}">"""
+    if entry_id == 1:
+        section_block_html += f"""<h1 id="store-quests">{section}</h1> """
+    entry_features_list = list(entry.keys())
+    for feature in entry_features_list:
+        if feature == 'name':
+            section_block_html += f"""<h3 id="quest={entry_id}">
+                        <textarea class="subtitle-textarea" id="user-store-rumors-{block_id}"
+                        hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-rumors-{block_id}t" hx-swap="outerHTML"
+                        title={section}>{entry['name']}</textarea>
+                        </h3>"""
+        else:
+            feature_name = feature[0].upper() + feature[1:]
+            section_block_html += f"""<p>
+                        <textarea class="string-action-description-textarea" id="user-store-rumors-{block_id}"
+                        hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-rumors-{block_id}t" hx-swap="outerHTML"
+                        title={section}>{feature_name}: {entry[feature]}</textarea>
+                        </p>"""
     
-    return customer_block_html
-
-# Quests block with name, description, reward
-def build_quests_block(quests, quest_id, block_id):
-    quests_block_html = f""""""
-    quests_block_html += f"""<div class="block-item" data-block-id="{block_id}">"""
-    if quest_id == 1:
-        quests_block_html += f"""<h1 id="store-quests">Store Quests</h1> """
-    
-    quest_block_html = f"""
-    <div class="Block_10">
-                                
-                                <h3 id="the-basilisk-bounty">The Basilisk Bounty</h3>
-                                <p>Morgor needs fresh basilisk meat and offers a handsome reward for those brave enough to hunt one.</p>
-                                <p>500 gold coins and choice cuts of meat.</p>
-                            </div>"""
+    return section_block_html
 
 #Text Area Template
 """<textarea class="string-action-description-textarea" id="user-store-rumors-{block_id}"
