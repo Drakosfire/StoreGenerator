@@ -97,6 +97,9 @@ def build_blocks(user_input, block_id):
         security_id += 1
         list_of_blocks.append(security_block)
 
+    inventory_block = build_inventory_block(user_input['inventory'], block_id)
+    block_id = block_id + 1
+    list_of_blocks.append(inventory_block)
 
     return list_of_blocks
 
@@ -104,7 +107,7 @@ def build_blocks(user_input, block_id):
 def process_into_html(item_type,item, block_id):
      item_html = f"""<tr>
                 <td align="left"><strong>{item_type}</strong></td>
-                <td align="right"><textarea class="string-action-description-textarea" id="user-store-owners-{block_id}"
+                <td align="right"><textarea class="string-action-description-textarea" id="{item_type}-{block_id}"
                 hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-owners-{block_id}t" hx-swap="outerHTML"
                 title="">{item}</textarea></td>
             </tr>"""
@@ -371,6 +374,142 @@ def build_section_entry_block(section, entry, entry_id, block_id):
                         </p>"""
     
     return section_block_html
+
+def build_inventory_block(inventory, block_id):
+    inventory_block_html = f""""""
+    inventory_block_html += f"""<div class="block-item" data-block-id="{block_id}">"""
+    inventory_block_html += f"""<div class="block classTable frame decoration">
+                                    <h5 id="inventory">Inventory</h5>
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th align="center">Name</th>
+                                                    <th align="center">Type</th>
+                                                    <th align="left">Cost</th>
+                                                    <th align="center">Properties</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>"""
+    # Create a list of the keys in the inventory, each key is the type of items
+    list_of_type = list(inventory.keys())
+    # Iterate through keys and check if the value is greater than an empty list
+    for type in list_of_type:
+        inventory_type = inventory[type]
+        if len(inventory_type) > 0 :
+            # iterate through items in inventory type list, each item is a dictionary with prescribed values.
+            # Need to check for list in properties.
+            for item in inventory_type:
+                item['properties'] = ', '.join(item['properties'])
+                item_block_html = f"""<tr>
+                                        <td align="center"><textarea class="string-action-description-textarea" id="user-store-rumors-{block_id}"
+                        hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-rumors-{block_id}t" hx-swap="outerHTML"
+                        title={type}>{item['name']}</textarea></td>
+                                        <td align="center"><textarea class="string-action-description-textarea" id="user-store-rumors-{block_id}"
+                        hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-rumors-{block_id}t" hx-swap="outerHTML"
+                        title={type}>{item['type']}</textarea></td>
+                                        <td align="center"><textarea class="string-action-description-textarea" id="user-store-rumors-{block_id}"
+                        hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-rumors-{block_id}t" hx-swap="outerHTML"
+                        title={type}>{item['cost']}</textarea></td>
+                                        <td align="center"><textarea class="string-action-description-textarea" id="user-store-rumors-{block_id}"
+                        hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-rumors-{block_id}t" hx-swap="outerHTML"
+                        title={type}>{item['properties']}</textarea></td>
+                                    </tr>"""
+                
+                inventory_block_html += item_block_html
+    inventory_block_html += f"""</tbody>
+                            </table>
+                            </div> 
+                        </div>"""
+    return inventory_block_html
+"""<div class="Block_13">
+                            <div class="block classTable frame decoration">
+                                <h5 id="inventory">Inventory</h5>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th align="center">Name</th>
+                                            <th align="center">Type</th>
+                                            <th align="left">Cost</th>
+                                            <th align="center">Properties</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td align="center">Poultry Drumsticks</td>
+                                            <td align="center">Meat</td>
+                                            <td align="left">1 gp per lbs</td>
+                                            <td align="center"></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center">Ground Beef</td>
+                                            <td align="center">Meat</td>
+                                            <td align="left">1 gp per lbs</td>
+                                            <td align="center"></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center">Pork Chops</td>
+                                            <td align="center">Meat</td>
+                                            <td align="left">1 gp per lbs</td>
+                                            <td align="center"></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center">Bacon Strips</td>
+                                            <td align="center">Meat</td>
+                                            <td align="left">1 gp per lbs</td>
+                                            <td align="center"></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center">Sausage Links</td>
+                                            <td align="center">Meat</td>
+                                            <td align="left">1 gp per lbs</td>
+                                            <td align="center"></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center">Mystic Minotaur Steak</td>
+                                            <td align="center">Exotic Meat</td>
+                                            <td align="left">25 gold per pound</td>
+                                            <td align="center">Grants temporary strength boost when consumed, Requires fine culinary skills to cook properly</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center">Quantum Quail</td>
+                                            <td align="center">Exotic Poultry</td>
+                                            <td align="left">15 gold each</td>
+                                            <td align="center">“Phases in and out of existence”, “Can enhance one’s agility”</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center">Invisible Bacon</td>
+                                            <td align="center">Mystical Meat</td>
+                                            <td align="left">10 gold per slice</td>
+                                            <td align="center">“Invisible to the naked eye”, “Tastes incredibly savory”, “Can only be seen with a special spell”</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center">Hydra Sausage</td>
+                                            <td align="center">Mythical Meat</td>
+                                            <td align="left">50 gold per link</td>
+                                            <td align="center">“Each bite regenerates after a while”, “Consuming too much may cause mild hallucinations”</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center">Cursed Cleaver</td>
+                                            <td align="center">Kitchen Equipment</td>
+                                            <td align="left">100 gold</td>
+                                            <td align="center">“Cuts through any meat effortlessly”, “Occasionally whispers in a long-forgotten language”, “Rumored to be haunted”</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center">Vampire Spice Mix</td>
+                                            <td align="center">Cooking Ingredient</td>
+                                            <td align="left">20 gold per pouch</td>
+                                            <td align="center">“Adds a distinct flavor”, “Enhances blood flow in the consumer”, “Leaves a lingering aftertaste of garlic”</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center">Phoenix Feather Skewers</td>
+                                            <td align="center">Cooking Utensil</td>
+                                            <td align="left">75 gold per set</td>
+                                            <td align="center">“Prevents meat from overcooking”, “Gives a slight warmth to cooked items”, “Reusable endlessly”</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                </div> <!--Close Block_12-->
+                            </div>"""
 
 #Text Area Template
 """<textarea class="string-action-description-textarea" id="user-store-rumors-{block_id}"
