@@ -106,6 +106,9 @@
 .page .monster hr:last-of-type + * {
   margin-top: .1cm;
 }
+.page * + h3 {
+  margin-top: .05cm;
+}
 .page * + h4 {
   margin-top: .1cm;
 }
@@ -253,7 +256,28 @@ input[type="text"]:focus, textarea:focus {
 }
 .title-textarea{
     height:30px;
-    margin-bottom: .19cm;
+    width: 100%;
+    margin-bottom: 5px;
+    column-span: all;
+    font-size: .89cm;
+    line-height: 1em;
+    font-family: "MrEavesRemake";
+    font-weight: 800;
+    color: var(--HB_Color_HeaderText);
+    border: 0;
+    font: inherit;
+    background: none;
+    padding: 0;
+    resize: none; /* Prevents the textarea from being resizable */
+    overflow: hidden; /* Prevents scrollbars */
+    outline: none; /* Removes the focus outline */
+
+}
+
+.subtitle-textarea{
+    height:20px;
+    width: 100%;
+    margin-bottom: 5px;
     column-span: all;
     font-size: .89cm;
     line-height: 1em;
@@ -723,7 +747,6 @@ div[contenteditable="true"] p::first-letter {
 
             // Initial run on page load
             initializeTextareaResizing();
-
 
             async function extractBlocks() {
                 
