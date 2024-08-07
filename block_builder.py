@@ -28,7 +28,9 @@ def build_blocks(user_input, block_id):
                                                           block_id= block_id)
     block_id = block_id + 1
     list_of_blocks.append(store_properties_block)
+
     owner_id = 1
+    # Employee and owner could be combined into a single function with a parameter for the type of block
     # Iterate over owners and generate owner image and details block
     owner_title = "Owner"
     if len(user_input['store_owners']) > 1:
@@ -45,6 +47,7 @@ def build_blocks(user_input, block_id):
         list_of_blocks.append(owner_block)
         owner_id += 1
     employee_id = 1
+    
     # Iterate over employees and generate employee image and details block
     employee_title = "Employee"
     if len(user_input['store_employees']) > 1:
@@ -58,6 +61,15 @@ def build_blocks(user_input, block_id):
         block_id = block_id + 1
         list_of_blocks.append(employee_block)
         employee_id += 1
+    
+    customer_id = 1
+    for customer in user_input['store_customers']:
+        customers_block = build_customers_block(customer, customer_id, block_id)
+        block_id = block_id + 1
+        customer_id += 1
+        list_of_blocks.append(customers_block)
+
+
     return list_of_blocks
 
 # Take in a specific item type and item, and return the html for that item
@@ -69,6 +81,7 @@ def process_into_html(item_type,item, block_id):
                 title="">{item}</textarea></td>
             </tr>"""
      return item_html
+
 # Take in a specific iterable type and iterable, and return the html for that iterable
 def process_iterable_into_html(iterable_type, iterable, block_id):
     iterable_html = f""""""
@@ -81,6 +94,7 @@ def process_iterable_into_html(iterable_type, iterable, block_id):
             </tr>"""
         iterable_html += item_html
     return iterable_html
+
 # Take in a list of rumors and return the html for that list of rumors
 def process_rumors_into_html(rumors, block_id):
         rumors_html = f""""""
@@ -93,6 +107,7 @@ def process_rumors_into_html(rumors, block_id):
                 </tr>"""
             rumors_html += rumor_html
         return rumors_html
+
 # Take in a list of secrets and return the html for that list of secrets    
 def process_secrets_into_html(secrets, block_id):
         secrets_html = f""""""
@@ -105,6 +120,7 @@ def process_secrets_into_html(secrets, block_id):
                 </tr>"""
             secrets_html += secret_html
         return secrets_html
+
 # Block for title, description, backstory, and reputation
 def build_title_block(title,description,backstory,reputation):
      title_block_html = f"""<div class="block-item" data-block-id = {block_id}><h1>
@@ -242,7 +258,9 @@ def build_owner_block(owner, owner_id, owner_title_block, block_id):
     owner_block_html += f"""<div class="block-item" data-block-id="{block_id}">"""
     if owner_id == 1:
         owner_block_html+= owner_title_block
-    owner_block_html += f"""<h3 id="owner_{owner_id}">{owner['name']}</h3>"""
+    owner_block_html += f"""<h3 id="owner_{owner_id}"><textarea class="title-textarea" id="user-store-rumors-{block_id}"
+                  hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-rumors-{block_id}t" hx-swap="outerHTML"
+                  title="Owner Name">{owner['name']}</textarea><</h3>"""
     owner_block_html += f"""<table>
                                 <thead>
                                     <tr>
@@ -298,5 +316,42 @@ def build_employee_block(employee, employee_id, employee_title_block, block_id):
     """
     return employee_block_html
 
+# Customers block with name, description, influence
+def build_customers_block(customer, customer_id, block_id):
+    customer_block_html = f""""""
+    customer_block_html += f"""<div class="block-item" data-block-id="{block_id}">"""
+    if customer_id == 1:
+        customer_block_html += f"""<h1 id="notable-customers">Notable Customers</h1> """
+    customer_block_html += f""" <div class="block note">
+            <h3 id="owner_{customer_id}"><textarea class="title-textarea" id="user-store-rumors-{block_id}"
+                  hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-rumors-{block_id}t" hx-swap="outerHTML"
+                  title="Owner Name">{customer['name']}</textarea></h3>
+            <p>{customer['description']}</p>
+            <p>{customer['influence']}</p>
+        </div>"""
+    
+    return customer_block_html
 
+# Quests block with name, description, reward
+def build_quests_block(quests, quest_id, block_id):
+    quests_block_html = f""""""
+    quests_block_html += f"""<div class="block-item" data-block-id="{block_id}">"""
+    if quest_id == 1:
+        quests_block_html += f"""<h1 id="store-quests">Store Quests</h1> """
+    
+    quest_block_html = f"""
+    <div class="Block_10">
+                                
+                                <h3 id="the-basilisk-bounty">The Basilisk Bounty</h3>
+                                <p>Morgor needs fresh basilisk meat and offers a handsome reward for those brave enough to hunt one.</p>
+                                <p>500 gold coins and choice cuts of meat.</p>
+                            </div>"""
 
+#Text Area Template
+"""<textarea class="string-action-description-textarea" id="user-store-rumors-{block_id}"
+                  hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-rumors-{block_id}t" hx-swap="outerHTML"
+                  title="Rumors">{rumor}</textarea>"""
+#Title Area Template
+"""<h3 id="owner_{owner_id}"><textarea class="title-textarea" id="user-store-rumors-{block_id}"
+                  hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-rumors-{block_id}t" hx-swap="outerHTML"
+                  title="Owner Name">{owner['name']}</textarea><</h3>"""
