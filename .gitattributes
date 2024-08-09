@@ -1,2 +1,5 @@
 *.png filter=lfs diff=lfs merge=lfs -text
 *.jpg filter=lfs diff=lfs merge=lfs -text
+galleries/test_images/*.png filter=lfs diff=lfs merge=lfs -text
+galleries/test_images/Morgor_bloodclaw.png filter=lfs diff=lfs merge=lfs -text
+galleries/test_images/morgor_meaty_marvels.png filter=lfs diff=lfs merge=lfs -text
