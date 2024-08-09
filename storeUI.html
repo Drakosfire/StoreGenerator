@@ -550,7 +550,8 @@ div[contenteditable="true"] p::first-letter {
                     title="As much or as little description as you want to provide. You can provide specific employees, inventory etc">A very standard gear store run by a fae potted plant named Gorgeous</textarea>
                     <button id="submitDescription">Submit</button>
                     <button id="parseHTML">Parse HTML</button>
-                <button id="resetButton">Reset</button>
+                    <button id="resetButton">Reset</button>
+                    <button onclick="printPageContainer()">Print to PDF</button>
                 <div class="pages">
                     <div id="page-1" class="page" data-page-id="page-0">
                         <div class="columnWrapper">
@@ -663,7 +664,23 @@ div[contenteditable="true"] p::first-letter {
                 console.error('Error:', error);
             });
         });
-        
+            // Print Function
+            window.printPageContainer = function() {
+                var pageContainer = document.getElementById('pageContainer');
+                if (pageContainer) {
+                    var printContents = pageContainer.innerHTML;
+                    var originalContents = document.body.innerHTML;
+
+                    document.body.innerHTML = printContents;
+
+                    window.print();
+
+                    document.body.innerHTML = originalContents;
+                } else {
+                    console.error('Element with ID "pageContainer" not found.');
+                }
+            }
+
             // Store initial positions of the blocks
             function storeInitialPositions() {
                 initialPositions = []; // Clear initialPositions before updating
