@@ -109,7 +109,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Store initial positions of the blocks
     function storeInitialPositions() {
-        initialPositions = []; // Clear initialPositions before updating
         const blocks = blockContainer.querySelectorAll('.block-item');
         blocks.forEach((block, index) => {
             const blockId = block.getAttribute('data-block-id');
@@ -122,6 +121,80 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         });
         console.log('Initial positions:', initialPositions);
+    }
+
+    function sortBlocksById() {
+        // Select all blocks inside the block-container
+        const blocks = Array.from(pageWrapper.querySelectorAll('.block-item'));
+    
+        // Sort the blocks based on their block-id attribute
+        blocks.sort((a, b) => {
+            const idA = parseInt(a.getAttribute('data-block-id'), 10);
+            const idB = parseInt(b.getAttribute('data-block-id'), 10);
+            return idA - idB; // Ascending order
+        });
+    
+        // Clear the block-container before re-appending the sorted blocks
+        pageWrapper.innerHTML = '';
+    
+        // Re-append the blocks in the sorted order
+        blocks.forEach(block => pageWrapper.appendChild(block));
+    
+        console.log('Blocks have been sorted and re-appended based on block-id');
+    }
+
+    function reinsertBlock(pageWrapper, blockId, innerHTML) {
+        const originalPosition = initialPositions.find(pos => pos.id === blockId);
+        console.log('Original position:', originalPosition);
+    
+        if (originalPosition) {
+            const blocks = pageWrapper.querySelectorAll('.block-item');
+            console.log('Blocks in pageWrapper:', blocks);
+    
+            // Adding debugging output for index details
+            console.log(`Attempting to insert block with ID: ${blockId} at original index: ${originalPosition.index}`);
+    
+            const newBlock = document.createElement('div');
+            newBlock.classList.add('block-item');
+            newBlock.setAttribute('data-block-id', blockId);
+            newBlock.setAttribute('data-page-id', 'block-container');
+            newBlock.innerHTML = innerHTML;
+            newBlock.setAttribute('draggable', true);
+            newBlock.addEventListener('dragstart', handleDragStart);
+            newBlock.addEventListener('dragend', handleDragEnd);
+    
+            if (originalPosition.index < blocks.length) {
+                const referenceNode = blocks[originalPosition.index];
+    
+                // Debugging output to ensure the correct reference node is identified
+                console.log(`Reference node index: ${originalPosition.index}, Node:`, referenceNode);
+    
+                if (referenceNode && referenceNode.parentNode === pageWrapper) {
+                    console.log(`Inserting before block at index: ${originalPosition.index}`);
+                    pageWrapper.insertBefore(newBlock, referenceNode);
+                } else {
+                    console.warn('Reference node does not belong to pageWrapper, appending to the end');
+                    pageWrapper.appendChild(newBlock);
+                }
+            } else {
+                console.log('Original index exceeds current blocks, appending block to the end');
+                pageWrapper.appendChild(newBlock);
+            }
+        } else {
+            console.warn('Original position not found, appending block to the end of pageWrapper');
+            const newBlock = document.createElement('div');
+            newBlock.classList.add('block-item');
+            newBlock.setAttribute('data-block-id', blockId);
+            newBlock.setAttribute('data-page-id', 'block-container');
+            newBlock.innerHTML = innerHTML;
+            newBlock.setAttribute('draggable', true);
+            newBlock.addEventListener('dragstart', handleDragStart);
+            newBlock.addEventListener('dragend', handleDragEnd);
+    
+            pageWrapper.appendChild(newBlock);
+        }
+    
+        console.log(`Restored block with ID: ${blockId}`);
     }
     
     function insertHtmlBlocks(blocks) {
@@ -155,7 +228,6 @@ document.addEventListener("DOMContentLoaded", function() {
             el.style.height = 'auto';
             el.style.height = (el.scrollHeight) + 'px';
         }
-        console.log('Original height:', el.style.height);
     }
 
     function initializeTextareaResizing() {
@@ -170,13 +242,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
         classes.forEach(className => {
             const textareas = document.querySelectorAll(`.${className}`);
-            console.log(`Textareas found for ${className}:`, textareas.length); // Debugging line
             textareas.forEach(textarea => {                                            
-            console.log('scrollHeight:', textarea.scrollHeight);
-            console.log('clientHeight:', textarea.clientHeight);
-            console.log('offsetHeight:', textarea.offsetHeight);
-            console.log('Computed line-height:', window.getComputedStyle(textarea).lineHeight);
-
+            
                 // Adjust height on page load
                 adjustTextareaHeight(textarea);
                 // Adjust height on input
@@ -326,9 +393,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function handleDragOver(e) {
         e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
         console.log('Drag over event');
-        
+         // Check if the drop target is a TEXTAREA or any other non-droppable area
+        if (e.target.tagName === 'TEXTAREA' || e.target.closest('.block-item')) {
+            e.dataTransfer.dropEffect = 'none'; // Indicate that drop is not allowed
+            return;
+        }
+        e.dataTransfer.dropEffect = 'move'; // Indicate that drop is allowed
+
         const targetPage = e.target.closest('.page');
         if (targetPage) {
             targetPage.classList.add('highlight-page'); // Add highlight class for pages                
@@ -350,13 +422,19 @@ document.addEventListener("DOMContentLoaded", function() {
    
     function handleDrop(e) {
         e.preventDefault();
+
+        // Ensure we are not dropping into a textarea or another block
+        if (e.target.classList.contains('block-item', 'block-content') || e.target.tagName === 'TEXTAREA') {
+            console.log('Cannot drop block inside another block or textarea');
+            return;
+}
         const blockId = e.dataTransfer.getData('block-id');
         const originalPageId = e.dataTransfer.getData('data-page-id');
         const innerHTML = e.dataTransfer.getData('text/plain');
         console.log(`Drop event for block ID: ${blockId} from page ID: ${originalPageId}`);
 
         // Ensure we are not dropping into a textarea or another block
-        if (event.target.classList.contains('block-item', 'block-content') || event.target.tagName === 'TEXTAREA') {
+        if (r.target.classList.contains('block-item', 'block-content') || event.target.tagName === 'TEXTAREA') {
             console.log('Cannot drop block inside another block or textarea');
             return;
 }
@@ -610,7 +688,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const newPage = document.querySelector(`[data-page-id="${newPageId}"] .block-container`);
         newPage.appendChild(block);
     }
-
+  
     // Handle the drop event on the trash area
     function handleTrashDrop(e) {
         e.preventDefault();
@@ -640,16 +718,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 console.log(`Removed duplicate block with ID: ${blockId} from block-container`);
             }
 
-            // Create a new block-item to be placed back in the block-container
-            const newBlock = document.createElement('div');
-            newBlock.classList.add('block-item');
-            newBlock.setAttribute('data-block-id', blockId);
-            newBlock.setAttribute('data-page-id', 'block-container');
-            newBlock.innerHTML = innerHTML;
-            newBlock.setAttribute('draggable', true);
-            newBlock.addEventListener('dragstart', handleDragStart);
-            newBlock.addEventListener('dragend', handleDragEnd);
-
             // Ensure the block is appended to the page wrapper inside blockContainer
             let pageWrapper = blockContainer.querySelector('.page');
             if (!pageWrapper) {
@@ -659,46 +727,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 blockContainer.appendChild(pageWrapper);
             }
 
-            // Debugging output
-            console.log('Page wrapper:', pageWrapper);
-            console.log('New block:', newBlock);
-
-            // Find the original position to insert the new block
-            const originalPosition = initialPositions.find(pos => pos.id === blockId);
-            console.log('Original position:', originalPosition);
-
-            if (originalPosition) {
-                const blocks = pageWrapper.querySelectorAll('.block-item');
-                console.log('Blocks in pageWrapper:', blocks);
-                console.log('Inserting at position:', originalPosition.index);
-
-                if (originalPosition.index < blocks.length) {
-                    const referenceNode = blocks[originalPosition.index];
-                    if (referenceNode && referenceNode.parentNode === pageWrapper) {
-                        console.log('Inserting before block at index:', originalPosition.index);
-                        pageWrapper.insertBefore(newBlock, referenceNode);
-                        console.log(`Moved block back to original position ${originalPosition.index} in block-container`);
-                    } else {
-                        console.warn('Reference node does not belong to pageWrapper, appending to the end');
-                        pageWrapper.appendChild(newBlock);
-                        console.log('Appended block to the end of block-container');
-                    }
-                } else {
-                    console.log('Appending block to the end of pageWrapper');
-                    pageWrapper.appendChild(newBlock);
-                    console.log('Appended block to the end of block-container');
-                }
+            // Reinsert the block using the refactored function
+        reinsertBlock(pageWrapper, blockId, innerHTML);
+        sortBlocksById();
             } else {
-                console.log('Original position not found, appending block to the end of pageWrapper');
-                pageWrapper.appendChild(newBlock);
-                console.log('Appended block to the end of block-container');
+                console.log('No data transferred');
             }
-
-            console.log(`Restored block with ID: ${blockId}`);
-        } else {
-            console.log('No data transferred');
-        }
-
         // Remove the "over" class and reset the background image
         trashArea.classList.remove('over');
         trashArea.style.backgroundImage = "url('./closed-mimic-trashcan.png')";
@@ -758,23 +792,8 @@ document.addEventListener("DOMContentLoaded", function() {
         initialPositions.forEach(pos => {
             const blockData = allBlocks.find(block => block.id === pos.id);
             if (blockData) {
-                const newBlock = document.createElement('div');
-                newBlock.classList.add('block-item');
-                newBlock.setAttribute('data-block-id', blockData.id);
-                newBlock.setAttribute('data-page-id', 'block-container');
-                newBlock.innerHTML = blockData.innerHTML;
-                newBlock.setAttribute('draggable', true);
-                newBlock.addEventListener('dragstart', handleDragStart);
-                newBlock.addEventListener('dragend', handleDragEnd);
-
-                const blocks = pageWrapper.querySelectorAll('.block-item');
-                if (pos.index < blocks.length) {
-                    pageWrapper.insertBefore(newBlock, blocks[pos.index]);
-                    console.log(`Moved block back to original position ${pos.index} in block-container`);
-                } else {
-                    pageWrapper.appendChild(newBlock);
-                    console.log('Appended block to the end of block-container');
-                }
+                reinsertBlock(pageWrapper, blockData.id, blockData.innerHTML);
+                sortBlocksById();
             }
         });
         createNewPage();
