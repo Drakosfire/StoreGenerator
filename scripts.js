@@ -353,28 +353,41 @@ document.addEventListener("DOMContentLoaded", function() {
             }
     function lockTextareas() {
         const textareas = blockContainer.querySelectorAll('textarea');
+        
         textareas.forEach(textarea => {
             textarea.setAttribute('disabled', true);
+            console.log(`Textarea with ID "${textarea.id}" is now disabled: ${textarea.disabled}`);
         });
-        const descriptionTextareas = blockContainer.querySelectorAll('description-textarea');
-        descriptionTextareas.forEach(descriptionTextareas => {
-            descriptionTextareas.setAttribute('disabled', false);
+        
+        const descriptionTextareas = blockContainer.querySelectorAll('.description-textarea');
+        
+        descriptionTextareas.forEach(descriptionTextarea => {
+            descriptionTextarea.removeAttribute('contenteditable');
+            console.log(`Description textarea with ID "${descriptionTextarea.id}" is now enabled: ${!descriptionTextarea.contenteditable}`);
         });
+        
         console.log('All textareas have been locked.');
     }
 
     function unlockTextareas() {
         const textareas = blockContainer.querySelectorAll('textarea');
+        
         textareas.forEach(textarea => {
             textarea.removeAttribute('disabled');
+            console.log(`Textarea with ID "${textarea.id}" is now enabled: ${!textarea.disabled}`);
         });
-        const descriptionTextareas = blockContainer.querySelectorAll('description-textarea');
-        textareas.forEach(descriptionTextareas => {
-            descriptionTextareas.setAttribute('disabled', True);
+        
+        const descriptionTextareas = blockContainer.querySelectorAll('.description-textarea');
+        
+        descriptionTextareas.forEach(descriptionTextarea => {
+            descriptionTextarea.removeAttribute('contenteditable');
+            console.log(`Description textarea with ID "${descriptionTextarea.id}" is now enabled: ${!descriptionTextarea.contenteditable}`);
+        });
+        
         console.log('All textareas have been unlocked.');
-        });
     }
-
+    
+        
     function handleDragStart(e) {
         lockTextareas();
         const target = e.target.closest('.block-item, .block-content');
