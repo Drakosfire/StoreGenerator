@@ -4,7 +4,7 @@ emoji:
 colorFrom: yellow
 colorTo: purple
 sdk: docker
-app_port:7860
+app_port: 7860
 ---
 
 #Store Generator
