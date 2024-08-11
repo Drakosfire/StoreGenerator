@@ -200,22 +200,17 @@ document.addEventListener("DOMContentLoaded", function() {
     function insertHtmlBlocks(blocks) {
         console.log('blockContainerPage = ', blockContainerPage)
         console.log('List of blocks:', blocks);
-        
         const parser = new DOMParser();
         
         blocks.forEach(blockHtml => {
             console.log('Original blockHtml:', blockHtml);
-            
             // Parse the HTML string
             const doc = parser.parseFromString(blockHtml, 'text/html');
-            console.log('Parsed document:', doc);
             const block = doc.body.firstChild;
-            console.log('Parsed block:', block);
             if (block) {
                 blockContainerPage.appendChild(block); // Append the parsed block to the container
                 console.log('Appended block:', block);
             }
-           
         });
         // console.log('Final state of blockContainer:', blockContainer.innerHTML);
         initializeTextareaResizing();
@@ -342,8 +337,31 @@ document.addEventListener("DOMContentLoaded", function() {
             console.error('Error:', error);
         });
             }
+    function lockTextareas() {
+        const textareas = blockContainer.querySelectorAll('textarea');
+        textareas.forEach(textarea => {
+            textarea.setAttribute('disabled', true);
+        });
+        const descriptionTextareas = blockContainer.querySelectorAll('description-textarea');
+        descriptionTextareas.forEach(descriptionTextareas => {
+            descriptionTextareas.setAttribute('disabled', false);
+        });
+        console.log('All textareas have been locked.');
+    }
 
+    function unlockTextareas() {
+        const textareas = blockContainer.querySelectorAll('textarea');
+        textareas.forEach(textarea => {
+            textarea.removeAttribute('disabled');
+        });
+        const descriptionTextareas = blockContainer.querySelectorAll('description-textarea');
+        textareas.forEach(descriptionTextareas => {
+            descriptionTextareas.setAttribute('disabled', True);
+        console.log('All textareas have been unlocked.');
+        });
+    }
     function handleDragStart(e) {
+        lockTextareas();
         const target = e.target.closest('.block-item, .block-content');
         if (!target) {
             console.error('Drag started for an element without a valid target');
@@ -359,6 +377,8 @@ document.addEventListener("DOMContentLoaded", function() {
             console.error('Drag started for an element without a data-page-id');
             return;
         }
+        
+        // Store the block ID and inner HTML in the data transfer object
         const innerHTML = target.innerHTML;
         e.dataTransfer.setData('block-id', blockId);
         e.dataTransfer.setData('text/plain', innerHTML); // Store inner HTML
@@ -393,7 +413,21 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function handleDragOver(e) {
         e.preventDefault();
-        console.log('Drag over event');
+        // Get the element currently under the cursor
+        const elementUnderCursor = document.elementFromPoint(e.clientX, e.clientY);
+
+        if (elementUnderCursor) {
+            // Check if the element is a block or textarea
+            if (elementUnderCursor.classList.contains('block-item')) {
+                console.log('Dragging over a block-item:', elementUnderCursor);
+                console.log('Block ID:', elementUnderCursor.getAttribute('data-block-id'));
+            } else if (elementUnderCursor.tagName === 'TEXTAREA') {
+                console.log('Dragging over a textarea:', elementUnderCursor);
+            } else {
+                // Log other elements if needed
+                console.log('Dragging over another element:', elementUnderCursor.tagName);
+            }
+        }  
          // Check if the drop target is a TEXTAREA or any other non-droppable area
         if (e.target.tagName === 'TEXTAREA' || e.target.closest('.block-item')) {
             e.dataTransfer.dropEffect = 'none'; // Indicate that drop is not allowed
@@ -418,26 +452,18 @@ document.addEventListener("DOMContentLoaded", function() {
                 targetBlock.classList.remove('highlight-block');
             }
         }
-    }
-   
+  
     function handleDrop(e) {
         e.preventDefault();
-
         // Ensure we are not dropping into a textarea or another block
-        if (e.target.classList.contains('block-item', 'block-content') || e.target.tagName === 'TEXTAREA') {
+        if (e.target.classList.contains('block-item', 'block-content', 'description-textarea') || e.target.tagName === 'TEXTAREA') {
             console.log('Cannot drop block inside another block or textarea');
             return;
-}
+        }
         const blockId = e.dataTransfer.getData('block-id');
         const originalPageId = e.dataTransfer.getData('data-page-id');
         const innerHTML = e.dataTransfer.getData('text/plain');
         console.log(`Drop event for block ID: ${blockId} from page ID: ${originalPageId}`);
-
-        // Ensure we are not dropping into a textarea or another block
-        if (r.target.classList.contains('block-item', 'block-content') || event.target.tagName === 'TEXTAREA') {
-            console.log('Cannot drop block inside another block or textarea');
-            return;
-}
         
         if (blockId && originalPageId) {
             const originalBlock = document.querySelector(`[data-block-id="${blockId}"]`);
@@ -525,6 +551,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
             // Ensure the column number is within valid bounds (1 or 2)
             const validColumnNumber = Math.min(Math.max(columnNumber, 1), 2);
+
+            unlockTextareas();
             return validColumnNumber;
         }
 
