@@ -125,7 +125,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function sortBlocksById() {
         // Select all blocks inside the block-container
-        const blocks = Array.from(pageWrapper.querySelectorAll('.block-item'));
+        const blocks = Array.from(blockContainerPage.querySelectorAll('.block-item'));
+        console.log('Blocks in blockContainerPage:', blocks);
     
         // Sort the blocks based on their block-id attribute
         blocks.sort((a, b) => {
@@ -135,21 +136,21 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     
         // Clear the block-container before re-appending the sorted blocks
-        pageWrapper.innerHTML = '';
+        blockContainerPage.innerHTML = '';
     
         // Re-append the blocks in the sorted order
-        blocks.forEach(block => pageWrapper.appendChild(block));
+        blocks.forEach(block => blockContainerPage.appendChild(block));
     
         console.log('Blocks have been sorted and re-appended based on block-id');
     }
 
-    function reinsertBlock(pageWrapper, blockId, innerHTML) {
+    function reinsertBlock(blockContainerPage, blockId, innerHTML) {
         const originalPosition = initialPositions.find(pos => pos.id === blockId);
         console.log('Original position:', originalPosition);
     
         if (originalPosition) {
-            const blocks = pageWrapper.querySelectorAll('.block-item');
-            console.log('Blocks in pageWrapper:', blocks);
+            const blocks = blockContainerPage.querySelectorAll('.block-item');
+            console.log('Blocks in blockContainerPage:', blocks);
     
             // Adding debugging output for index details
             console.log(`Attempting to insert block with ID: ${blockId} at original index: ${originalPosition.index}`);
@@ -169,19 +170,19 @@ document.addEventListener("DOMContentLoaded", function() {
                 // Debugging output to ensure the correct reference node is identified
                 console.log(`Reference node index: ${originalPosition.index}, Node:`, referenceNode);
     
-                if (referenceNode && referenceNode.parentNode === pageWrapper) {
+                if (referenceNode && referenceNode.parentNode === blockContainerPage) {
                     console.log(`Inserting before block at index: ${originalPosition.index}`);
-                    pageWrapper.insertBefore(newBlock, referenceNode);
+                    blockContainerPage.insertBefore(newBlock, referenceNode);
                 } else {
-                    console.warn('Reference node does not belong to pageWrapper, appending to the end');
-                    pageWrapper.appendChild(newBlock);
+                    console.warn('Reference node does not belong to blockContainerPage, appending to the end');
+                    blockContainerPage.appendChild(newBlock);
                 }
             } else {
                 console.log('Original index exceeds current blocks, appending block to the end');
-                pageWrapper.appendChild(newBlock);
+                blockContainerPage.appendChild(newBlock);
             }
         } else {
-            console.warn('Original position not found, appending block to the end of pageWrapper');
+            console.warn('Original position not found, appending block to the end of blockContainerPage');
             const newBlock = document.createElement('div');
             newBlock.classList.add('block-item');
             newBlock.setAttribute('data-block-id', blockId);
@@ -191,7 +192,7 @@ document.addEventListener("DOMContentLoaded", function() {
             newBlock.addEventListener('dragstart', handleDragStart);
             newBlock.addEventListener('dragend', handleDragEnd);
     
-            pageWrapper.appendChild(newBlock);
+            blockContainerPage.appendChild(newBlock);
         }
     
         console.log(`Restored block with ID: ${blockId}`);
@@ -254,44 +255,57 @@ document.addEventListener("DOMContentLoaded", function() {
     initializeTextareaResizing();
 
     async function extractBlocks() {
-        
         try {
             if (blockContainerPage.children.length > 0) {
                 console.log('Blocks already loaded, skipping fetch');
                 return;
             }
-            const response = await fetch('The_Mirage_Emporium.html');
+            
+            const response = await fetch('template_update.html');
             if (!response.ok) {
                 throw new Error('Network response was not ok ' + response.statusText);
             }
+            
             const text = await response.text();
             const parser = new DOMParser();
             const doc = parser.parseFromString(text, 'text/html');
-            const blocks = doc.querySelectorAll('[class^="Block_"]');
-
+            
+            // Selecting all elements with the 'block-item' class
+            const blocks = doc.querySelectorAll('.block-item');
             
             blocks.forEach((block, index) => {
                 const blockContent = block.innerHTML;
                 const blockItem = document.createElement('div');
                 blockItem.classList.add('block-item');
                 blockItem.innerHTML = blockContent;
+                
+                // Assigning unique block ID
                 const blockId = `block-${index}`;
                 blockItem.setAttribute('data-block-id', blockId);
+                
+                // Setting the page ID and other attributes
                 const pageId = 'block-container';
                 blockItem.setAttribute('data-page-id', pageId);
                 blockItem.setAttribute('draggable', true);
+                
+                // Add event listeners for drag and drop functionality
                 blockItem.addEventListener('dragstart', handleDragStart);
                 blockItem.addEventListener('dragend', handleDragEnd);
                 
                 console.log(`Loaded block with ID: ${blockId}`);
+                
+                // Append block to the container
                 blockContainerPage.appendChild(blockItem);
             });
             
+            // Store the initial positions of the blocks (if needed for drag and drop)
             storeInitialPositions();
+            
         } catch (error) {
-            console.error('Error fetching and parsing template.html:', error);
+            console.error('Error fetching and parsing template_update.html:', error);
         }
     }
+    
 
      blockContainer.addEventListener('click', function(event) {
         if (event.target && event.target.classList.contains('generate-image-button')) {
@@ -360,6 +374,7 @@ document.addEventListener("DOMContentLoaded", function() {
         console.log('All textareas have been unlocked.');
         });
     }
+
     function handleDragStart(e) {
         lockTextareas();
         const target = e.target.closest('.block-item, .block-content');
@@ -452,6 +467,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 targetBlock.classList.remove('highlight-block');
             }
         }
+    }
   
     function handleDrop(e) {
         e.preventDefault();
@@ -532,8 +548,8 @@ document.addEventListener("DOMContentLoaded", function() {
             adjustPageLayout(newPageId, targetColumn);
             } else {
             console.log('No data transferred');
-                            }
-                        }
+        }
+    }
                     
         function getColumnFromOffset(block, offset) {
             const page = block.closest('.page');
@@ -747,16 +763,16 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             // Ensure the block is appended to the page wrapper inside blockContainer
-            let pageWrapper = blockContainer.querySelector('.page');
-            if (!pageWrapper) {
-                pageWrapper = document.createElement('div');
-                pageWrapper.classList.add('page');
-                pageWrapper.setAttribute('data-page-id', 'block-container');
-                blockContainer.appendChild(pageWrapper);
+            let blockContainerPage = blockContainer.querySelector('.page');
+            if (!blockContainerPage) {
+                blockContainerPage = document.createElement('div');
+                blockContainerPage.classList.add('page');
+                blockContainerPage.setAttribute('data-page-id', 'block-container');
+                blockContainer.appendChild(blockContainerPage);
             }
 
             // Reinsert the block using the refactored function
-        reinsertBlock(pageWrapper, blockId, innerHTML);
+        reinsertBlock(blockContainerPage, blockId, innerHTML);
         sortBlocksById();
             } else {
                 console.log('No data transferred');
@@ -807,12 +823,12 @@ document.addEventListener("DOMContentLoaded", function() {
         blockContainer.innerHTML = '';
 
         // Reinsert blocks back into the blockContainer in their original order
-        let pageWrapper = blockContainer.querySelector('.page');
-        if (!pageWrapper) {
-            pageWrapper = document.createElement('div');
-            pageWrapper.classList.add('page');
-            pageWrapper.setAttribute('id', 'block-page');
-            blockContainer.appendChild(pageWrapper);
+        
+        if (!blockContainerPage) {
+            blockContainerPage = document.createElement('div');
+            blockContainerPage.classList.add('page');
+            blockContainerPage.setAttribute('id', 'block-page');
+            blockContainer.appendChild(blockContainerPage);
         }
         // Reassign blockContainerPage to the newly created block-page element
         blockContainerPage = document.getElementById('block-page');
@@ -820,7 +836,7 @@ document.addEventListener("DOMContentLoaded", function() {
         initialPositions.forEach(pos => {
             const blockData = allBlocks.find(block => block.id === pos.id);
             if (blockData) {
-                reinsertBlock(pageWrapper, blockData.id, blockData.innerHTML);
+                reinsertBlock(blockContainerPage, blockData.id, blockData.innerHTML);
                 sortBlocksById();
             }
         });
