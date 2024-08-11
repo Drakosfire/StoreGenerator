@@ -1,6 +1,6 @@
 ---
 title: Drakosfires Dungeons and Dragons Statblock Generator
-emoji: 
+emoji: 🏪
 colorFrom: yellow
 colorTo: purple
 sdk: docker
