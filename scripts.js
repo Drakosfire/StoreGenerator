@@ -669,7 +669,7 @@ document.addEventListener("DOMContentLoaded", function() {
             blocks.forEach((block, index) => {
                 const column = getColumnFromOffset(block, block.getBoundingClientRect().left);
                 columnHeights[column - 1] += block.offsetHeight;
-                if (columnHeights[targetColumn - 1] > MAX_COLUMN_HEIGHT && overflowStartIndex === -1) {
+                if (column === 2 && columnHeights[1] > MAX_COLUMN_HEIGHT && overflowStartIndex === -1) {
                     overflowStartIndex = index;
                 }
             });
@@ -681,22 +681,22 @@ document.addEventListener("DOMContentLoaded", function() {
             const overflowBlocks = blocks.slice(overflowStartIndex);
             const overflowHeight = overflowBlocks.reduce((acc, block) => acc + block.offsetHeight, 0);
 
-            // If the target column is the first column, check if the second column has enough space
-            if (targetColumn === 1) {
-                const secondColumnAvailableHeight = MAX_COLUMN_HEIGHT - columnHeights[1];
+            // // If the target column is the first column, check if the second column has enough space
+            // if (targetColumn === 1) {
+            //     const secondColumnAvailableHeight = MAX_COLUMN_HEIGHT - columnHeights[1];
               
-                if (overflowHeight <= secondColumnAvailableHeight) {
-                    // Move the overflowing blocks to the second column within the same page
-                    overflowBlocks.forEach(block => {
-                        const blockWrapper = block.closest('.block.monster.frame.wide');
-                        if (blockWrapper) {
-                            blockWrapper.appendChild(block);
-                            block.setAttribute('data-page-id', page.getAttribute('data-page-id'));
-                        }
-                    });
-                    return;
-                }
-            }
+            //     if (overflowHeight <= secondColumnAvailableHeight) {
+            //         // Move the overflowing blocks to the second column within the same page
+            //         overflowBlocks.forEach(block => {
+            //             const blockWrapper = block.closest('.block.monster.frame.wide');
+            //             if (blockWrapper) {
+            //                 blockWrapper.appendChild(block);
+            //                 block.setAttribute('data-page-id', page.getAttribute('data-page-id'));
+            //             }
+            //         });
+            //         return;
+            //     }
+            // }
 
              // Get the next page if it exists
             const nextPage = getNextPage(page);
@@ -719,15 +719,15 @@ document.addEventListener("DOMContentLoaded", function() {
                     return;
                 }
 
-                // If the next page's second column has enough space for overflow from the first column
-                if (targetColumn === 1 && nextPageColumnHeights[1] + overflowHeight <= MAX_COLUMN_HEIGHT) {
-                    const nextPageContainer = nextPage.querySelector('.block.monster.frame.wide');
-                    overflowBlocks.forEach(block => {
-                        nextPageContainer.appendChild(block);
-                        block.setAttribute('data-page-id', nextPage.getAttribute('data-page-id'));
-                    });
-                    return;
-                }
+                // // If the next page's second column has enough space for overflow from the first column
+                // if (targetColumn === 1 && nextPageColumnHeights[1] + overflowHeight <= MAX_COLUMN_HEIGHT) {
+                //     const nextPageContainer = nextPage.querySelector('.block.monster.frame.wide');
+                //     overflowBlocks.forEach(block => {
+                //         nextPageContainer.appendChild(block);
+                //         block.setAttribute('data-page-id', nextPage.getAttribute('data-page-id'));
+                //     });
+                //     return;
+                // }
             }
 
             // Otherwise, create a new page and move the overflowing blocks there
@@ -741,19 +741,19 @@ document.addEventListener("DOMContentLoaded", function() {
                 console.error('New monster frame not found in the new page');
                 return;
             }
-
             
             overflowBlocks.forEach(block => {
                 newMonsterFrame.appendChild(block);
+                block.setAttribute('data-page-id', newPage.getAttribute('data-page-id'));
             });
             console.log(`Moved overflowing blocks to new page with ID: ${newPage.getAttribute('data-page-id')}`);
         }
 
-        // Utility function to get the next page element
-        function getNextPage(currentPage) {
-            const nextPageId = parseInt(currentPage.getAttribute('data-page-id').split('-')[1]) + 1;
-            return document.querySelector(`[data-page-id="page-${nextPageId}"]`);
-        }
+    // Utility function to get the next page element
+    function getNextPage(currentPage) {
+        const nextPageId = parseInt(currentPage.getAttribute('data-page-id').split('-')[1]) + 1;
+        return document.querySelector(`[data-page-id="page-${nextPageId}"]`);
+    }
 
     // Handle the drop event on the trash area
     function handleTrashDrop(e) {
