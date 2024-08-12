@@ -90,23 +90,44 @@ document.addEventListener("DOMContentLoaded", function() {
     .catch((error) => {
         console.error('Error:', error);
     });
-});
-    // Print Function
+    });
+
+    const headHTMLString = `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link href="./dependencies/all.css" rel="stylesheet" />
+            <link href="./dependencies/css.css?family=Open+Sans:400,300,600,700" rel="stylesheet" type="text/css" />
+            <link href='./dependencies/bundle.css' rel='stylesheet' />
+            <link href="./dependencies/style.css" rel='stylesheet' />
+            <link href="./dependencies/5ePHBstyle.css" rel='stylesheet' />
+            <link href="./storeUI.css" rel='stylesheet' />  
+            <title>DnD Stat Block</title>
+            <link rel="stylesheet" href="styles.css">
+            <script src="https://unpkg.com/htmx.org@1.7.0/dist/htmx.min.js"></script>
+        </head>
+        <body>`;
     window.printPageContainer = function() {
         var pageContainer = document.getElementById('pages');
         if (pageContainer) {
-            var printContents = pageContainer.innerHTML;
-            var originalContents = document.body.innerHTML;
-
-            document.body.innerHTML = printContents;
-
-            window.print();
-
-            document.body.innerHTML = originalContents;
+            var printWindow = window.open('', '', 'height=800,width=600');
+            printWindow.document.write(headHTMLString);
+            printWindow.document.write(pageContainer.innerHTML);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.focus();
+            
+            // Wait for the content to be fully loaded before printing
+            printWindow.onload = function() {
+                printWindow.print();
+                printWindow.close(); // Close the print window after printing
+            };
         } else {
-            console.error('Element with ID "pageContainer" not found.');
+            console.error('Element with ID "pages" not found.');
         }
-    }
+    };
+
 
     // Store initial positions of the blocks
     function storeInitialPositions() {
