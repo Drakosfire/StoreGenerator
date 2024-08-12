@@ -1,5 +1,5 @@
 ---
-title: Drakosfires Dungeons and Dragons Statblock Generator
+title: Drakosfires Dungeons and Dragons Store Generator
 emoji: 🏪
 colorFrom: yellow
 colorTo: purple
