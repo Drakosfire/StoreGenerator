@@ -63,7 +63,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const userInput = document.getElementById('user-description').value;
     // Clear the block container before inserting new blocks
     blockContainerPage.innerHTML = '';
-
+    document.getElementById('add-page-button').addEventListener('click', addPage);
+    document.getElementById('remove-page-button').addEventListener('click', removePage);
 
     fetch('http://127.0.0.1:5000/process-description', {
         method: 'POST',
@@ -352,42 +353,38 @@ document.addEventListener("DOMContentLoaded", function() {
         });
             }
     function lockTextareas() {
-        const textareas = blockContainer.querySelectorAll('textarea');
+        const textareas = document.querySelectorAll('textarea');
         
         textareas.forEach(textarea => {
             textarea.setAttribute('disabled', true);
-            console.log(`Textarea with ID "${textarea.id}" is now disabled: ${textarea.disabled}`);
         });
         
-        const descriptionTextareas = blockContainer.querySelectorAll('.description-textarea');
+        const descriptionTextareas = document.querySelectorAll('.description-textarea');
         
         descriptionTextareas.forEach(descriptionTextarea => {
             descriptionTextarea.removeAttribute('contenteditable');
-            console.log(`Description textarea with ID "${descriptionTextarea.id}" is now enabled: ${!descriptionTextarea.contenteditable}`);
         });
         
         console.log('All textareas have been locked.');
     }
 
     function unlockTextareas() {
-        const textareas = blockContainer.querySelectorAll('textarea');
+        const textareas = document.querySelectorAll('textarea');
         
         textareas.forEach(textarea => {
             textarea.removeAttribute('disabled');
-            console.log(`Textarea with ID "${textarea.id}" is now enabled: ${!textarea.disabled}`);
         });
         
-        const descriptionTextareas = blockContainer.querySelectorAll('.description-textarea');
+        const descriptionTextareas = document.querySelectorAll('.description-textarea');
         
         descriptionTextareas.forEach(descriptionTextarea => {
-            descriptionTextarea.removeAttribute('contenteditable');
-            console.log(`Description textarea with ID "${descriptionTextarea.id}" is now enabled: ${!descriptionTextarea.contenteditable}`);
+            descriptionTextarea.setAttribute('contenteditable', 'true');
+            console.log(`Contenteditable for element with ID "${descriptionTextarea.id}" is now: ${descriptionTextarea.contentEditable}`);
         });
         
         console.log('All textareas have been unlocked.');
     }
     
-        
     function handleDragStart(e) {
         lockTextareas();
         const target = e.target.closest('.block-item, .block-content');
@@ -503,6 +500,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Ensure the original block exists before proceeding
             if (!originalBlock || !newPage) {
                 console.error(`Block with ID ${blockId} on page ${originalPageId} not found`);
+                unlockTextareas();
                 return;
             }
 
@@ -534,9 +532,11 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (offset > bounding.height / 2) {
                     console.log('Inserting after the target');
                     target.parentNode.insertBefore(newBlockContent, target.nextSibling);
+                    unlockTextareas();
                 } else {
                     console.log('Inserting before the target');
                     target.parentNode.insertBefore(newBlockContent, target);
+                    unlockTextareas();
                 }
 
                 // Remove highlight borders
@@ -545,6 +545,7 @@ document.addEventListener("DOMContentLoaded", function() {
             } else {
                 console.log('No valid drop target found, appending to the end');
                 newPage.querySelector('.block.monster.frame.wide').appendChild(newBlockContent);
+                unlockTextareas();
             }
 
             // Remove the original block from the original container
@@ -562,6 +563,7 @@ document.addEventListener("DOMContentLoaded", function() {
             } else {
             console.log('No data transferred');
         }
+        
     }
                     
         function getColumnFromOffset(block, offset) {
@@ -581,7 +583,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Ensure the column number is within valid bounds (1 or 2)
             const validColumnNumber = Math.min(Math.max(columnNumber, 1), 2);
 
-            unlockTextareas();
+            
             return validColumnNumber;
         }
 
@@ -617,7 +619,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         let pageCounter = 1;
         // Function to create new page
-        function createNewPage() {
+        function addPage() {
             const newPage = document.createElement('div');
             newPage.classList.add('page');
             newPage.setAttribute('data-page-id', `page-${pageCounter}`);
@@ -642,6 +644,18 @@ document.addEventListener("DOMContentLoaded", function() {
 
             pageCounter++;
             return newPage;
+        }
+
+        function removePage() {
+            const pages = pageContainer.querySelectorAll('.page');
+        
+            if (pages.length > 1) { // Ensure at least one page remains
+                const lastPage = pages[pages.length - 1];
+                pageContainer.removeChild(lastPage);
+                console.log(`Page removed with ID: ${lastPage.id}`);
+            } else {
+                console.log('Cannot remove the last page.');
+            }
         }
 
         function handleColumnOverflow(page, targetColumn) {
@@ -716,7 +730,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             // Otherwise, create a new page and move the overflowing blocks there
-            const newPage = createNewPage();
+            const newPage = addPage();
             if (!newPage) {
                 console.error('Failed to create a new page');
                 return;
@@ -740,12 +754,6 @@ document.addEventListener("DOMContentLoaded", function() {
             return document.querySelector(`[data-page-id="page-${nextPageId}"]`);
         }
 
-    function moveBlockToPage(block, newPageId) {
-        block.setAttribute('data-page-id', newPageId);
-        const newPage = document.querySelector(`[data-page-id="${newPageId}"] .block-container`);
-        newPage.appendChild(block);
-    }
-  
     // Handle the drop event on the trash area
     function handleTrashDrop(e) {
         e.preventDefault();
@@ -853,11 +861,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 sortBlocksById();
             }
         });
-        createNewPage();
+        addPage();
 
         console.log('Reset complete, all blocks moved back to block-container');
         initializeTextareaResizing();
     }
+   
+
 
     pageContainer.addEventListener('dragover', handleDragOver);
     pageContainer.addEventListener('drop', handleDrop);
