@@ -149,8 +149,11 @@ document.addEventListener("DOMContentLoaded", function() {
                     </html>
                 `);
         
-                printWindow.document.close();
-                printWindow.focus(); // Optional: Bring the window to the front
+               // Wait for the content to be fully loaded before printing
+            printWindow.onload = function() {
+            printWindow.print();
+            printWindow.close(); // Close the print window after printing
+                };
             } else {
                 console.error('Element with ID "pages" not found.');
             }

@@ -1,8 +1,3 @@
-import re, fileinput, sys
-import utilities as u
-import os
-import ast
-
 # block_id is a global variable that is used to keep track of the current block id
 block_id = 0
 

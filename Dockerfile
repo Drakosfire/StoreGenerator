@@ -21,10 +21,11 @@ COPY --chown=user . $HOME/app
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Expose port 5000 for the Flask app
-EXPOSE 5000
+EXPOSE 7860
 
 # Define environment variable to ensure Flask runs the correct application
 ENV FLASK_APP=app.py
+ENV FLASK_ENV=production  
 
 # Command to run the Flask app
 CMD ["flask", "run", "--host=0.0.0.0", "--port=7860"]
