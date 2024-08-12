@@ -433,6 +433,8 @@ document.addEventListener("DOMContentLoaded", function() {
         document.querySelectorAll('.highlight-page').forEach(el => el.classList.remove('highlight-page'));
         document.querySelectorAll('.highlight-block').forEach(el => el.classList.remove('highlight-block'));
         document.querySelectorAll('.highlight-block-top').forEach(el => el.classList.remove('highlight-block-top'));
+        unlockTextareas()
+
     }
 
     function handleDragOver(e) {
@@ -499,7 +501,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Ensure the original block exists before proceeding
             if (!originalBlock || !newPage) {
                 console.error(`Block with ID ${blockId} on page ${originalPageId} not found`);
-                unlockTextareas();
+                
                 return;
             }
 
@@ -531,11 +533,11 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (offset > bounding.height / 2) {
                     console.log('Inserting after the target');
                     target.parentNode.insertBefore(newBlockContent, target.nextSibling);
-                    unlockTextareas();
+                   
                 } else {
                     console.log('Inserting before the target');
                     target.parentNode.insertBefore(newBlockContent, target);
-                    unlockTextareas();
+                    
                 }
 
                 // Remove highlight borders
@@ -544,7 +546,7 @@ document.addEventListener("DOMContentLoaded", function() {
             } else {
                 console.log('No valid drop target found, appending to the end');
                 newPage.querySelector('.block.monster.frame.wide').appendChild(newBlockContent);
-                unlockTextareas();
+                
             }
 
             // Remove the original block from the original container
@@ -800,7 +802,7 @@ document.addEventListener("DOMContentLoaded", function() {
         // Remove the "over" class and reset the background image
         trashArea.classList.remove('over');
         trashArea.style.backgroundImage = "url('./closed-mimic-trashcan.png')";
-        unlockTextareas()
+        
         initializeTextareaResizing();
     }
 
@@ -868,7 +870,8 @@ document.addEventListener("DOMContentLoaded", function() {
     }
    
 
-
+    blockContainer.addEventListener('dragover', handleDragOver);
+    blockContainer.addEventListener('drop', handleDrop);
     pageContainer.addEventListener('dragover', handleDragOver);
     pageContainer.addEventListener('drop', handleDrop);
     
