@@ -108,25 +108,53 @@ document.addEventListener("DOMContentLoaded", function() {
             <script src="https://unpkg.com/htmx.org@1.7.0/dist/htmx.min.js"></script>
         </head>
         <body>`;
-    window.printPageContainer = function() {
-        var pageContainer = document.getElementById('pages');
-        if (pageContainer) {
-            var printWindow = window.open('', '', 'height=800,width=600');
-            printWindow.document.write(headHTMLString);
-            printWindow.document.write(pageContainer.innerHTML);
-            printWindow.document.write('</body></html>');
-            printWindow.document.close();
-            printWindow.focus();
-            
-            // Wait for the content to be fully loaded before printing
-            printWindow.onload = function() {
-                printWindow.print();
-                printWindow.close(); // Close the print window after printing
-            };
-        } else {
-            console.error('Element with ID "pages" not found.');
-        }
-    };
+        window.printPageContainer = function() {
+            var pageContainer = document.getElementById('brewRenderer');
+            if (pageContainer) {
+                var printWindow = window.open('', 'Print Preview', 'height=800,width=600');
+                
+                printWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html lang="en">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <link href="./dependencies/all.css" rel="stylesheet">
+                        <link href="./dependencies/css.css?family=Open+Sans:400,300,600,700" rel="stylesheet" type="text/css">
+                        <link href="./dependencies/bundle.css" rel="stylesheet">
+                        <link href="./dependencies/style.css" rel="stylesheet">
+                        <link href="./dependencies/5ePHBstyle.css" rel="stylesheet">
+                        <link href="./storeUI.css" rel="stylesheet">  
+                        <title>Print Preview - DnD Stat Block</title>
+                        <link rel="stylesheet" href="styles.css">
+                        <style>
+                            @media print {
+                                
+                                .page {
+                                    page-break-before: auto;
+                                    page-break-after: avoid;
+                                    page-break-inside: avoid;
+                                    
+                                }
+                                .columnWrapper {
+                                    overflow: visible;
+                                }
+                               
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        ${pageContainer.innerHTML}
+                    </body>
+                    </html>
+                `);
+        
+                printWindow.document.close();
+                printWindow.focus(); // Optional: Bring the window to the front
+            } else {
+                console.error('Element with ID "pages" not found.');
+            }
+        };
 
 
     // Store initial positions of the blocks
@@ -702,23 +730,6 @@ document.addEventListener("DOMContentLoaded", function() {
             const overflowBlocks = blocks.slice(overflowStartIndex);
             const overflowHeight = overflowBlocks.reduce((acc, block) => acc + block.offsetHeight, 0);
 
-            // // If the target column is the first column, check if the second column has enough space
-            // if (targetColumn === 1) {
-            //     const secondColumnAvailableHeight = MAX_COLUMN_HEIGHT - columnHeights[1];
-              
-            //     if (overflowHeight <= secondColumnAvailableHeight) {
-            //         // Move the overflowing blocks to the second column within the same page
-            //         overflowBlocks.forEach(block => {
-            //             const blockWrapper = block.closest('.block.monster.frame.wide');
-            //             if (blockWrapper) {
-            //                 blockWrapper.appendChild(block);
-            //                 block.setAttribute('data-page-id', page.getAttribute('data-page-id'));
-            //             }
-            //         });
-            //         return;
-            //     }
-            // }
-
              // Get the next page if it exists
             const nextPage = getNextPage(page);
             if (nextPage) {
@@ -739,16 +750,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     });
                     return;
                 }
-
-                // // If the next page's second column has enough space for overflow from the first column
-                // if (targetColumn === 1 && nextPageColumnHeights[1] + overflowHeight <= MAX_COLUMN_HEIGHT) {
-                //     const nextPageContainer = nextPage.querySelector('.block.monster.frame.wide');
-                //     overflowBlocks.forEach(block => {
-                //         nextPageContainer.appendChild(block);
-                //         block.setAttribute('data-page-id', nextPage.getAttribute('data-page-id'));
-                //     });
-                //     return;
-                // }
             }
 
             // Otherwise, create a new page and move the overflowing blocks there
