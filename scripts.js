@@ -379,7 +379,6 @@ document.addEventListener("DOMContentLoaded", function() {
         
         descriptionTextareas.forEach(descriptionTextarea => {
             descriptionTextarea.setAttribute('contenteditable', 'true');
-            console.log(`Contenteditable for element with ID "${descriptionTextarea.id}" is now: ${descriptionTextarea.contentEditable}`);
         });
         
         console.log('All textareas have been unlocked.');
@@ -801,6 +800,7 @@ document.addEventListener("DOMContentLoaded", function() {
         // Remove the "over" class and reset the background image
         trashArea.classList.remove('over');
         trashArea.style.backgroundImage = "url('./closed-mimic-trashcan.png')";
+        unlockTextareas()
         initializeTextareaResizing();
     }
 
