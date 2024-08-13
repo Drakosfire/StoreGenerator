@@ -96,12 +96,17 @@ document.addEventListener("DOMContentLoaded", function() {
         var pageContainer = document.getElementById('brewRenderer');
         if (pageContainer) {
             var printWindow = window.open('', 'Print Preview', 'height=800,width=600');
-            // if (!printWindow) {
-            //     console.error('Failed to open print window.');
-            //     return;
-            // }
+            if (!printWindow) {
+                console.error('Failed to open print window.');
+                return;
+            }
 
-            console.log('Page container content:', pageContainer.innerHTML);  // Debugging line
+            // Introduce a small delay to allow the window to fully instantiate
+            setTimeout(function() {
+                if (!printWindow || printWindow.closed || typeof printWindow.closed == 'undefined') {
+                    console.error('Failed to open print window.');
+                    return;
+                }
             
             printWindow.document.write(`
                 <!DOCTYPE html>
@@ -138,6 +143,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 </body>
                 </html>
             `);
+        }, 100); // Delay of 100 milliseconds
     
             // Wait for the content to be fully loaded before printing
         printWindow.onload = function() {
