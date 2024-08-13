@@ -94,21 +94,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
     window.printPageContainer = function() {
         var pageContainer = document.getElementById('brewRenderer');
-        if (pageContainer) {
-            var printWindow = window.open('', 'Print Preview', 'height=800,width=600');
-            if (!printWindow) {
-                console.error('Failed to open print window.');
-                return;
-            }
-
-            // Introduce a small delay to allow the window to fully instantiate
-            setTimeout(function() {
-                if (!printWindow || printWindow.closed || typeof printWindow.closed == 'undefined') {
-                    console.error('Failed to open print window.');
-                    return;
-                }
             
-            printWindow.document.write(`
+            htmlContent = `
                 <!DOCTYPE html>
                 <html lang="en">
                 <head>
@@ -142,16 +129,18 @@ document.addEventListener("DOMContentLoaded", function() {
                     ${pageContainer.innerHTML}
                 </body>
                 </html>
-            `);
-        }, 100); // Delay of 100 milliseconds
-    
-            // Wait for the content to be fully loaded before printing
-        printWindow.onload = function() {
-        printWindow.print();
-        printWindow.close(); // Close the print window after printing
-            };
+            `;
+            // Open a new tab
+        const newTab = window.open('', '_blank');
+
+        // Check if the new tab was blocked
+        if (newTab) {
+            // Write the HTML content to the new tab
+            newTab.document.open();
+            newTab.document.write(htmlContent);
+            newTab.document.close();
         } else {
-            console.error('Element with ID "pages" not found.');
+            console.error('Failed to open a new tab. It may have been blocked by the browser.');
         }
     };
 
