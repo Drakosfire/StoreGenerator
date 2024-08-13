@@ -96,10 +96,10 @@ document.addEventListener("DOMContentLoaded", function() {
         var pageContainer = document.getElementById('brewRenderer');
         if (pageContainer) {
             var printWindow = window.open('', 'Print Preview', 'height=800,width=600');
-            if (!printWindow) {
-                console.error('Failed to open print window.');
-                return;
-            }
+            // if (!printWindow) {
+            //     console.error('Failed to open print window.');
+            //     return;
+            // }
 
             console.log('Page container content:', pageContainer.innerHTML);  // Debugging line
             
