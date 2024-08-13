@@ -63,8 +63,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const userInput = document.getElementById('user-description').value;
     // Clear the block container before inserting new blocks
     blockContainerPage.innerHTML = '';
-    document.getElementById('add-page-button').addEventListener('click', addPage);
-    document.getElementById('remove-page-button').addEventListener('click', removePage);
+    // document.getElementById('add-page-button').addEventListener('click', addPage);
+    // document.getElementById('remove-page-button').addEventListener('click', removePage);
 
     fetch('http://127.0.0.1:5000/process-description', {
         method: 'POST',
