@@ -384,7 +384,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         const sdPrompt = sdPromptElement.value;
 
-        fetch('http://127.0.0.1:5000/generate-image', {
+        fetch('/generate-image', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -404,6 +404,7 @@ document.addEventListener("DOMContentLoaded", function() {
             console.error('Error:', error);
         });
             }
+
     function lockTextareas() {
         const textareas = document.querySelectorAll('textarea');
         
