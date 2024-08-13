@@ -59,6 +59,22 @@
       box-sizing: border-box; /* Include padding and border in the element's total width and height */
   }
   
+  @media print {
+ 
+    .page {
+        page-break-before: auto;
+        page-break-after: avoid;
+        page-break-inside: avoid;
+       
+    }
+    .columnWrapper {
+        overflow: visible;
+    }
+    .block-content {
+        margin-bottom: 0;
+    }
+}
+
   
   .page {
       column-count: 2;
@@ -145,8 +161,8 @@
       transition: transform 0.3s;
   }
   .block-item:hover {
-     /* transform: translateY(-5px);
-      background-color: rgba(255, 255, 255, 0.5); /* Slightly visible background on hover */
+    transform: translateY(-5px);
+    background-color: rgba(255, 255, 255, 0.5); /* Slightly visible background on hover */
   }
   
   .block-item img {

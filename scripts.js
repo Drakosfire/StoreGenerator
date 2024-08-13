@@ -92,22 +92,6 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     });
 
-    const headHTMLString = `<!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <link href="./dependencies/all.css" rel="stylesheet" />
-            <link href="./dependencies/css.css?family=Open+Sans:400,300,600,700" rel="stylesheet" type="text/css" />
-            <link href='./dependencies/bundle.css' rel='stylesheet' />
-            <link href="./dependencies/style.css" rel='stylesheet' />
-            <link href="./dependencies/5ePHBstyle.css" rel='stylesheet' />
-            <link href="./storeUI.css" rel='stylesheet' />  
-            <title>DnD Stat Block</title>
-            <link rel="stylesheet" href="styles.css">
-            <script src="https://unpkg.com/htmx.org@1.7.0/dist/htmx.min.js"></script>
-        </head>
-        <body>`;
         window.printPageContainer = function() {
             var pageContainer = document.getElementById('brewRenderer');
             if (pageContainer) {
