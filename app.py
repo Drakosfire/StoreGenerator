@@ -1,11 +1,9 @@
 # this imports the code from files and modules
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS 
-import utilities as u
 import os
 import ctypes
 import store_helper as sh
-import process_text
 import block_builder
 import sd_generator as sd
 
@@ -15,13 +13,25 @@ M_MMAP_THRESHOLD = -3
 
 # Set malloc mmap threshold.
 libc.mallopt(M_MMAP_THRESHOLD, 2**20)
-# Ensure the directory exists
-
-
 
 # Initialize the Flask application
 app = Flask(__name__)
 os.makedirs('static/images', exist_ok=True)
+
+# Serve files from the 'dependencies' directory
+@app.route('/dependencies/<path:filename>')
+def custom_static(filename):
+    return send_from_directory('dependencies', filename)
+
+# Serve HTML files from the main directory
+@app.route('/<path:filename>')
+def serve_html(filename):
+    return send_from_directory('.', filename)
+
+# Default route for index
+@app.route('/')
+def index():
+    return send_from_directory('.', 'storeUI.html')  # Make sure this points to your main HTML file
 
 CORS(app)# Route to handle the incoming POST request with user description
 
@@ -57,5 +67,5 @@ def generate_image():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=7860)
