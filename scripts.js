@@ -92,56 +92,62 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     });
 
-        window.printPageContainer = function() {
-            var pageContainer = document.getElementById('brewRenderer');
-            if (pageContainer) {
-                var printWindow = window.open('', 'Print Preview', 'height=800,width=600');
-                
-                printWindow.document.write(`
-                    <!DOCTYPE html>
-                    <html lang="en">
-                    <head>
-                        <meta charset="UTF-8">
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <link href="./dependencies/all.css" rel="stylesheet">
-                        <link href="./dependencies/css.css?family=Open+Sans:400,300,600,700" rel="stylesheet" type="text/css">
-                        <link href="./dependencies/bundle.css" rel="stylesheet">
-                        <link href="./dependencies/style.css" rel="stylesheet">
-                        <link href="./dependencies/5ePHBstyle.css" rel="stylesheet">
-                        <link href="./storeUI.css" rel="stylesheet">  
-                        <title>Print Preview - DnD Stat Block</title>
-                        <link rel="stylesheet" href="styles.css">
-                        <style>
-                            @media print {
-                                
-                                .page {
-                                    page-break-before: auto;
-                                    page-break-after: avoid;
-                                    page-break-inside: avoid;
-                                    
-                                }
-                                .columnWrapper {
-                                    overflow: visible;
-                                }
-                               
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        ${pageContainer.innerHTML}
-                    </body>
-                    </html>
-                `);
-        
-               // Wait for the content to be fully loaded before printing
-            printWindow.onload = function() {
-            printWindow.print();
-            printWindow.close(); // Close the print window after printing
-                };
-            } else {
-                console.error('Element with ID "pages" not found.');
+    window.printPageContainer = function() {
+        var pageContainer = document.getElementById('brewRenderer');
+        if (pageContainer) {
+            var printWindow = window.open('', 'Print Preview', 'height=800,width=600');
+            if (!printWindow) {
+                console.error('Failed to open print window.');
+                return;
             }
-        };
+
+            console.log('Page container content:', pageContainer.innerHTML);  // Debugging line
+            
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <link href="./dependencies/all.css" rel="stylesheet">
+                    <link href="./dependencies/css.css?family=Open+Sans:400,300,600,700" rel="stylesheet" type="text/css">
+                    <link href="./dependencies/bundle.css" rel="stylesheet">
+                    <link href="./dependencies/style.css" rel="stylesheet">
+                    <link href="./dependencies/5ePHBstyle.css" rel="stylesheet">
+                    <link href="./storeUI.css" rel="stylesheet">  
+                    <title>Print Preview - DnD Stat Block</title>
+                    <link rel="stylesheet" href="styles.css">
+                    <style>
+                        @media print {
+                            
+                            .page {
+                                page-break-before: auto;
+                                page-break-after: avoid;
+                                page-break-inside: avoid;
+                                
+                            }
+                            .columnWrapper {
+                                overflow: visible;
+                            }
+                            
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${pageContainer.innerHTML}
+                </body>
+                </html>
+            `);
+    
+            // Wait for the content to be fully loaded before printing
+        printWindow.onload = function() {
+        printWindow.print();
+        printWindow.close(); // Close the print window after printing
+            };
+        } else {
+            console.error('Element with ID "pages" not found.');
+        }
+    };
 
 
     // Store initial positions of the blocks
