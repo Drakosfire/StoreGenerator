@@ -91,8 +91,17 @@ document.addEventListener("DOMContentLoaded", function() {
         console.error('Error:', error);
     });
     });
-
-    window.printPageContainer = function() {
+    document.getElementById('printButton').addEventListener('click', function() {
+        const newTab = window.open('', '_blank');
+        
+        if (newTab) {
+            // Call the function to write content
+            window.printPageContainer(newTab);
+        } else {
+            console.error('Failed to open a new tab. It may have been blocked by the browser.');
+        }
+    });
+    window.printPageContainer = function(newTab) {
         var pageContainer = document.getElementById('brewRenderer');
             
             htmlContent = `
@@ -131,8 +140,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 </html>
             `;
             // Open a new tab
-        const newTab = window.open('', '_blank');
-
+        
         // Check if the new tab was blocked
         if (newTab) {
             // Write the HTML content to the new tab
