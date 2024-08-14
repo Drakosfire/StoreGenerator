@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // document.getElementById('add-page-button').addEventListener('click', addPage);
     // document.getElementById('remove-page-button').addEventListener('click', removePage);
 
-    fetch('http://127.0.0.1:5000/process-description', {
+    fetch('/process-description', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -283,8 +283,11 @@ document.addEventListener("DOMContentLoaded", function() {
         ];
 
         classes.forEach(className => {
+            console.log('Initializing textareas for class:', className);
+            console.log(document.querySelectorAll(`.${className}`));
             const textareas = document.querySelectorAll(`.${className}`);
-            textareas.forEach(textarea => {                                            
+            textareas.forEach(textarea => {  
+                console.log('Textarea found:', textarea);                                          
             
                 // Adjust height on page load
                 adjustTextareaHeight(textarea);
@@ -297,8 +300,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // Initial run on page load
-    initializeTextareaResizing();
+
 
     async function extractBlocks() {
         try {
@@ -350,6 +352,7 @@ document.addEventListener("DOMContentLoaded", function() {
         } catch (error) {
             console.error('Error fetching and parsing template_update.html:', error);
         }
+        initializeTextareaResizing();
     }
     
 
