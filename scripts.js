@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const trashArea = document.getElementById('trashArea');
     const toggleButton = document.getElementById('toggle-text-block-button');
     const resetButton = document.getElementById('resetButton');
+    const addPageButton = document.getElementById('add-page-button');
+    const removePageButton = document.getElementById('remove-page-button');
     let currentPage = pageContainer.querySelector('.block.monster.frame.wide');
     const modal = document.getElementById('imageModal');
     const modalImg = document.getElementById('modalImage');
@@ -302,6 +304,7 @@ document.addEventListener("DOMContentLoaded", function() {
             'properties-textarea',
             'string-stat-textarea',
             'string-action-description-textarea',
+            'image-textarea'
         ];
 
         classes.forEach(className => {
@@ -387,11 +390,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Function to generate image
     function generateImage(blockId) {
-        const sdPromptElement = document.getElementById(`user-storefront-prompt-${blockId}`);
+        const sdPromptElement = document.getElementById(`sdprompt-${blockId}`);
         const imageElement = document.getElementById(`generated-image-${blockId}`);
         
         if (!sdPromptElement) {
-            console.error('Element with ID user-storefront-prompt not found');
+            console.error('Element with ID sdprompt not found');
             return;
         }
 
@@ -720,11 +723,20 @@ document.addEventListener("DOMContentLoaded", function() {
 
         function removePage() {
             const pages = pageContainer.querySelectorAll('.page');
-        
+            
             if (pages.length > 1) { // Ensure at least one page remains
                 const lastPage = pages[pages.length - 1];
-                pageContainer.removeChild(lastPage);
-                console.log(`Page removed with ID: ${lastPage.id}`);
+                const blocks = lastPage.querySelectorAll('.block-content'); // Check for blocks inside the last page
+        
+                if (blocks.length > 0) {
+                    // If blocks are present, block the removal and display a warning
+                    console.log(`Cannot remove page with ID: ${lastPage.id} because it contains ${blocks.length} block(s).`);
+                    alert(`Cannot remove this page because it contains ${blocks.length} block(s). Please remove the blocks first.`);
+                } else {
+                    // If no blocks are present, allow removal
+                    pageContainer.removeChild(lastPage);
+                    console.log(`Page removed with ID: ${lastPage.id}`);
+                }
             } else {
                 console.log('Cannot remove the last page.');
             }
@@ -912,7 +924,9 @@ document.addEventListener("DOMContentLoaded", function() {
         console.log('Reset complete, all blocks moved back to block-container');
         initializeTextareaResizing();
     }
-    
+
+    addPageButton.addEventListener('click', addPage);
+    removePageButton.addEventListener('click', removePage);
     toggleButton.addEventListener('click', toggleAllTextBlocks);
     blockContainer.addEventListener('dragover', handleDragOver);
     blockContainer.addEventListener('drop', handleDrop);
