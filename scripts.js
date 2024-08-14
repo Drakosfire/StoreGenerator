@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let blockContainerPage = document.getElementById('block-page');
     const pageContainer = document.getElementById('pages');
     const trashArea = document.getElementById('trashArea');
+    const toggleButton = document.getElementById('toggle-text-block-button');
     const resetButton = document.getElementById('resetButton');
     let currentPage = pageContainer.querySelector('.block.monster.frame.wide');
     const modal = document.getElementById('imageModal');
@@ -35,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     
     // Event delegation for image clicks
-    blockContainer.addEventListener('click', function(event) {
+    document.addEventListener('click', function(event) {
         console.log('Click detected in blockContainer:', event.target);
         if (event.target.tagName === 'IMG' && event.target.id.startsWith('generated-image-')) {
             console.log('Image clicked for modal display. Image ID:', event.target.id);
@@ -101,6 +102,27 @@ document.addEventListener("DOMContentLoaded", function() {
             console.error('Failed to open a new tab. It may have been blocked by the browser.');
         }
     });
+
+    function toggleAllTextBlocks() {
+        const pageContainer = document.querySelector('.page-container');
+        const textareas = pageContainer.querySelectorAll('.image-textarea');
+        const generateButtons = pageContainer.querySelectorAll('.generate-image-button');
+    
+        let isAnyVisible = Array.from(textareas).some(textarea => textarea.style.display === 'block');
+    
+        if (isAnyVisible) {
+            // Hide all textareas and buttons
+            textareas.forEach(textarea => textarea.style.display = 'none');
+            generateButtons.forEach(btn => btn.style.display = 'none');
+            document.querySelector('.toggle-text-block-button').textContent = 'Show All Image Descriptions';
+        } else {
+            // Show all textareas and buttons
+            textareas.forEach(textarea => textarea.style.display = 'block');
+            generateButtons.forEach(btn => btn.style.display = 'inline-block');
+            document.querySelector('.toggle-text-block-button').textContent = 'Hide All Image Descriptions';
+        }
+    }
+    
     window.printPageContainer = function(newTab) {
         var pageContainer = document.getElementById('brewRenderer');
             
@@ -356,7 +378,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     
 
-     blockContainer.addEventListener('click', function(event) {
+     document.addEventListener('click', function(event) {
         if (event.target && event.target.classList.contains('generate-image-button')) {
             const blockId = event.target.getAttribute('data-block-id');
             generateImage(blockId);
@@ -890,8 +912,8 @@ document.addEventListener("DOMContentLoaded", function() {
         console.log('Reset complete, all blocks moved back to block-container');
         initializeTextareaResizing();
     }
-   
-
+    
+    toggleButton.addEventListener('click', toggleAllTextBlocks);
     blockContainer.addEventListener('dragover', handleDragOver);
     blockContainer.addEventListener('drop', handleDrop);
     pageContainer.addEventListener('dragover', handleDragOver);
