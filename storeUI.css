@@ -470,6 +470,41 @@
       resize: none; /* Prevents the textarea from being manually resizable */
       overflow: hidden; /* Hide scrollbars */
   }
+
+    .image-textarea {
+        width: 100%;
+        height: 16px;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 16px;
+        margin-bottom: 0;
+        box-sizing: border-box;
+        border: 0;
+        font-family: "ScalySansRemake";
+        vertical-align: baseline;
+        margin: 0;
+        padding: 0;
+        overflow-wrap: break-word;
+        text-rendering: optimizeLegibility;
+        background: none;
+        resize: none; /* Prevents the textarea from being manually resizable */
+        overflow: hidden; /* Hide scrollbars */
+    }
+
+        .page-container .image-textarea {
+            display: none; /* Hidden by default when in .page-container */
+    }
+
+        .page-container .block-content:hover .image-textarea {
+            display: block; /* Show when hovering over .block-content */
+    }
+    .page-container .generate-image-button {
+        display: none; /* Hidden by default when in .page-container */
+    }
+    
+    .page-container .block-content:hover .generate-image-button {
+        display: inline-block; /* Show the button on hover */
+    }
   
   .block.monster.frame.wide {
       column-count: inherit;
