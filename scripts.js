@@ -877,53 +877,78 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function handleReset() {
-        console.log('Reset button clicked');
+    console.log('Reset button clicked');
+    
+    // Collect all blocks from all pages
+    const allBlocks = [];
+    const pages = document.querySelectorAll('.page');
+    
+    pages.forEach(page => {
+        console.log(`Processing page with ID: ${page.getAttribute('data-page-id')}`);
         
-        // Collect all blocks from all pages
-        const allBlocks = [];
-        const pages = document.querySelectorAll('.page');
-        pages.forEach(page => {
-            const blocksOnPage = page.querySelectorAll('[data-block-id]');
-            blocksOnPage.forEach(block => {
-                const blockId = block.getAttribute('data-block-id');
-                allBlocks.push({
-                    id: blockId,
-                    innerHTML: block.innerHTML
-                });
-                block.remove();
-                console.log(`Removed block with ID: ${blockId} from page ID: ${page.getAttribute('data-page-id')}`);
+        const blocksOnPage = page.querySelectorAll('[data-block-id]');
+        
+        blocksOnPage.forEach(block => {
+            const blockId = block.getAttribute('data-block-id');
+            allBlocks.push({
+                id: blockId,
+                innerHTML: block.innerHTML
             });
+            block.remove();
+            console.log(`Removed block with ID: ${blockId} from page ID: ${page.getAttribute('data-page-id')}`);
         });
+    });
 
-        // Clear all pages
-        pages.forEach(page => page.remove());
+    // Log blocks collected
+    console.log('All blocks collected:', allBlocks);
 
-        // Clear blockContainer before reinserting blocks
-        blockContainer.innerHTML = '';
+    // Clear all pages
+    pages.forEach(page => {
+        console.log(`Removing page with ID: ${page.getAttribute('data-page-id')}`);
+        page.remove();
+    });
 
-        // Reinsert blocks back into the blockContainer in their original order
-        
-        if (!blockContainerPage) {
-            blockContainerPage = document.createElement('div');
-            blockContainerPage.classList.add('page');
-            blockContainerPage.setAttribute('id', 'block-page');
-            blockContainer.appendChild(blockContainerPage);
-        }
-        // Reassign blockContainerPage to the newly created block-page element
-        blockContainerPage = document.getElementById('block-page');
+    // Clear blockContainer before reinserting blocks
+    console.log('Clearing blockContainer...');
+    blockContainer.innerHTML = '';
 
-        initialPositions.forEach(pos => {
-            const blockData = allBlocks.find(block => block.id === pos.id);
-            if (blockData) {
-                reinsertBlock(blockContainerPage, blockData.id, blockData.innerHTML);
-                sortBlocksById();
-            }
-        });
-        addPage();
-
-        console.log('Reset complete, all blocks moved back to block-container');
-        initializeTextareaResizing();
+    // Check and create blockContainerPage if it doesn't exist
+    let blockContainerPage = document.getElementById('block-page');
+    if (!blockContainerPage) {
+        blockContainerPage = document.createElement('div');
+        blockContainerPage.classList.add('page');
+        blockContainerPage.setAttribute('id', 'block-page');
+        blockContainer.appendChild(blockContainerPage);
+        console.log('Created new blockContainerPage');
+    } else {
+        console.log('blockContainerPage already exists');
     }
+
+    // Reassign blockContainerPage to the newly created block-page element
+    
+    console.log('blockContainerPage reassigned to:', blockContainerPage);
+
+    // Reinsert blocks back into the blockContainer in their original order
+    initialPositions.forEach(pos => {
+        const blockData = allBlocks.find(block => block.id === pos.id);
+        
+        if (blockData) {
+            console.log(`Reinserting block with ID: ${blockData.id} into blockContainerPage`);
+            reinsertBlock(blockContainerPage, blockData.id, blockData.innerHTML);
+            sortBlocksById();
+        } else {
+            console.log(`Block with ID: ${pos.id} not found in collected blocks.`);
+        }
+    });
+
+    // Add a new page after reset
+    addPage();
+    console.log('Added new page after reset.');
+
+    console.log('Reset complete, all blocks moved back to block-container');
+    initializeTextareaResizing();
+}
+
 
     addPageButton.addEventListener('click', addPage);
     removePageButton.addEventListener('click', removePage);
