@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Iterate over each block and move it to the pageContainer
         blocks.forEach(block => {
-            block.setAttribute('class', 'block-content');
+            block.setAttribute('class', 'block-page');
             block.setAttribute('data-page-id', currentPage.getAttribute('data-page-id'));
             // Append the block to the current page's columnWrapper
             const newPage = currentPage.querySelector('.block.monster.frame.wide');
@@ -493,7 +493,7 @@ document.addEventListener("DOMContentLoaded", function() {
     
     function handleDragStart(e) {
         lockTextareas();
-        const target = e.target.closest('.block-item, .block-content');
+        const target = e.target.closest('.block-item, .block-page');
         if (!target) {
             console.error('Drag started for an element without a valid target');
             return;
@@ -529,7 +529,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function handleDragEnd(e) {
-        const target = e.target.closest('.block-item, .block-content');
+        const target = e.target.closest('.block-item, .block-page');
         if (target) {
             target.style.opacity = '1'; // Reset the opacity
             const blockId = target.getAttribute('data-block-id');
@@ -573,7 +573,7 @@ document.addEventListener("DOMContentLoaded", function() {
             targetPage.classList.add('highlight-page'); // Add highlight class for pages                
             }
 
-        const targetBlock = e.target.closest('.block-item, .block-content');
+        const targetBlock = e.target.closest('.block-item, .block-page');
         if (targetBlock) {
             const bounding = targetBlock.getBoundingClientRect();
             const offset = e.clientY - bounding.top;
@@ -590,7 +590,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function handleDrop(e) {
         e.preventDefault();
         // Ensure we are not dropping into a textarea or another block
-        if (e.target.classList.contains('block-item', 'block-content', 'description-textarea') || e.target.tagName === 'TEXTAREA') {
+        if (e.target.classList.contains('block-item', 'block-page', 'description-textarea') || e.target.tagName === 'TEXTAREA') {
             console.log('Cannot drop block inside another block or textarea');
             return;
         }
@@ -613,7 +613,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             const newBlockContent = document.createElement('div');
-            newBlockContent.classList.add('block-content');
+            newBlockContent.classList.add('block-page');
             newBlockContent.innerHTML = originalBlock.innerHTML; // Transfer inner content only
 
             // Add necessary attributes and event listeners
@@ -624,7 +624,7 @@ document.addEventListener("DOMContentLoaded", function() {
             newBlockContent.addEventListener('dragstart', handleDragStart);
             newBlockContent.addEventListener('dragend', handleDragEnd);
 
-            const target = e.target.closest('.block-item, .block-content');
+            const target = e.target.closest('.block-item, .block-page');
             let targetColumn = 1;
             if (target) {
                 const bounding = target.getBoundingClientRect();
@@ -699,7 +699,7 @@ document.addEventListener("DOMContentLoaded", function() {
          // Function to get the height of a column by index
         function getColumnHeights(pageElement) {
             const columns = [0, 0]; // Assuming two columns for simplicity
-            const blocks = pageElement.querySelectorAll('.block-content');
+            const blocks = pageElement.querySelectorAll('.block-page');
             blocks.forEach(block => {
                 const column = getColumnFromOffset(block, block.getBoundingClientRect().left);
                 columns[column - 1] += block.offsetHeight;
@@ -759,7 +759,7 @@ document.addEventListener("DOMContentLoaded", function() {
             
             if (pages.length > 1) { // Ensure at least one page remains
                 const lastPage = pages[pages.length - 1];
-                const blocks = lastPage.querySelectorAll('.block-content'); // Check for blocks inside the last page
+                const blocks = lastPage.querySelectorAll('.block-page'); // Check for blocks inside the last page
         
                 if (blocks.length > 0) {
                     // If blocks are present, block the removal and display a warning
@@ -777,7 +777,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         function handleColumnOverflow(page, targetColumn) {
             console.log(`Handling overflow for page ID: ${page.getAttribute('data-page-id')} in column ${targetColumn}`);
-            const blocks = Array.from(page.querySelectorAll('.block-content'));
+            const blocks = Array.from(page.querySelectorAll('.block-page'));
             let columnHeights = [0, 0];
             let overflowStartIndex = -1;
 
@@ -800,7 +800,7 @@ document.addEventListener("DOMContentLoaded", function() {
              // Get the next page if it exists
             const nextPage = getNextPage(page);
             if (nextPage) {
-                const nextPageBlocks = nextPage.querySelectorAll('.block-content, .block-item');
+                const nextPageBlocks = nextPage.querySelectorAll('.block-page, .block-item');
                 let nextPageColumnHeights = [0, 0];
 
                 nextPageBlocks.forEach(block => {
@@ -854,7 +854,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         if (innerHTML && blockId) {
             // Find the dragged element and remove it from the DOM
-            let draggedElement = document.querySelector(`[data-block-id="${blockId}"].block-content`);
+            let draggedElement = document.querySelector(`[data-block-id="${blockId}"].block-page`);
             if (!draggedElement) {
                 draggedElement = document.querySelector(`[data-block-id="${blockId}"].block-item`);
             }
@@ -864,7 +864,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             // Check if the block already exists in the block-container and remove it if it does
-            let existingBlock = blockContainer.querySelector(`[data-block-id="${blockId}"].block-content`);
+            let existingBlock = blockContainer.querySelector(`[data-block-id="${blockId}"].block-page`);
             if (!existingBlock) {
                 existingBlock = blockContainer.querySelector(`[data-block-id="${blockId}"].block-item`);
             }

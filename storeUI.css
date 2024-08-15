@@ -135,7 +135,7 @@
   }
   
   /* Ensure the h1 tag is constrained within its column */
-  .block-content h1 {
+  .block-page h1 {
       column-span: none;
       box-sizing: border-box; /* Include padding and border in the element's total width and height */
       margin: 0 auto; /* Center the h1 within the column */

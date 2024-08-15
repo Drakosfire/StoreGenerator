@@ -76,24 +76,29 @@ def convert_to_dict(string):
   
 
 # Instructions past 4 are not time tested and may need to be removed.
-### Meta prompted : 
+### System prompt : 
 initial_prompt_instructions = """ **Purpose**: ONLY Generate a structured json following the provided format. The job is to generate a store with character, style, detail, and a healthy splash of fun, fantasy, and weird. You do not need to stick strictly to the rules and mechanics of the game, if it fits the style and flavor of the user input, get weird, scary, or silly with the details. You will also be writing interesting flavor text and description of the location and it's atmopshere, and a brief one sentence image generation prompts. Us a wide range of words, you have certain words you use too often, avoid them ex : "whimsical", "unwavering".
 
-Image Generation Prompt Examples :
-"A highly detailed fantasy oil painting of an elderly full body female gnome,in a costume shop. The gnome is wearing a costume with wings, with a costume hat . The gnome has distinct fantasy features, such as pointed ears and a small, sturdy build.  "
+store_front_sd_prompt should be from the exterior, emphasize the store's architecture, style, and atmosphere and exclude descriptions of the owner.
 
-"A highly detailed fantasy drawing of a middle-aged full body male dwarf in a bustling butcher shop. The dwarf is wearing a bloodstained apron and a butcher's hat. The shop is filled with hanging meats, freshly cut steaks, and various sausages. The dwarf has distinct fantasy features, such as a long braided beard and a stout, muscular build. The background shows the hustle and bustle of Market Square outside the shop window."
+storefront_sd_prompt Examples :
+"A highly detailed fantasy painting of the exterior of a bustling magic shop. The shop is adorned with glowing runes, enchanted crystals, and mystical artifacts. The shop sign reads "Arcane Emporium" in elegant script. The street is filled with magical creatures, floating lanterns, and colorful stalls. "
 
-"A highly detailed fantasy image of a shady-looking full body male goblin in a dimly lit pawn shop. The goblin is wearing a patched vest and a tattered hat. The shop is cluttered with various items, including old weapons, dusty artifacts, and strange trinkets. The goblin has distinct fantasy features, such as green skin, sharp teeth, and pointed ears. The background is filled with shadows and the glint of hidden treasures."
+"A highly detailed fantasy drawing of the entrance to a mysterious alchemy shop. The shop is hidden down a narrow alley, with a flickering lantern above the door. The shop sign reads "Elixir Emporium" in faded letters. The alley is filled with shadows, strange smells, and the distant sound of bubbling potions. "
 
-"A highly detailed fantasy photo of a scholarly full body female elf in an elegant parchment shop. The elf is wearing a flowing robe and a delicate circlet. The shop is filled with scrolls, quills, and ancient tomes. The elf has distinct fantasy features, such as pointed ears and a slender, graceful build. The background shows the interior of the shop with shelves lined with parchment and ink bottles, and a large window letting in natural light."
+"A highly detailed fantasy photo of the front of a grand weapon shop. The shop is decorated with suits of armor, hanging banners, and a large sword embedded in the stone facade. The shop sign reads "Ironclad Armory" in bold letters. The street is filled with armored guards, clashing swords, and the sound of ringing anvils. "
 
-"A highly detailed fantasy painting of a mysterious full body male tiefling in a mystical magic shop. The tiefling is wearing a long cloak and a hood, with glowing runes on his hands. The shop is filled with potions, spellbooks, and enchanted artifacts. The tiefling has distinct fantasy features, such as red skin, horns, and a tail. The background is filled with a magical aura, with various mystical items floating in the air and a crystal ball on the counter."
+Owner and Employee Generation Prompt Examples :
+"A highly detailed fantasy oil painting portrait of a wise and mysterious shop owner. The owner is an elderly elf with silver hair, a long beard, and piercing blue eyes. They wear flowing robes, a jeweled amulet, and a crown of thorns. The owner is surrounded by magical artifacts, ancient tomes, and glowing crystals."
+
+"A highly detailed fantasy charcoal sketch of a quirky and eccentric shop employee. The employee is a young gnome with wild hair, mismatched eyes, and a mischievous grin. They wear patched clothes, a bandolier of potions, and a pet dragon perched on their shoulder. The employee is surrounded by alchemical ingredients, bubbling cauldrons, and floating spellbooks."
+
+"A highly detailed fantasy watercolor painting of a stoic and intimidating shop security guard. The guard is a massive half-orc with a shaved head, a scarred face, and a stern expression. They wear heavy armor, a massive sword, and a shield emblazoned with a roaring lion. The guard is surrounded by chained beasts, locked chests, and glowing runes."
 
 1. Only output file structure starting with { and ending with } it is CRITICAL to end with a }, DO NOT say anything, don't add ''' or json"
 2. DO NOT use null, use "". 
 3. All keys and values MUST be enclosed in double quotes. ""
-4. Services and specialties should have name, description, and prices.
+4. Services and specialties should have name, description, and prices. 
 5. sd_prompts should specify race or species
 6. quests MUST be detailed, and interesting, preferably unexpected, delightful and memorable. 
 7. The reward for the quest MUST be specific and detailed!
