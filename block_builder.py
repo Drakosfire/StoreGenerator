@@ -163,8 +163,8 @@ def build_title_block(title,description,backstory,reputation):
 def build_image_block(sd_prompt, block_id):
     image_block_html = f"""
     <div class="block-item" data-block-id="{block_id}">
-        <textarea class="string-action-description-textarea" id="user-storefront-prompt-{block_id}"
-                  hx-post="/update-stats" hx-trigger="change" hx-target="#user-sd-prompt" hx-swap="outerHTML"
+        <textarea class="image-textarea" id="sdprompt-{block_id}"
+                  hx-post="/update-stats" hx-trigger="change" hx-target="#sd-prompt-{block_id}" hx-swap="outerHTML"
                   title="Storefront image description">{sd_prompt}</textarea>
         <button class="generate-image-button" data-block-id="{block_id}">Generate Image</button>
         <img id="generated-image-{block_id}" alt="" style="display: none; cursor: pointer;">

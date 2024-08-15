@@ -5,7 +5,10 @@ document.addEventListener("DOMContentLoaded", function() {
     let blockContainerPage = document.getElementById('block-page');
     const pageContainer = document.getElementById('pages');
     const trashArea = document.getElementById('trashArea');
+    const toggleButton = document.getElementById('toggle-text-block-button');
     const resetButton = document.getElementById('resetButton');
+    const addPageButton = document.getElementById('add-page-button');
+    const removePageButton = document.getElementById('remove-page-button');
     let currentPage = pageContainer.querySelector('.block.monster.frame.wide');
     const modal = document.getElementById('imageModal');
     const modalImg = document.getElementById('modalImage');
@@ -35,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     
     // Event delegation for image clicks
-    blockContainer.addEventListener('click', function(event) {
+    document.addEventListener('click', function(event) {
         console.log('Click detected in blockContainer:', event.target);
         if (event.target.tagName === 'IMG' && event.target.id.startsWith('generated-image-')) {
             console.log('Image clicked for modal display. Image ID:', event.target.id);
@@ -66,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // document.getElementById('add-page-button').addEventListener('click', addPage);
     // document.getElementById('remove-page-button').addEventListener('click', removePage);
 
-    fetch('http://127.0.0.1:5000/process-description', {
+    fetch('/process-description', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -91,19 +94,41 @@ document.addEventListener("DOMContentLoaded", function() {
         console.error('Error:', error);
     });
     });
+    document.getElementById('printButton').addEventListener('click', function() {
+        const newTab = window.open('', '_blank');
+        
+        if (newTab) {
+            // Call the function to write content
+            window.printPageContainer(newTab);
+        } else {
+            console.error('Failed to open a new tab. It may have been blocked by the browser.');
+        }
+    });
 
-    window.printPageContainer = function() {
+    function toggleAllTextBlocks() {
+        const pageContainer = document.querySelector('.page-container');
+        const textareas = pageContainer.querySelectorAll('.image-textarea');
+        const generateButtons = pageContainer.querySelectorAll('.generate-image-button');
+    
+        let isAnyVisible = Array.from(textareas).some(textarea => textarea.style.display === 'block');
+    
+        if (isAnyVisible) {
+            // Hide all textareas and buttons
+            textareas.forEach(textarea => textarea.style.display = 'none');
+            generateButtons.forEach(btn => btn.style.display = 'none');
+            document.querySelector('.toggle-text-block-button').textContent = 'Show All Image Descriptions';
+        } else {
+            // Show all textareas and buttons
+            textareas.forEach(textarea => textarea.style.display = 'block');
+            generateButtons.forEach(btn => btn.style.display = 'inline-block');
+            document.querySelector('.toggle-text-block-button').textContent = 'Hide All Image Descriptions';
+        }
+    }
+    
+    window.printPageContainer = function(newTab) {
         var pageContainer = document.getElementById('brewRenderer');
-        if (pageContainer) {
-            var printWindow = window.open('', 'Print Preview', 'height=800,width=600');
-            // if (!printWindow) {
-            //     console.error('Failed to open print window.');
-            //     return;
-            // }
-
-            console.log('Page container content:', pageContainer.innerHTML);  // Debugging line
             
-            printWindow.document.write(`
+            htmlContent = `
                 <!DOCTYPE html>
                 <html lang="en">
                 <head>
@@ -137,15 +162,17 @@ document.addEventListener("DOMContentLoaded", function() {
                     ${pageContainer.innerHTML}
                 </body>
                 </html>
-            `);
-    
-            // Wait for the content to be fully loaded before printing
-        printWindow.onload = function() {
-        printWindow.print();
-        printWindow.close(); // Close the print window after printing
-            };
+            `;
+            // Open a new tab
+        
+        // Check if the new tab was blocked
+        if (newTab) {
+            // Write the HTML content to the new tab
+            newTab.document.open();
+            newTab.document.write(htmlContent);
+            newTab.document.close();
         } else {
-            console.error('Element with ID "pages" not found.');
+            console.error('Failed to open a new tab. It may have been blocked by the browser.');
         }
     };
 
@@ -277,11 +304,15 @@ document.addEventListener("DOMContentLoaded", function() {
             'properties-textarea',
             'string-stat-textarea',
             'string-action-description-textarea',
+            'image-textarea'
         ];
 
         classes.forEach(className => {
+            console.log('Initializing textareas for class:', className);
+            console.log(document.querySelectorAll(`.${className}`));
             const textareas = document.querySelectorAll(`.${className}`);
-            textareas.forEach(textarea => {                                            
+            textareas.forEach(textarea => {  
+                console.log('Textarea found:', textarea);                                          
             
                 // Adjust height on page load
                 adjustTextareaHeight(textarea);
@@ -294,8 +325,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // Initial run on page load
-    initializeTextareaResizing();
+
 
     async function extractBlocks() {
         try {
@@ -347,10 +377,11 @@ document.addEventListener("DOMContentLoaded", function() {
         } catch (error) {
             console.error('Error fetching and parsing template_update.html:', error);
         }
+        initializeTextareaResizing();
     }
     
 
-     blockContainer.addEventListener('click', function(event) {
+     document.addEventListener('click', function(event) {
         if (event.target && event.target.classList.contains('generate-image-button')) {
             const blockId = event.target.getAttribute('data-block-id');
             generateImage(blockId);
@@ -359,11 +390,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Function to generate image
     function generateImage(blockId) {
-        const sdPromptElement = document.getElementById(`user-storefront-prompt-${blockId}`);
+        const sdPromptElement = document.getElementById(`sdprompt-${blockId}`);
         const imageElement = document.getElementById(`generated-image-${blockId}`);
         
         if (!sdPromptElement) {
-            console.error('Element with ID user-storefront-prompt not found');
+            console.error('Element with ID sdprompt not found');
             return;
         }
 
@@ -692,11 +723,20 @@ document.addEventListener("DOMContentLoaded", function() {
 
         function removePage() {
             const pages = pageContainer.querySelectorAll('.page');
-        
+            
             if (pages.length > 1) { // Ensure at least one page remains
                 const lastPage = pages[pages.length - 1];
-                pageContainer.removeChild(lastPage);
-                console.log(`Page removed with ID: ${lastPage.id}`);
+                const blocks = lastPage.querySelectorAll('.block-content'); // Check for blocks inside the last page
+        
+                if (blocks.length > 0) {
+                    // If blocks are present, block the removal and display a warning
+                    console.log(`Cannot remove page with ID: ${lastPage.id} because it contains ${blocks.length} block(s).`);
+                    alert(`Cannot remove this page because it contains ${blocks.length} block(s). Please remove the blocks first.`);
+                } else {
+                    // If no blocks are present, allow removal
+                    pageContainer.removeChild(lastPage);
+                    console.log(`Page removed with ID: ${lastPage.id}`);
+                }
             } else {
                 console.log('Cannot remove the last page.');
             }
@@ -884,8 +924,10 @@ document.addEventListener("DOMContentLoaded", function() {
         console.log('Reset complete, all blocks moved back to block-container');
         initializeTextareaResizing();
     }
-   
 
+    addPageButton.addEventListener('click', addPage);
+    removePageButton.addEventListener('click', removePage);
+    toggleButton.addEventListener('click', toggleAllTextBlocks);
     blockContainer.addEventListener('dragover', handleDragOver);
     blockContainer.addEventListener('drop', handleDrop);
     pageContainer.addEventListener('dragover', handleDragOver);
