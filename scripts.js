@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const pageContainer = document.getElementById('pages');
     const trashArea = document.getElementById('trashArea');
     const toggleButton = document.getElementById('toggle-text-block-button');
+    const autofillButton = document.getElementById('autofill-button');
     const resetButton = document.getElementById('resetButton');
     const addPageButton = document.getElementById('add-page-button');
     const removePageButton = document.getElementById('remove-page-button');
@@ -124,7 +125,39 @@ document.addEventListener("DOMContentLoaded", function() {
             document.querySelector('.toggle-text-block-button').textContent = 'Hide All Image Descriptions';
         }
     }
-    
+    function autofillBlocks() {
+        console.log('Autofill button clicked');
+
+        const blocks = Array.from(blockContainer.querySelectorAll('.block-item'));        
+        let currentPage = pageContainer.querySelector('.page'); 
+        // If no existing page is found, create the first page
+        if (!currentPage) {
+            currentPage = addPage();
+            console.log('No existing pages found. Created the first page:', currentPage.id);
+        }
+
+        // Iterate over each block and move it to the pageContainer
+        blocks.forEach(block => {
+            block.setAttribute('class', 'block-content');
+            block.setAttribute('data-page-id', currentPage.getAttribute('data-page-id'));
+            // Append the block to the current page's columnWrapper
+            const newPage = currentPage.querySelector('.block.monster.frame.wide');
+            newPage.appendChild(block);
+            console.log(`Moved block with ID: ${block.getAttribute('data-block-id')} to page with ID: ${currentPage.getAttribute('data-page-id')}`);
+            // Adjust the layout after adding the block; this function handles creating a new page if needed
+            adjustPageLayout(currentPage.getAttribute('data-page-id'));
+
+            // Check if a new page was created and update curtrrentPage accordingly
+            const lastPageInContainer = pageContainer.querySelector('.page:last-child');
+            if (lastPageInContainer !== currentPage) {
+                currentPage = lastPageInContainer;
+                console.log('Moved to a new page:', currentPage.getAttribute('data-page-id'));            }
+
+           
+
+        });
+        console.log('Autofill complete, all blocks moved to page-container');
+    }
     window.printPageContainer = function(newTab) {
         var pageContainer = document.getElementById('brewRenderer');
             
@@ -889,6 +922,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const blocksOnPage = page.querySelectorAll('[data-block-id]');
         
         blocksOnPage.forEach(block => {
+            block.setAttribute('display', 'block');
             const blockId = block.getAttribute('data-block-id');
             allBlocks.push({
                 id: blockId,
@@ -949,15 +983,19 @@ document.addEventListener("DOMContentLoaded", function() {
     initializeTextareaResizing();
 }
 
-
+    // Event listeners for buttons
     addPageButton.addEventListener('click', addPage);
     removePageButton.addEventListener('click', removePage);
     toggleButton.addEventListener('click', toggleAllTextBlocks);
+    autofillButton.addEventListener('click', autofillBlocks);
+    
+    // Event listeners for drag and drop functionality
     blockContainer.addEventListener('dragover', handleDragOver);
     blockContainer.addEventListener('drop', handleDrop);
     pageContainer.addEventListener('dragover', handleDragOver);
     pageContainer.addEventListener('drop', handleDrop);
     
+    // Event listeners for trash area
     trashArea.addEventListener('dragover', handleTrashOver);
     trashArea.addEventListener('dragleave', handleTrashLeave);
     trashArea.addEventListener('drop', handleTrashDrop);
