@@ -151,10 +151,8 @@ document.addEventListener("DOMContentLoaded", function() {
             const lastPageInContainer = pageContainer.querySelector('.page:last-child');
             if (lastPageInContainer !== currentPage) {
                 currentPage = lastPageInContainer;
-                console.log('Moved to a new page:', currentPage.getAttribute('data-page-id'));            }
-
-           
-
+                console.log('Moved to a new page:', currentPage.getAttribute('data-page-id'));            
+            }
         });
         console.log('Autofill complete, all blocks moved to page-container');
     }
@@ -180,9 +178,6 @@ document.addEventListener("DOMContentLoaded", function() {
                             
                             .page {
                                 page-break-before: auto;
-                                page-break-after: avoid;
-                                page-break-inside: avoid;
-                                
                             }
                             .columnWrapper {
                                 overflow: visible;
@@ -192,7 +187,11 @@ document.addEventListener("DOMContentLoaded", function() {
                     </style>
                 </head>
                 <body>
-                    ${pageContainer.innerHTML}
+                    <div id="pageContainer" class="page-container">
+                        <div id= "brewRenderer" class="brewRenderer">
+                            ${pageContainer.innerHTML}
+                        </div>
+                    </div>
                 </body>
                 </html>
             `;
@@ -322,10 +321,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     storeInitialPositions();
 
-    function adjustTextareaHeight(el) {
+    function adjustTextareaHeight(el, offset = 0) {
         if (el.scrollHeight > 16){
             el.style.height = 'auto';
-            el.style.height = (el.scrollHeight) + 'px';
+            el.style.height = (el.scrollHeight) + offset + 'px';
         }
     }
 
@@ -337,10 +336,18 @@ document.addEventListener("DOMContentLoaded", function() {
             'properties-textarea',
             'string-stat-textarea',
             'string-action-description-textarea',
-            'image-textarea'
+            'image-textarea',
+            'title-textarea'
         ];
 
         classes.forEach(className => {
+            if (className === 'description-textarea') {
+                console.log('Class is ', className, 'offset is 5');
+                offset = 10;
+            } else {
+                offset = 0;
+            }
+
             console.log('Initializing textareas for class:', className);
             console.log(document.querySelectorAll(`.${className}`));
             const textareas = document.querySelectorAll(`.${className}`);
@@ -348,7 +355,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 console.log('Textarea found:', textarea);                                          
             
                 // Adjust height on page load
-                adjustTextareaHeight(textarea);
+                adjustTextareaHeight(textarea, offset);
                 // Adjust height on input
                 textarea.addEventListener('input', function() {
                     adjustTextareaHeight(textarea);
