@@ -28,6 +28,11 @@ def custom_static(filename):
 def serve_html(filename):
     return send_from_directory('.', filename)
 
+@app.after_request
+def apply_headers(response):
+    response.headers["Cross-Origin-Opener-Policy"] = "same-origin-allow-popups"
+    return response
+
 # Default route for index
 @app.route('/')
 def index():
