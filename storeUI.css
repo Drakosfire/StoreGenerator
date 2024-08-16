@@ -51,35 +51,52 @@
       
   }
   .page-container {
-      margin-left: 450px; /* Offset the page content by the width of block-container plus margin */
-      width: 900px;
-      padding: 20px;
-      overflow: auto; /* Enable scrolling if needed */
-      height: 100vh; /* Full viewport height */
-      box-sizing: border-box; /* Include padding and border in the element's total width and height */
-  }
+    margin-left: 450px; /* Offset the page content by the width of block-container plus margin */
+    width: 900px;
+    padding: 20px;
+    padding-top: 100px; /* Adjust based on the toolbar's height + any additional space you want */
+    overflow: auto; /* Enable scrolling if needed */
+    height: calc(100vh - 80px); /* Adjust the height to consider the toolbar's height */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+    #floatingToolbar {
+    position: fixed;
+    column-count: 2;
+    column-width: 425px;
+    column-fill: auto;
+    width: 900px; /* Set the width of the floating toolbar */
+    top: 10px; /* Distance from the top of the page */
+    left: 475px; /* Distance from the right side of the page */
+    z-index: 1000; /* Ensure it stays on top of other elements */
+    background-color: #f9f9f9; /* Optional: Background color */
+    padding: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Shadow for a floating effect */
+    border-radius: 8px; /* Optional: Rounded corners */
+    height: 135px; /* Set the height of the floating toolbar */
+}
+
   
   @media print {
  
     .page {
         page-break-before: auto;
-        page-break-after: avoid;
-        page-break-inside: avoid;
+        
        
     }
     .columnWrapper {
         overflow: visible;
     }
-    .block-content {
+    .block-page {
         margin-bottom: 0;
     }
 }
-
   
   .page {
       column-count: 2;
       column-gap: .9cm;
       column-width: 8cm;
+      column-fill: auto;
       -webkit-column-count: 2;
       -moz-column-count: 2;
       -webkit-column-width: 8cm;
@@ -134,13 +151,17 @@
       margin-left: 0.1cm;
   }
   
+  .block-page{
+    break-inside: avoid;
+  }
   /* Ensure the h1 tag is constrained within its column */
-  .block-content h1 {
+  .block-page h1 {
       column-span: none;
       box-sizing: border-box; /* Include padding and border in the element's total width and height */
       margin: 0 auto; /* Center the h1 within the column */
       overflow: hidden; /* Handle overflow content */
       word-wrap: break-word; /* Break long words to prevent overflow */
+      
   }
   .columnWrapper {
       width: 100%;
@@ -495,14 +516,14 @@
             display: none; /* Hidden by default when in .page-container */
     }
 
-        .page-container .block-content:hover .image-textarea {
-            display: block; /* Show when hovering over .block-content */
+        .page-container .block-page:hover .image-textarea {
+            display: block; /* Show when hovering over .block-page */
     }
     .page-container .generate-image-button {
         display: none; /* Hidden by default when in .page-container */
     }
     
-    .page-container .block-content:hover .generate-image-button {
+    .page-container .block-page:hover .generate-image-button {
         display: inline-block; /* Show the button on hover */
     }
   

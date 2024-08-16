@@ -21,19 +21,23 @@
             <!-- Blocks will be wrapped in a page div and loaded here -->
              </div>
         </div>
-        
-        <div class="page-container" id="pageContainer">
+        <div id="floatingToolbar">
             <h1>Describe your creature</h1>
-                <textarea id="user-description" class="user-description-textarea"
-                    hx-post="/update-stats" hx-trigger="change"
-                    hx-target="#user-description" hx-swap="outerHTML"
-                    title="As much or as little description as you want to provide. You can provide specific employees, inventory etc">A very standard gear store run by a fae potted plant named Gorgeous</textarea>
-                    <button id="submitDescription">Submit</button>
-                    <button id="toggle-text-block-button">Toggle Image Descriptions</button>
-                    <button id="add-page-button">Add New Page</button>
-                    <button id="remove-page-button">Remove Last Page</button>
-                    <button id="resetButton">Reset</button>
-                    <button id="printButton">Open Tab to print</button>
+            <textarea id="user-description" class="user-description-textarea"
+            hx-post="/update-stats" hx-trigger="change"
+            hx-target="#user-description" hx-swap="outerHTML"
+            title="As much or as little description as you want to provide. You can provide specific employees, inventory etc">A very standard gear store run by a fae potted plant named Gorgeous</textarea>
+            <button id="submitDescription">Submit</button>
+            <button id="autofill-button">Autofill Pages</button>
+            <button id="toggle-text-block-button">Toggle Image Descriptions</button>
+            <button id="add-page-button">Add New Page</button>
+            <button id="remove-page-button">Remove Last Page</button>
+            <button id="resetButton">Reset</button>
+            <button id="printButton">Open Tab to print</button>
+        </div>
+        <div class="page-container" id="pageContainer">
+            
+                    
             <div class="brewRenderer" id="brewRenderer">
                 
                 <div class="pages" id="pages">

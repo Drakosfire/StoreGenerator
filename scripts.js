@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const pageContainer = document.getElementById('pages');
     const trashArea = document.getElementById('trashArea');
     const toggleButton = document.getElementById('toggle-text-block-button');
+    const autofillButton = document.getElementById('autofill-button');
     const resetButton = document.getElementById('resetButton');
     const addPageButton = document.getElementById('add-page-button');
     const removePageButton = document.getElementById('remove-page-button');
@@ -124,7 +125,37 @@ document.addEventListener("DOMContentLoaded", function() {
             document.querySelector('.toggle-text-block-button').textContent = 'Hide All Image Descriptions';
         }
     }
-    
+    function autofillBlocks() {
+        console.log('Autofill button clicked');
+
+        const blocks = Array.from(blockContainer.querySelectorAll('.block-item'));        
+        let currentPage = pageContainer.querySelector('.page'); 
+        // If no existing page is found, create the first page
+        if (!currentPage) {
+            currentPage = addPage();
+            console.log('No existing pages found. Created the first page:', currentPage.id);
+        }
+
+        // Iterate over each block and move it to the pageContainer
+        blocks.forEach(block => {
+            block.setAttribute('class', 'block-page');
+            block.setAttribute('data-page-id', currentPage.getAttribute('data-page-id'));
+            // Append the block to the current page's columnWrapper
+            const newPage = currentPage.querySelector('.block.monster.frame.wide');
+            newPage.appendChild(block);
+            console.log(`Moved block with ID: ${block.getAttribute('data-block-id')} to page with ID: ${currentPage.getAttribute('data-page-id')}`);
+            // Adjust the layout after adding the block; this function handles creating a new page if needed
+            adjustPageLayout(currentPage.getAttribute('data-page-id'));
+
+            // Check if a new page was created and update curtrrentPage accordingly
+            const lastPageInContainer = pageContainer.querySelector('.page:last-child');
+            if (lastPageInContainer !== currentPage) {
+                currentPage = lastPageInContainer;
+                console.log('Moved to a new page:', currentPage.getAttribute('data-page-id'));            
+            }
+        });
+        console.log('Autofill complete, all blocks moved to page-container');
+    }
     window.printPageContainer = function(newTab) {
         var pageContainer = document.getElementById('brewRenderer');
             
@@ -147,9 +178,6 @@ document.addEventListener("DOMContentLoaded", function() {
                             
                             .page {
                                 page-break-before: auto;
-                                page-break-after: avoid;
-                                page-break-inside: avoid;
-                                
                             }
                             .columnWrapper {
                                 overflow: visible;
@@ -159,7 +187,11 @@ document.addEventListener("DOMContentLoaded", function() {
                     </style>
                 </head>
                 <body>
-                    ${pageContainer.innerHTML}
+                    <div id="pageContainer" class="page-container">
+                        <div id= "brewRenderer" class="brewRenderer">
+                            ${pageContainer.innerHTML}
+                        </div>
+                    </div>
                 </body>
                 </html>
             `;
@@ -289,10 +321,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     storeInitialPositions();
 
-    function adjustTextareaHeight(el) {
+    function adjustTextareaHeight(el, offset = 0) {
         if (el.scrollHeight > 16){
             el.style.height = 'auto';
-            el.style.height = (el.scrollHeight) + 'px';
+            el.style.height = (el.scrollHeight) + offset + 'px';
         }
     }
 
@@ -304,10 +336,18 @@ document.addEventListener("DOMContentLoaded", function() {
             'properties-textarea',
             'string-stat-textarea',
             'string-action-description-textarea',
-            'image-textarea'
+            'image-textarea',
+            'title-textarea'
         ];
 
         classes.forEach(className => {
+            if (className === 'description-textarea') {
+                console.log('Class is ', className, 'offset is 5');
+                offset = 10;
+            } else {
+                offset = 0;
+            }
+
             console.log('Initializing textareas for class:', className);
             console.log(document.querySelectorAll(`.${className}`));
             const textareas = document.querySelectorAll(`.${className}`);
@@ -315,7 +355,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 console.log('Textarea found:', textarea);                                          
             
                 // Adjust height on page load
-                adjustTextareaHeight(textarea);
+                adjustTextareaHeight(textarea, offset);
                 // Adjust height on input
                 textarea.addEventListener('input', function() {
                     adjustTextareaHeight(textarea);
@@ -460,7 +500,7 @@ document.addEventListener("DOMContentLoaded", function() {
     
     function handleDragStart(e) {
         lockTextareas();
-        const target = e.target.closest('.block-item, .block-content');
+        const target = e.target.closest('.block-item, .block-page');
         if (!target) {
             console.error('Drag started for an element without a valid target');
             return;
@@ -496,7 +536,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function handleDragEnd(e) {
-        const target = e.target.closest('.block-item, .block-content');
+        const target = e.target.closest('.block-item, .block-page');
         if (target) {
             target.style.opacity = '1'; // Reset the opacity
             const blockId = target.getAttribute('data-block-id');
@@ -540,7 +580,7 @@ document.addEventListener("DOMContentLoaded", function() {
             targetPage.classList.add('highlight-page'); // Add highlight class for pages                
             }
 
-        const targetBlock = e.target.closest('.block-item, .block-content');
+        const targetBlock = e.target.closest('.block-item, .block-page');
         if (targetBlock) {
             const bounding = targetBlock.getBoundingClientRect();
             const offset = e.clientY - bounding.top;
@@ -557,7 +597,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function handleDrop(e) {
         e.preventDefault();
         // Ensure we are not dropping into a textarea or another block
-        if (e.target.classList.contains('block-item', 'block-content', 'description-textarea') || e.target.tagName === 'TEXTAREA') {
+        if (e.target.classList.contains('block-item', 'block-page', 'description-textarea') || e.target.tagName === 'TEXTAREA') {
             console.log('Cannot drop block inside another block or textarea');
             return;
         }
@@ -580,7 +620,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             const newBlockContent = document.createElement('div');
-            newBlockContent.classList.add('block-content');
+            newBlockContent.classList.add('block-page');
             newBlockContent.innerHTML = originalBlock.innerHTML; // Transfer inner content only
 
             // Add necessary attributes and event listeners
@@ -591,7 +631,7 @@ document.addEventListener("DOMContentLoaded", function() {
             newBlockContent.addEventListener('dragstart', handleDragStart);
             newBlockContent.addEventListener('dragend', handleDragEnd);
 
-            const target = e.target.closest('.block-item, .block-content');
+            const target = e.target.closest('.block-item, .block-page');
             let targetColumn = 1;
             if (target) {
                 const bounding = target.getBoundingClientRect();
@@ -666,7 +706,7 @@ document.addEventListener("DOMContentLoaded", function() {
          // Function to get the height of a column by index
         function getColumnHeights(pageElement) {
             const columns = [0, 0]; // Assuming two columns for simplicity
-            const blocks = pageElement.querySelectorAll('.block-content');
+            const blocks = pageElement.querySelectorAll('.block-page');
             blocks.forEach(block => {
                 const column = getColumnFromOffset(block, block.getBoundingClientRect().left);
                 columns[column - 1] += block.offsetHeight;
@@ -726,7 +766,7 @@ document.addEventListener("DOMContentLoaded", function() {
             
             if (pages.length > 1) { // Ensure at least one page remains
                 const lastPage = pages[pages.length - 1];
-                const blocks = lastPage.querySelectorAll('.block-content'); // Check for blocks inside the last page
+                const blocks = lastPage.querySelectorAll('.block-page'); // Check for blocks inside the last page
         
                 if (blocks.length > 0) {
                     // If blocks are present, block the removal and display a warning
@@ -744,7 +784,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         function handleColumnOverflow(page, targetColumn) {
             console.log(`Handling overflow for page ID: ${page.getAttribute('data-page-id')} in column ${targetColumn}`);
-            const blocks = Array.from(page.querySelectorAll('.block-content'));
+            const blocks = Array.from(page.querySelectorAll('.block-page'));
             let columnHeights = [0, 0];
             let overflowStartIndex = -1;
 
@@ -767,7 +807,7 @@ document.addEventListener("DOMContentLoaded", function() {
              // Get the next page if it exists
             const nextPage = getNextPage(page);
             if (nextPage) {
-                const nextPageBlocks = nextPage.querySelectorAll('.block-content, .block-item');
+                const nextPageBlocks = nextPage.querySelectorAll('.block-page, .block-item');
                 let nextPageColumnHeights = [0, 0];
 
                 nextPageBlocks.forEach(block => {
@@ -821,7 +861,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         if (innerHTML && blockId) {
             // Find the dragged element and remove it from the DOM
-            let draggedElement = document.querySelector(`[data-block-id="${blockId}"].block-content`);
+            let draggedElement = document.querySelector(`[data-block-id="${blockId}"].block-page`);
             if (!draggedElement) {
                 draggedElement = document.querySelector(`[data-block-id="${blockId}"].block-item`);
             }
@@ -831,7 +871,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             // Check if the block already exists in the block-container and remove it if it does
-            let existingBlock = blockContainer.querySelector(`[data-block-id="${blockId}"].block-content`);
+            let existingBlock = blockContainer.querySelector(`[data-block-id="${blockId}"].block-page`);
             if (!existingBlock) {
                 existingBlock = blockContainer.querySelector(`[data-block-id="${blockId}"].block-item`);
             }
@@ -877,62 +917,92 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function handleReset() {
-        console.log('Reset button clicked');
+    console.log('Reset button clicked');
+    
+    // Collect all blocks from all pages
+    const allBlocks = [];
+    const pages = document.querySelectorAll('.page');
+    
+    pages.forEach(page => {
+        console.log(`Processing page with ID: ${page.getAttribute('data-page-id')}`);
         
-        // Collect all blocks from all pages
-        const allBlocks = [];
-        const pages = document.querySelectorAll('.page');
-        pages.forEach(page => {
-            const blocksOnPage = page.querySelectorAll('[data-block-id]');
-            blocksOnPage.forEach(block => {
-                const blockId = block.getAttribute('data-block-id');
-                allBlocks.push({
-                    id: blockId,
-                    innerHTML: block.innerHTML
-                });
-                block.remove();
-                console.log(`Removed block with ID: ${blockId} from page ID: ${page.getAttribute('data-page-id')}`);
+        const blocksOnPage = page.querySelectorAll('[data-block-id]');
+        
+        blocksOnPage.forEach(block => {
+            block.setAttribute('display', 'block');
+            const blockId = block.getAttribute('data-block-id');
+            allBlocks.push({
+                id: blockId,
+                innerHTML: block.innerHTML
             });
+            block.remove();
+            console.log(`Removed block with ID: ${blockId} from page ID: ${page.getAttribute('data-page-id')}`);
         });
+    });
 
-        // Clear all pages
-        pages.forEach(page => page.remove());
+    // Log blocks collected
+    console.log('All blocks collected:', allBlocks);
 
-        // Clear blockContainer before reinserting blocks
-        blockContainer.innerHTML = '';
+    // Clear all pages
+    pages.forEach(page => {
+        console.log(`Removing page with ID: ${page.getAttribute('data-page-id')}`);
+        page.remove();
+    });
 
-        // Reinsert blocks back into the blockContainer in their original order
-        
-        if (!blockContainerPage) {
-            blockContainerPage = document.createElement('div');
-            blockContainerPage.classList.add('page');
-            blockContainerPage.setAttribute('id', 'block-page');
-            blockContainer.appendChild(blockContainerPage);
-        }
-        // Reassign blockContainerPage to the newly created block-page element
-        blockContainerPage = document.getElementById('block-page');
+    // Clear blockContainer before reinserting blocks
+    console.log('Clearing blockContainer...');
+    blockContainer.innerHTML = '';
 
-        initialPositions.forEach(pos => {
-            const blockData = allBlocks.find(block => block.id === pos.id);
-            if (blockData) {
-                reinsertBlock(blockContainerPage, blockData.id, blockData.innerHTML);
-                sortBlocksById();
-            }
-        });
-        addPage();
-
-        console.log('Reset complete, all blocks moved back to block-container');
-        initializeTextareaResizing();
+    // Check and create blockContainerPage if it doesn't exist
+    let blockContainerPage = document.getElementById('block-page');
+    if (!blockContainerPage) {
+        blockContainerPage = document.createElement('div');
+        blockContainerPage.classList.add('page');
+        blockContainerPage.setAttribute('id', 'block-page');
+        blockContainer.appendChild(blockContainerPage);
+        console.log('Created new blockContainerPage');
+    } else {
+        console.log('blockContainerPage already exists');
     }
 
+    // Reassign blockContainerPage to the newly created block-page element
+    
+    console.log('blockContainerPage reassigned to:', blockContainerPage);
+
+    // Reinsert blocks back into the blockContainer in their original order
+    initialPositions.forEach(pos => {
+        const blockData = allBlocks.find(block => block.id === pos.id);
+        
+        if (blockData) {
+            console.log(`Reinserting block with ID: ${blockData.id} into blockContainerPage`);
+            reinsertBlock(blockContainerPage, blockData.id, blockData.innerHTML);
+            sortBlocksById();
+        } else {
+            console.log(`Block with ID: ${pos.id} not found in collected blocks.`);
+        }
+    });
+
+    // Add a new page after reset
+    addPage();
+    console.log('Added new page after reset.');
+
+    console.log('Reset complete, all blocks moved back to block-container');
+    initializeTextareaResizing();
+}
+
+    // Event listeners for buttons
     addPageButton.addEventListener('click', addPage);
     removePageButton.addEventListener('click', removePage);
     toggleButton.addEventListener('click', toggleAllTextBlocks);
+    autofillButton.addEventListener('click', autofillBlocks);
+    
+    // Event listeners for drag and drop functionality
     blockContainer.addEventListener('dragover', handleDragOver);
     blockContainer.addEventListener('drop', handleDrop);
     pageContainer.addEventListener('dragover', handleDragOver);
     pageContainer.addEventListener('drop', handleDrop);
     
+    // Event listeners for trash area
     trashArea.addEventListener('dragover', handleTrashOver);
     trashArea.addEventListener('dragleave', handleTrashLeave);
     trashArea.addEventListener('drop', handleTrashDrop);
