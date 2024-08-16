@@ -77,19 +77,18 @@
 }
 
   
-  @media print {
- 
+@media print {
+                            
     .page {
         page-break-before: auto;
+        page-break-after: avoid;
+        page-break-inside: avoid;
         
-       
     }
     .columnWrapper {
         overflow: visible;
     }
-    .block-page {
-        margin-bottom: 0;
-    }
+    
 }
   
   .page {
