@@ -20,10 +20,6 @@ COPY --chown=user . $HOME/app
 # Install any necessary dependencies specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN apt-get update && apt-get install -y \
-    wkhtmltopdf \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
 
 # Expose port 5000 for the Flask app
 EXPOSE 7860
