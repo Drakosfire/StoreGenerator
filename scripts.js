@@ -244,13 +244,25 @@ document.addEventListener("DOMContentLoaded", function() {
     // );
 
     function printPDF() {
+        // Capture the innerHTML of brewRenderer
         var brewRendererContent = document.getElementById('brewRenderer').innerHTML;
     
+        // Open a new window immediately on user interaction
+        var previewWindow = window.open('', 'pdf-preview', 'width=800,height=600');
+    
+        // Check if the window was blocked
+        if (!previewWindow) {
+            alert("Popup blocked! Please allow popups for this website to preview the PDF.");
+            return;
+        }
+    
+        // Create a form to send the content to the proxy
         var form = document.createElement("form");
         form.setAttribute("method", "post");
-        form.setAttribute("action", "/proxy.html"); // Flask route
+        form.setAttribute("action", "/proxy.html");
         form.setAttribute("target", "pdf-preview");
     
+        // Create a hidden input to store the HTML content
         var hiddenField = document.createElement("input");
         hiddenField.setAttribute("type", "hidden");
         hiddenField.setAttribute("name", "htmlContent");
@@ -259,17 +271,17 @@ document.addEventListener("DOMContentLoaded", function() {
         form.appendChild(hiddenField);
         document.body.appendChild(form);
     
-        // Open the form submission in a new window
-        var previewWindow = window.open('', 'pdf-preview', 'width=800,height=600');
+        // Submit the form, which will load the proxy.html in the new window
         form.submit();
     
-        // Optionally clean up the form after submission
+        // Clean up the form after a short delay
         setTimeout(function() {
             form.remove();
         }, 1000);
     }
     
     document.getElementById('printButton').addEventListener('click', printPDF);
+    
     
 
 
