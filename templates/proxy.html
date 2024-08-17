@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Print Preview</title>
+    <link href="/static/all.css" rel="stylesheet" />
+    <link href="/static/css.css?family=Open+Sans:400,300,600,700" rel="stylesheet" type="text/css" />
+    <link href='/static/bundle.css' rel='stylesheet' />
+    <link href="/static/style.css" rel='stylesheet' />
+    <link href="/static/5ePHBstyle.css" rel='stylesheet' />
+    <link href="/static/storeUI.css" rel='stylesheet' />
+    <title>Print Preview - DnD Stat Block</title>
+    <style> 
+        @media print {
+                        
+        .page {
+            page-break-before: auto;
+        }
+        .columnWrapper {
+            overflow: visible;
+        }
+        
+        }
+        .page-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- <div id="pageContainer" class="page-container"> -->
+        <div id= "brewRenderer" class="brewRenderer">
+            <!-- This div will display the content passed from the main app -->
+            <div id="printContent">{{ html_content|safe }}
+            </div>
+        </div>
+    <!-- </div> -->
+    <div id="preview-actions">
+        <button id="print-button">Print</button>
+        <button id="cancel-button">Cancel</button>
+    </div>
+
+    <script>
+        // Function to trigger print
+        document.getElementById('print-button').addEventListener('click', function() {
+            window.print();
+        });
+
+        // Function to close the preview without printing
+        document.getElementById('cancel-button').addEventListener('click', function() {
+            window.close(); // Close the preview window
+        });
+    </script>
+</html>

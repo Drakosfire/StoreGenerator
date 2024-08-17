@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function() {
         console.error('closeModal element not found');
         return;
     }
-    
+  
     // Event delegation for image clicks
     document.addEventListener('click', function(event) {
         console.log('Click detected in blockContainer:', event.target);
@@ -95,10 +95,7 @@ document.addEventListener("DOMContentLoaded", function() {
         console.error('Error:', error);
     });
     });
-    document.getElementById('printButton').addEventListener('click', function() {
-        window.printPageContainer();
-        } 
-    );
+   
 
     function toggleAllTextBlocks() {
         const pageContainer = document.querySelector('.page-container');
@@ -161,19 +158,19 @@ document.addEventListener("DOMContentLoaded", function() {
         
          // Replace spaces with dashes
          var processedTitle = storeTitle.replace(/\s+/g, '-');
-        
+         
         htmlContent = `
             <!DOCTYPE html>
             <html lang="en">
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <link href="./dependencies/all.css" rel="stylesheet">
-                <link href="./dependencies/css.css?family=Open+Sans:400,300,600,700" rel="stylesheet" type="text/css">
-                <link href="./dependencies/bundle.css" rel="stylesheet">
-                <link href="./dependencies/style.css" rel="stylesheet">
-                <link href="./dependencies/5ePHBstyle.css" rel="stylesheet">
-                <link href="./storeUI.css" rel="stylesheet">  
+                 <link href="{{all_css}}" rel="stylesheet">
+                <link href="{{font_css}}" rel="stylesheet">
+                <link href="{{bundle_css}}" rel="stylesheet">
+                <link href="{{style_css}}" rel="stylesheet">
+                <link href="{{phb_style_css}}" rel="stylesheet">
+                <link href="{{store_ui_css}}" rel="stylesheet">
                 <title>Print Preview - DnD Stat Block</title>
                 
                 <style>
@@ -198,9 +195,9 @@ document.addEventListener("DOMContentLoaded", function() {
             </body>
             </html>
         `;
-
+ 
         console.log(htmlContent);  // Add this line to check the content
-       
+        // var encodedHtmlContent = btoa(encodeURIComponent(htmlContent));
 
         // Send the HTML content to the server to generate a PDF
         fetch('/generate-pdf', {
@@ -208,24 +205,72 @@ document.addEventListener("DOMContentLoaded", function() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ html_content: htmlContent,
+            body: JSON.stringify({ htmlContent: htmlContent,
                 title: processedTitle
             })
         })
         
-        .then(response => response.json())
-        .then(data => {
-            if (data.html_url) {
-                // Display an alert with the URL of the generated HTML file
-                alert("The generated HTML file can be viewed at: " + data.html_url);
+        .then(response => {
+            if (response.ok) {
+                return response.blob(); // Get the response as a Blob (binary large object)
             } else {
-                console.error('Error generating HTML:', data.error);
+                return response.json().then(data => {
+                    throw new Error(data.error || 'Failed to generate PDF');
+                });
             }
         })
+        .then(blob => {
+            // Create a URL for the Blob
+            var downloadUrl = window.URL.createObjectURL(blob);
+            
+            // Create an anchor element and click it to trigger the download
+            var a = document.createElement('a');
+            a.href = downloadUrl;
+            a.download = `${processedTitle}.pdf`;  // Set the desired file name
+            document.body.appendChild(a);
+            a.click();
+            
+            // Clean up by revoking the object URL and removing the anchor element
+            window.URL.revokeObjectURL(downloadUrl);
+            a.remove();
+        })
         .catch(error => {
-            console.error('Error generating HTML:', error);
+            console.error('Error generating PDF:', error);
         });
     };
+    // document.getElementById('printButton').addEventListener('click', function() {
+    //     window.printPageContainer();
+    //     } 
+    // );
+
+    function printPDF() {
+        var brewRendererContent = document.getElementById('brewRenderer').innerHTML;
+    
+        var form = document.createElement("form");
+        form.setAttribute("method", "post");
+        form.setAttribute("action", "/proxy.html"); // Flask route
+        form.setAttribute("target", "pdf-preview");
+    
+        var hiddenField = document.createElement("input");
+        hiddenField.setAttribute("type", "hidden");
+        hiddenField.setAttribute("name", "htmlContent");
+        hiddenField.setAttribute("value", brewRendererContent);
+    
+        form.appendChild(hiddenField);
+        document.body.appendChild(form);
+    
+        // Open the form submission in a new window
+        var previewWindow = window.open('', 'pdf-preview', 'width=800,height=600');
+        form.submit();
+    
+        // Optionally clean up the form after submission
+        setTimeout(function() {
+            form.remove();
+        }, 1000);
+    }
+    
+    document.getElementById('printButton').addEventListener('click', printPDF);
+    
 
 
     // Store initial positions of the blocks

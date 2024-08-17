@@ -1,7 +1,9 @@
 # this imports the code from files and modules
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, url_for, render_template, send_file
 from flask_cors import CORS 
 import os
+import base64
+import pdfkit
 import ctypes
 import store_helper as sh
 import block_builder
@@ -18,7 +20,7 @@ libc.mallopt(M_MMAP_THRESHOLD, 2**20)
 app = Flask(__name__)
 os.makedirs('static/images', exist_ok=True)
 
-# Serve files from the 'dependencies' directory
+# Serve files from the 'static' directory
 @app.route('/static/<path:filename>')
 def custom_static(filename):
     return send_from_directory('static', filename)
@@ -33,10 +35,23 @@ def apply_headers(response):
     response.headers["Cross-Origin-Opener-Policy"] = "same-origin-allow-popups"
     return response
 
-# Default route for index
+# # Default route for index
+# @app.route('/')
+# def index():
+#     return send_from_directory('.', 'storeUI.html')  # Make sure this points to your main HTML file
+
 @app.route('/')
 def index():
-    return send_from_directory('.', 'storeUI.html')  # Make sure this points to your main HTML file
+    css_files = {
+        'all_css': url_for('static', filename='all.css'),
+        'font_css': url_for('static', filename='css.css?family=Open+Sans:400,300,600,700'),
+        'bundle_css': url_for('static', filename='bundle.css'),
+        'style_css': url_for('static', filename='style.css'),
+        'phb_style_css': url_for('static', filename='5ePHBstyle.css'),
+        'store_ui_css': url_for('static', filename='storeUI.css')
+    }
+    return render_template('storeUI.html', css_files=css_files)
+
 
 CORS(app)# Route to handle the incoming POST request with user description
 
@@ -73,32 +88,12 @@ def generate_image():
         return jsonify({'error': str(e)}), 500
     
 # New route to convert HTML to PDF
-@app.route('/generate-pdf', methods=['POST'])
-def generate_pdf():
-    data = request.json
-    html_content = data.get('html_content', '')
-    title = data.get('title', 'output')  # Default to 'output' if no title is provided
-    print(f"Received HTML content for title: {title}")
-    print(html_content)
+@app.route('/proxy.html', methods=['POST'])
+def proxy():
+    html_content = request.form.get('htmlContent', '')
 
-    if not html_content:
-        return jsonify({'error': 'No HTML content provided'}), 400
-    
-    
-    # Define the directory where the HTML files will be stored
-    output_dir = os.path.join(app.root_path, 'static', 'html_files')
-    os.makedirs(output_dir, exist_ok=True)
-    
-    # Save the HTML content to a file with the processed title
-    html_filename = f"{title}.html"
-    html_filepath = os.path.join(output_dir, html_filename)
-    
-    with open(html_filepath, 'w', encoding='utf-8') as file:
-        file.write(html_content)
-
-    # Return the URL to access the HTML file
-    file_url = f"/static/html_files/{html_filename}"
-    return jsonify({'html_url': file_url}), 200
+    # Render the proxy HTML with the provided content
+    return render_template('proxy.html', html_content=html_content)
 
 
 if __name__ == "__main__":

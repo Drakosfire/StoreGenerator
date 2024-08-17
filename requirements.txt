@@ -2,3 +2,4 @@ flask
 flask-cors
 fal_client
 openai
+pdfkit
