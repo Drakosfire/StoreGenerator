@@ -19,9 +19,9 @@ app = Flask(__name__)
 os.makedirs('static/images', exist_ok=True)
 
 # Serve files from the 'dependencies' directory
-@app.route('/dependencies/<path:filename>')
+@app.route('/static/<path:filename>')
 def custom_static(filename):
-    return send_from_directory('dependencies', filename)
+    return send_from_directory('static', filename)
 
 # Serve HTML files from the main directory
 @app.route('/<path:filename>')
@@ -71,6 +71,35 @@ def generate_image():
         return jsonify({'image_url': image_url})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+# New route to convert HTML to PDF
+@app.route('/generate-pdf', methods=['POST'])
+def generate_pdf():
+    data = request.json
+    html_content = data.get('html_content', '')
+    title = data.get('title', 'output')  # Default to 'output' if no title is provided
+    print(f"Received HTML content for title: {title}")
+    print(html_content)
+
+    if not html_content:
+        return jsonify({'error': 'No HTML content provided'}), 400
+    
+    
+    # Define the directory where the HTML files will be stored
+    output_dir = os.path.join(app.root_path, 'static', 'html_files')
+    os.makedirs(output_dir, exist_ok=True)
+    
+    # Save the HTML content to a file with the processed title
+    html_filename = f"{title}.html"
+    html_filepath = os.path.join(output_dir, html_filename)
+    
+    with open(html_filepath, 'w', encoding='utf-8') as file:
+        file.write(html_content)
+
+    # Return the URL to access the HTML file
+    file_url = f"/static/html_files/{html_filename}"
+    return jsonify({'html_url': file_url}), 200
+
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=7860)
+    app.run(host="0.0.0.0", port=7860, debug=True)  # Run the app on localhost, port 7860

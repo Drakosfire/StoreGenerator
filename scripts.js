@@ -96,15 +96,9 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     });
     document.getElementById('printButton').addEventListener('click', function() {
-        const newTab = window.open('', '_blank');
-        
-        if (newTab) {
-            // Call the function to write content
-            window.printPageContainer(newTab);
-        } else {
-            console.error('Failed to open a new tab. It may have been blocked by the browser.');
-        }
-    });
+        window.printPageContainer();
+        } 
+    );
 
     function toggleAllTextBlocks() {
         const pageContainer = document.querySelector('.page-container');
@@ -156,56 +150,81 @@ document.addEventListener("DOMContentLoaded", function() {
         });
         console.log('Autofill complete, all blocks moved to page-container');
     }
-    window.printPageContainer = function(newTab) {
+
+
+    window.printPageContainer = function() {
         var pageContainer = document.getElementById('brewRenderer');
-            
-            htmlContent = `
-                <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <link href="./dependencies/all.css" rel="stylesheet">
-                    <link href="./dependencies/css.css?family=Open+Sans:400,300,600,700" rel="stylesheet" type="text/css">
-                    <link href="./dependencies/bundle.css" rel="stylesheet">
-                    <link href="./dependencies/style.css" rel="stylesheet">
-                    <link href="./dependencies/5ePHBstyle.css" rel="stylesheet">
-                    <link href="./storeUI.css" rel="stylesheet">  
-                    <title>Print Preview - DnD Stat Block</title>
-                    <link rel="stylesheet" href="styles.css">
-                    <style>
-                        @media print {
-                            
-                            .page {
-                                page-break-before: auto;
-                            }
-                            .columnWrapper {
-                                overflow: visible;
-                            }
-                            
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div id="pageContainer" class="page-container">
-                        <div id= "brewRenderer" class="brewRenderer">
-                            ${pageContainer.innerHTML}
-                        </div>
-                    </div>
-                </body>
-                </html>
-            `;
-            // Open a new tab
+
+        titleElement = document.getElementById('user-store-title');
+         // Get the current value of the textarea
+         var storeTitle = titleElement.value;
         
-        // Check if the new tab was blocked
-        if (newTab) {
-            // Write the HTML content to the new tab
-            newTab.document.open();
-            newTab.document.write(htmlContent);
-            newTab.document.close();
-        } else {
-            console.error('Failed to open a new tab. It may have been blocked by the browser.');
-        }
+         // Replace spaces with dashes
+         var processedTitle = storeTitle.replace(/\s+/g, '-');
+        
+        htmlContent = `
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <link href="./dependencies/all.css" rel="stylesheet">
+                <link href="./dependencies/css.css?family=Open+Sans:400,300,600,700" rel="stylesheet" type="text/css">
+                <link href="./dependencies/bundle.css" rel="stylesheet">
+                <link href="./dependencies/style.css" rel="stylesheet">
+                <link href="./dependencies/5ePHBstyle.css" rel="stylesheet">
+                <link href="./storeUI.css" rel="stylesheet">  
+                <title>Print Preview - DnD Stat Block</title>
+                
+                <style>
+                    @media print {
+                        
+                        .page {
+                            page-break-before: auto;
+                        }
+                        .columnWrapper {
+                            overflow: visible;
+                        }
+                        
+                    }
+                </style>
+            </head>
+            <body>
+                <div id="pageContainer" class="page-container">
+                    <div id= "brewRenderer" class="brewRenderer">
+                        ${pageContainer.innerHTML}
+                    </div>
+                </div>
+            </body>
+            </html>
+        `;
+
+        console.log(htmlContent);  // Add this line to check the content
+       
+
+        // Send the HTML content to the server to generate a PDF
+        fetch('/generate-pdf', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ html_content: htmlContent,
+                title: processedTitle
+            })
+        })
+        
+        .then(response => response.json())
+        .then(data => {
+            if (data.html_url) {
+                // Display an alert with the URL of the generated HTML file
+                alert("The generated HTML file can be viewed at: " + data.html_url);
+            } else {
+                console.error('Error generating HTML:', data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error generating HTML:', error);
+        });
     };
 
 

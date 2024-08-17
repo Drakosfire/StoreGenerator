@@ -1,0 +1,592 @@
+:root {
+    --HB_Color_Background: #EEE5CE;
+    --HB_Color_Accent: #E0E5C1;
+    --HB_Color_HeaderUnderline: #C0AD6A;
+    --HB_Color_HorizontalRule: #9C2B1B;
+    --HB_Color_HeaderText: #58180D;
+    --HB_Color_MonsterStatBackground: #F2E5B5;
+    --HB_Color_CaptionText: #766649;
+    --HB_Color_WatercolorStain: #BBAD82;
+    --HB_Color_Footnotes: #C9AD6A;
+      }
+      input[type="text"], textarea {
+      width: auto;
+      padding: 8px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      background-color: #f9f9f9;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+  .grid-container {
+              display: grid;
+              grid-template-columns: 1fr 3fr; /* Two columns with the second column being three times as wide */
+              grid-gap: 20px;
+              padding: 20px;
+              height: 100vh;
+          }
+  .block-container {
+      position: fixed; /* Lock the block-container in place */
+      top: 20px; /* Distance from the top of the viewport */
+      left: 20px; /* Distance from the left of the viewport */
+      width: 450px; /* Set the width of the block-container */
+      height: calc(100vh - 40px); /* Full viewport height minus top and bottom padding */
+      overflow-y: auto; /* Enable vertical scrolling if needed */
+      border-right: 1px solid #ccc; /* Right border for visual separation */
+      padding-right: 20px; /* Padding inside the block-container */
+      box-sizing: border-box; /* Include padding and border in the element's total width and height */
+      background-color: #f9f9f9; /* Background color */
+      z-index: 1000; /* Ensure it is on top of other elements */
+  }
+  
+  .block-container .page {
+      column-count: 1;
+      padding: 0;
+      width: 425px;
+      height: auto; /* Allow the page to expand to fit content */
+      overflow: visible; /* Allow content to overflow if necessary */
+      page-break-before: auto;
+      page-break-after: auto;
+      
+  }
+  .page-container {
+    margin-left: 450px; /* Offset the page content by the width of block-container plus margin */
+    width: 900px;
+    padding: 20px;
+    padding-top: 100px; /* Adjust based on the toolbar's height + any additional space you want */
+    overflow: auto; /* Enable scrolling if needed */
+    height: calc(100vh - 80px); /* Adjust the height to consider the toolbar's height */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+    #floatingToolbar {
+    position: fixed;
+    column-count: 2;
+    column-width: 425px;
+    column-fill: auto;
+    width: 900px; /* Set the width of the floating toolbar */
+    top: 10px; /* Distance from the top of the page */
+    left: 475px; /* Distance from the right side of the page */
+    z-index: 1000; /* Ensure it stays on top of other elements */
+    background-color: #f9f9f9; /* Optional: Background color */
+    padding: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Shadow for a floating effect */
+    border-radius: 8px; /* Optional: Rounded corners */
+    height: 135px; /* Set the height of the floating toolbar */
+}
+
+  
+@media print {
+                            
+    .page {
+        page-break-before: auto;
+        page-break-after: avoid;
+        page-break-inside: avoid;
+        
+    }
+    .columnWrapper {
+        overflow: visible;
+    }
+    
+}
+  
+  .page {
+      column-count: 2;
+      column-gap: .9cm;
+      column-width: 8cm;
+      column-fill: auto;
+      -webkit-column-count: 2;
+      -moz-column-count: 2;
+      -webkit-column-width: 8cm;
+      -moz-column-width: 8cm;
+      -webkit-column-gap: .9cm;
+      -moz-column-gap: .9cm;
+      position: relative;
+      z-index: 15;
+      box-sizing: border-box;
+      width: 215.9mm;
+      height: 279.4mm; /* Original height for print layout */
+      padding: 1.4cm 1.2cm 1.7cm;
+      overflow: hidden;
+      font-family: "BookInsanityRemake";
+      font-size: .34cm;
+      counter-increment: phb-page-numbers;
+      background-color: var(--HB_Color_Background);
+      background-image: url('./themes/assets/parchmentBackground.jpg');
+      text-rendering: optimizeLegibility;
+      page-break-before: always;
+      page-break-after: always;
+      contain: size;
+      
+  }
+  
+  .page .monster hr:last-of-type + * {
+    margin-top: .1cm;
+  }
+  .page * + h3 {
+    margin-top: .05cm;
+  }
+  .page * + h4 {
+    margin-top: .1cm;
+  }
+  .page h4 + * {
+    margin-top: .1cm;
+  }
+  .page dl + * {
+    margin-top: .1cm;
+  }
+  .page p + * {
+      margin-top: .1cm;
+  }
+  .page img {
+      width: 100%;
+      height: auto;
+      cursor: pointer;
+  }
+  .page .classTable.frame{
+        width: 95%;
+      margin-right:0.1cm;
+      margin-left: 0.1cm;
+  }
+  
+  .block-page{
+    break-inside: avoid;
+  }
+  /* Ensure the h1 tag is constrained within its column */
+  .block-page h1 {
+      column-span: none;
+      box-sizing: border-box; /* Include padding and border in the element's total width and height */
+      margin: 0 auto; /* Center the h1 within the column */
+      overflow: hidden; /* Handle overflow content */
+      word-wrap: break-word; /* Break long words to prevent overflow */
+      
+  }
+  .columnWrapper {
+      width: 100%;
+      column-gap: inherit;
+      max-height: 100%;
+      column-span: all;
+      columns: inherit;
+      height: 100%; /* Ensure it takes full height of the parent */
+      box-sizing: border-box; /* Ensures padding and border are included in the element's total width and height */
+  }
+   /* block-item styling */
+  .block-item {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: transparent;
+      padding: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s;
+  }
+  .block-item:hover {
+    transform: translateY(-5px);
+    background-color: rgba(255, 255, 255, 0.5); /* Slightly visible background on hover */
+  }
+  
+  .block-item img {
+      width: 100%;
+      height: auto;
+      cursor: pointer;
+  }
+  
+   /* Modal styling */
+  .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 1001; /* Sit on top */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+      }
+  
+  .modal-content {
+      margin: auto;
+      display: block;
+      width: 80%;
+      max-width: 700px;
+      }
+  
+  .modal-content, #caption {
+      animation-name: zoom;
+      animation-duration: 0.6s;
+      }
+  
+  @keyframes zoom {
+      from {transform: scale(0)}
+      to {transform: scale(1)}
+      }
+  
+  .close {
+      position: absolute;
+      top: 15px;
+      right: 35px;
+      color: #f1f1f1;
+      font-size: 40px;
+      font-weight: bold;
+      transition: 0.3s;
+      }
+  
+  .close:hover,
+  .close:focus {
+      color: #bbb;
+      text-decoration: none;
+      cursor: pointer;
+      }
+  input[type="text"]:focus, textarea:focus {
+      background-color: #e9e9e9;
+      border-color: #aaa;
+      outline: none;
+  }
+  
+  /* Specific styles for different textboxes */
+  
+  .user-description-textarea {
+      width: 400px;
+      height: 40px; /* Adjust as needed for 3 lines */
+      resize: vertical;
+      background: none;
+      font-family: "ScalySansRemake";
+      font-weight: 800;
+      
+  }
+  /* Focus styles for description textbox */
+  .user-description-textarea:focus {
+      background-color: #e9e9e9;
+      border-color: #aaa;
+      outline: none;
+  }
+  
+  .heading-textarea {
+      width: 100%;
+      font-size: .458cm; /* Matches the font size of an h4 heading */
+      line-height: .7em;
+      font-weight: 800;
+      border: none;
+      background: none;
+      margin: 0;
+      padding: 0;
+      resize: none; /* Prevents the textarea from being resizable */
+      overflow: hidden; /* Prevents scrollbars */
+      outline: none; /* Removes the focus outline */
+      font-family: "MrEavesRemake"; /* Ensures font family is inherited */
+      color: var(--HB_Color_HeaderText)
+      
+  }
+  .title-textarea{
+      height:30px;
+      width: 100%;
+      margin-bottom: 5px;
+      column-span: all;
+      font-size: .89cm;
+      line-height: 1em;
+      font-family: "MrEavesRemake";
+      font-weight: 800;
+      color: var(--HB_Color_HeaderText);
+      border: 0;
+      font: inherit;
+      background: none;
+      padding: 0;
+      resize: none; /* Prevents the textarea from being resizable */
+      overflow: hidden; /* Prevents scrollbars */
+      outline: none; /* Removes the focus outline */
+  
+  }
+  
+  .subtitle-textarea{
+      height:20px;
+      width: 100%;
+      margin-bottom: 5px;
+      column-span: all;
+      font-size: .89cm;
+      line-height: 1em;
+      font-family: "MrEavesRemake";
+      font-weight: 800;
+      color: var(--HB_Color_HeaderText);
+      border: 0;
+      font: inherit;
+      background: none;
+      padding: 0;
+      resize: none; /* Prevents the textarea from being resizable */
+      overflow: hidden; /* Prevents scrollbars */
+      outline: none; /* Removes the focus outline */
+  
+  }
+  
+  div[contenteditable="true"]:focus {
+      background-color: #e9e9e9;
+      border-color: #aaa;
+      outline: none;
+  }
+  
+  div[contenteditable="true"] p::first-letter {
+    float: left;
+    padding-bottom: 2px;
+    padding-left: 40px;
+    margin-top: 0cm;
+    margin-bottom: -20px;
+    margin-left: -40px;
+    font-family: "SolberaImitationRemake";
+    font-size: 3.5cm;
+    line-height: 1em;
+    color: rgba(0, 0, 0, 0);
+    background-image: linear-gradient(-45deg, #322814, #998250, #322814);
+    -webkit-background-clip: text;
+    background-clip: text;
+    border: 0;
+  }
+  .properties-textarea {
+      width: 100%;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: .7em;
+      margin-bottom: 0;
+      font-style: italic;
+      box-sizing: border-box;
+      border: 0;
+      font-family: "ScalySansRemake";
+      vertical-align: baseline;
+      margin: 0;
+      padding: 0;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      background: none;
+      resize: none; /* Prevents the textarea from being resizable */
+  
+  }
+  
+  .description-textarea {
+      width: 100%;
+      height: auto; 
+      font-size: .318cm;
+      font-weight: 400;
+      line-height: .9em;
+      margin-bottom: 0;
+      font-style: italic;
+      box-sizing: border-box;
+      border: 0;
+      font-family: "ScalySansSmallCapsRemake";
+      vertical-align: baseline;
+      margin: 0;
+      padding: 0;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      background: none;
+      resize: none; /* Prevents the textarea from being manually resizable */
+      overflow: hidden; /* Hide scrollbars */
+  }
+  
+  .red-integer-stat-textarea {
+      width: 20px;
+      height:13px;
+      font-size: .318cm;
+      font-weight: 400;
+      line-height: 1.2em;
+      margin-bottom: 0;
+      font-style: italic;
+      box-sizing: border-box;
+      border: 0;
+      font-family: "ScalySansSmallCapsRemake";
+      vertical-align: baseline;
+      margin: 0;
+      padding: 0;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      background: none;
+      resize: none; /* Prevents the textarea from being manually resizable */
+      overflow: hidden; /* Hide scrollbars */
+      color: var(--HB_Color_HeaderText);
+      white-space: pre-line;
+  }
+  
+  .integer-stat-textarea {
+      width: 20px;
+      height:13px;
+      font-size: .318cm;
+      font-weight: 400;
+      line-height: 1.2em;
+      margin-bottom: 0;
+      font-style: italic;
+      box-sizing: border-box;
+      border: 0;
+      font-family: "ScalySansRemake";
+      vertical-align: baseline;
+      margin: 0;
+      padding: 0;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      background: none;
+      resize: none; /* Prevents the textarea from being manually resizable */
+      overflow: hidden; /* Hide scrollbars */
+      white-space: pre-line;
+  }
+  
+  .string-stat-textarea {
+      width: 200px;
+      height:13px;
+      font-size: .318cm;
+      font-weight: 400;
+      line-height: 1.2em;
+      margin-bottom: 0;
+      font-style: italic;
+      box-sizing: border-box;
+      border: 0;
+      font-family: "ScalySansRemake";
+      vertical-align: baseline;
+      margin: 0;
+      padding: 0;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      background: none;
+      resize: none; /* Prevents the textarea from being manually resizable */
+      overflow: hidden; /* Hide scrollbars */
+      white-space: pre-wrap;
+  }
+  
+  .string-action-name-textarea {
+      width: 100%;
+      height:13px;
+      font-size: .318cm;
+      font-style: italic;
+      font-weight: bold;
+      line-height: 1.2em;
+      margin-bottom: 0;
+      font-style: italic;
+      box-sizing: border-box;
+      border: 0;
+      font-family: "ScalySansRemake";
+      vertical-align: baseline;
+      margin: 0;
+      padding: 0;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      background: none;
+      resize: none; /* Prevents the textarea from being manually resizable */
+      overflow: hidden; /* Hide scrollbars */
+      
+  }
+  
+  .string-action-description-textarea {
+      width: 100%;
+      height:16px;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 16px;
+      margin-bottom: 0;
+      box-sizing: border-box;
+      border: 0;
+      font-family: "ScalySansRemake";
+      vertical-align: baseline;
+      margin: 0;
+      padding: 0;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      background: none;
+      resize: none; /* Prevents the textarea from being manually resizable */
+      overflow: hidden; /* Hide scrollbars */
+  }
+
+    .image-textarea {
+        width: 100%;
+        height: 16px;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 16px;
+        margin-bottom: 0;
+        box-sizing: border-box;
+        border: 0;
+        font-family: "ScalySansRemake";
+        vertical-align: baseline;
+        margin: 0;
+        padding: 0;
+        overflow-wrap: break-word;
+        text-rendering: optimizeLegibility;
+        background: none;
+        resize: none; /* Prevents the textarea from being manually resizable */
+        overflow: hidden; /* Hide scrollbars */
+    }
+
+        .page-container .image-textarea {
+            display: none; /* Hidden by default when in .page-container */
+    }
+
+        .page-container .block-page:hover .image-textarea {
+            display: block; /* Show when hovering over .block-page */
+    }
+    .page-container .generate-image-button {
+        display: none; /* Hidden by default when in .page-container */
+    }
+    
+    .page-container .block-page:hover .generate-image-button {
+        display: inline-block; /* Show the button on hover */
+    }
+  
+  .block.monster.frame.wide {
+      column-count: inherit;
+      min-height: 100px; /* Set an appropriate minimum height */
+      height: 859px; /* Allow height to expand automatically */
+      column-fill: auto;
+      overflow: hidden; /* Ensure content overflow is visible */
+      width: 100%; /* Ensure it takes the full width of the container */
+      
+  }
+  
+  .highlight-page {
+      outline: 2px dashed #2196F3; /* Blue dashed border */
+      background-color: rgba(33, 150, 243, 0.1); /* Light blue background */
+  }
+  
+  .highlight-block {
+      border-bottom: 2px solid #2196F3; /* Blue solid border */
+      background-color: rgba(33, 150, 243, 0.1); /* Light blue background */
+  }
+  
+  .highlight-block-top {
+      border-top: 2px solid #2196F3; /* Blue solid border at the top */
+      background-color: rgba(33, 150, 243, 0.1); /* Light blue background */
+  }
+  
+  .name-textbox {
+      width: 50px;
+      font-size: 1.5em;
+      padding: 10px;
+  }
+  
+  .stat-textbox {
+      width: 50px;
+      text-align: center;
+      font-size: 1em;
+      padding: 5px;
+  }
+  
+  .trash-area {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 100px;
+      height: 100px;
+      
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      cursor: pointer;
+      background-image: url('./closed-mimic-trashcan.png'); /* Adjust the path to your image file */
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+  }
+  
+  .trash-area:hover {
+              background-image: url('./mimic_trashcan.png');
+          }
+  .trash-area.over {    
+      color: white;
+      background-image: url('./mimic_trashcan.png'); /* Example image change */
+  }
+  
