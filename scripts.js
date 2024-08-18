@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function() {
         return;
     }
   
-    // Event delegation for image clicks
+    // Event delegation for click events
     document.addEventListener('click', function(event) {
             // Log the click event for debugging
             console.log('Click detected:', event.target);
@@ -194,8 +194,18 @@ document.addEventListener("DOMContentLoaded", function() {
     function openPrintModal() {
         // Clone the original content before modifying
         originalContent = document.body.cloneNode(true);
-
         var brewRendererContent = document.getElementById('brewRenderer').innerHTML;
+
+        // Create a hidden iframe or select an existing one
+        var printIframe = document.createElement('iframe');
+        printIframe.style.position = 'fixed';
+        printIframe.style.width = '0px';
+        printIframe.style.height = '0px';
+        printIframe.style.border = 'none'; // Make the iframe invisible
+        document.body.appendChild(printIframe);
+        // Write the modal content to the iframe
+        var iframeDoc = printIframe.contentWindow.document;
+        iframeDoc.open();
 
         fetch('/proxy.html', {
             method: 'POST',
@@ -222,7 +232,13 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementsByClassName('close')[0].onclick = function() {
                 closePrintModal();
             };
+            iframeDoc.write(document.getElementById('modalPreviewContent').innerHTML);
+            iframeDoc.close();
+             // Wait for the content to load, then trigger the print dialog
+        printIframe.contentWindow.focus();
+        printIframe.contentWindow.print();
         })
+        
         .catch(error => {
             console.error('Error loading the print preview:', error);
         });
@@ -232,17 +248,7 @@ document.addEventListener("DOMContentLoaded", function() {
         var modal = document.getElementById('printModal');
         modal.style.display = "none";
         document.getElementById('modalPreviewContent').innerHTML = '';
-
-        // // Restore the original content or state
-        // if (originalContent) {
-        //     document.body = originalContent.cloneNode(true);
-        //     originalContent = null; // Clear the reference
-        // }
     }
-
-
-
-
 
     // Store initial positions of the blocks
     function storeInitialPositions() {
