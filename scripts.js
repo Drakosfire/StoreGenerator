@@ -149,140 +149,86 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
 
-    window.printPageContainer = function() {
-        var pageContainer = document.getElementById('brewRenderer');
-
-        titleElement = document.getElementById('user-store-title');
-         // Get the current value of the textarea
-         var storeTitle = titleElement.value;
-        
-         // Replace spaces with dashes
-         var processedTitle = storeTitle.replace(/\s+/g, '-');
-         
-        htmlContent = `
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                 <link href="{{all_css}}" rel="stylesheet">
-                <link href="{{font_css}}" rel="stylesheet">
-                <link href="{{bundle_css}}" rel="stylesheet">
-                <link href="{{style_css}}" rel="stylesheet">
-                <link href="{{phb_style_css}}" rel="stylesheet">
-                <link href="{{store_ui_css}}" rel="stylesheet">
-                <title>Print Preview - DnD Stat Block</title>
-                
-                <style>
-                    @media print {
-                        
-                        .page {
-                            page-break-before: auto;
-                        }
-                        .columnWrapper {
-                            overflow: visible;
-                        }
-                        
-                    }
-                </style>
-            </head>
-            <body>
-                <div id="pageContainer" class="page-container">
-                    <div id= "brewRenderer" class="brewRenderer">
-                        ${pageContainer.innerHTML}
-                    </div>
-                </div>
-            </body>
-            </html>
-        `;
- 
-        console.log(htmlContent);  // Add this line to check the content
-        // var encodedHtmlContent = btoa(encodeURIComponent(htmlContent));
-
-        // Send the HTML content to the server to generate a PDF
-        fetch('/generate-pdf', {
+    // Works great locally, not deployed to huggingface
+    // function printPDF() {
+    //     // Capture the innerHTML of brewRenderer
+    //     var brewRendererContent = document.getElementById('brewRenderer').innerHTML;
+    
+    //     // Open a new window immediately on user interaction
+    //     var previewWindow = window.open('', 'pdf-preview', 'width=800,height=600');
+    
+    //     // Check if the window was blocked
+    //     if (!previewWindow) {
+    //         alert("Popup blocked! Please allow popups for this website to preview the PDF.");
+    //         return;
+    //     }
+    
+    //     // Create a form to send the content to the proxy
+    //     var form = document.createElement("form");
+    //     form.setAttribute("method", "post");
+    //     form.setAttribute("action", "/proxy.html");
+    //     form.setAttribute("target", "pdf-preview");
+    
+    //     // Create a hidden input to store the HTML content
+    //     var hiddenField = document.createElement("input");
+    //     hiddenField.setAttribute("type", "hidden");
+    //     hiddenField.setAttribute("name", "htmlContent");
+    //     hiddenField.setAttribute("value", brewRendererContent);
+    
+    //     form.appendChild(hiddenField);
+    //     document.body.appendChild(form);
+    
+    //     // Submit the form, which will load the proxy.html in the new window
+    //     form.submit();
+    
+    //     // Clean up the form after a short delay
+    //     setTimeout(function() {
+    //         form.remove();
+    //     }, 1000);
+    // }
+    
+    // document.getElementById('printButton').addEventListener('click', printPDF);
+    
+    function openPrintModal() {
+        var brewRendererContent = document.getElementById('brewRenderer').innerHTML;
+        console.log('brewRendererContent:', brewRendererContent);
+    
+        // Fetch proxy.html via AJAX
+        fetch('/proxy.html', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ htmlContent: htmlContent,
-                title: processedTitle
-            })
+            body: JSON.stringify({ htmlContent: brewRendererContent }),
         })
-        
-        .then(response => {
-            if (response.ok) {
-                return response.blob(); // Get the response as a Blob (binary large object)
-            } else {
-                return response.json().then(data => {
-                    throw new Error(data.error || 'Failed to generate PDF');
-                });
-            }
-        })
-        .then(blob => {
-            // Create a URL for the Blob
-            var downloadUrl = window.URL.createObjectURL(blob);
-            
-            // Create an anchor element and click it to trigger the download
-            var a = document.createElement('a');
-            a.href = downloadUrl;
-            a.download = `${processedTitle}.pdf`;  // Set the desired file name
-            document.body.appendChild(a);
-            a.click();
-            
-            // Clean up by revoking the object URL and removing the anchor element
-            window.URL.revokeObjectURL(downloadUrl);
-            a.remove();
+        .then(response => response.text())
+        .then(html => {
+            // Insert the fetched HTML into the modal
+            document.getElementById('modalPreviewContent').innerHTML = html;
+    
+            // Display the modal
+            var modal = document.getElementById('printModal');
+            modal.style.display = "block";
+    
+            // Attach event listeners to the print and cancel buttons
+            document.getElementById('print-button').onclick = function() {
+                window.print(); // Trigger print dialog
+            };
+    
+            document.getElementById('cancel-button').onclick = function() {
+                modal.style.display = "none"; // Close the modal
+            };
+    
+            document.getElementsByClassName('close')[0].onclick = function() {
+                modal.style.display = "none"; // Close the modal
+            };
         })
         .catch(error => {
-            console.error('Error generating PDF:', error);
+            console.error('Error loading the print preview:', error);
         });
-    };
-    // document.getElementById('printButton').addEventListener('click', function() {
-    //     window.printPageContainer();
-    //     } 
-    // );
-
-    function printPDF() {
-        // Capture the innerHTML of brewRenderer
-        var brewRendererContent = document.getElementById('brewRenderer').innerHTML;
-    
-        // Open a new window immediately on user interaction
-        var previewWindow = window.open('', 'pdf-preview', 'width=800,height=600');
-    
-        // Check if the window was blocked
-        if (!previewWindow) {
-            alert("Popup blocked! Please allow popups for this website to preview the PDF.");
-            return;
-        }
-    
-        // Create a form to send the content to the proxy
-        var form = document.createElement("form");
-        form.setAttribute("method", "post");
-        form.setAttribute("action", "/proxy.html");
-        form.setAttribute("target", "pdf-preview");
-    
-        // Create a hidden input to store the HTML content
-        var hiddenField = document.createElement("input");
-        hiddenField.setAttribute("type", "hidden");
-        hiddenField.setAttribute("name", "htmlContent");
-        hiddenField.setAttribute("value", brewRendererContent);
-    
-        form.appendChild(hiddenField);
-        document.body.appendChild(form);
-    
-        // Submit the form, which will load the proxy.html in the new window
-        form.submit();
-    
-        // Clean up the form after a short delay
-        setTimeout(function() {
-            form.remove();
-        }, 1000);
     }
     
-    document.getElementById('printButton').addEventListener('click', printPDF);
-    
-    
+    document.getElementById('printButton').addEventListener('click', openPrintModal);
 
 
     // Store initial positions of the blocks

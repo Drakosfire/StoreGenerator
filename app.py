@@ -88,7 +88,9 @@ def generate_image():
 # New route to convert HTML to PDF
 @app.route('/proxy.html', methods=['POST'])
 def proxy():
-    html_content = request.form.get('htmlContent', '')
+    data = request.json
+    html_content = data.get('htmlContent', '')
+    print(f"Received HTML content: {html_content}")
 
     # Render the proxy HTML with the provided content
     return render_template('proxy.html', html_content=html_content)
