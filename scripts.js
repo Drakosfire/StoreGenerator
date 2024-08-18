@@ -1,15 +1,15 @@
-// Waits for DOM content to be fully loaded and assigns critical elements to variables.
+
+// Globals
+let originalContent = null;
 let initialPositions = [];
+
+// Waits for DOM content to be fully loaded and assigns critical elements to variables.
 document.addEventListener("DOMContentLoaded", function() {
-    const blockContainer = document.getElementById('blockContainer');
+    // constants and variables. 
+    let blockContainer = document.getElementById('blockContainer');
     let blockContainerPage = document.getElementById('block-page');
     const pageContainer = document.getElementById('pages');
     const trashArea = document.getElementById('trashArea');
-    const toggleButton = document.getElementById('toggle-text-block-button');
-    const autofillButton = document.getElementById('autofill-button');
-    const resetButton = document.getElementById('resetButton');
-    const addPageButton = document.getElementById('add-page-button');
-    const removePageButton = document.getElementById('remove-page-button');
     let currentPage = pageContainer.querySelector('.block.monster.frame.wide');
     const modal = document.getElementById('imageModal');
     const modalImg = document.getElementById('modalImage');
@@ -40,61 +40,104 @@ document.addEventListener("DOMContentLoaded", function() {
   
     // Event delegation for image clicks
     document.addEventListener('click', function(event) {
-        console.log('Click detected in blockContainer:', event.target);
-        if (event.target.tagName === 'IMG' && event.target.id.startsWith('generated-image-')) {
-            console.log('Image clicked for modal display. Image ID:', event.target.id);
-            modal.style.display = 'block';
-            modalImg.src = event.target.src;
-            captionText.innerHTML = event.target.alt;
-        } else {
-            console.log('Clicked element is not an image or does not match ID pattern.');
-        }
-    });
-
-    // Function to close the modal
-    closeModal.onclick = function() {
-        modal.style.display = "none";
-    }
-
-    // Function to close the modal when clicking outside of the modal content
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
-
-    document.getElementById('submitDescription').addEventListener('click', function() {
-    const userInput = document.getElementById('user-description').value;
-    // Clear the block container before inserting new blocks
-    blockContainerPage.innerHTML = '';
-    // document.getElementById('add-page-button').addEventListener('click', addPage);
-    // document.getElementById('remove-page-button').addEventListener('click', removePage);
-
-    fetch('/process-description', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ user_input: userInput })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Success:', data);
-        initialPositions.length = 0; // Clear the initialPositions array
-        insertHtmlBlocks(data.html_blocks);
-        const blocks = blockContainerPage.querySelectorAll('.block-item');
-        blocks.forEach(block => {
-            block.setAttribute('data-page-id', 'block-container');
-            block.setAttribute('draggable', true);
-            block.addEventListener('dragstart', handleDragStart);
-            block.addEventListener('dragend', handleDragEnd);
+            // Log the click event for debugging
+            console.log('Click detected:', event.target);
+    
+            // Handle image clicks for modal display
+            if (event.target.tagName === 'IMG' && event.target.id.startsWith('generated-image-')) {
+                console.log('Image clicked for modal display. Image ID:', event.target.id);
+                modal.style.display = 'block';
+                modalImg.src = event.target.src;
+                captionText.innerHTML = event.target.alt;
+            }
+    
+            // Handle modal close button
+            if (event.target.id === 'closeModal') {
+                console.log('Close button clicked for modal. Element ID:', event.target.id);
+                modal.style.display = "none";
+            }
+    
+            // Handle modal close when clicking outside of the modal content
+            if (event.target === modal) {
+                console.log('Clicked outside of modal content, closing modal.');
+                modal.style.display = "none";
+            }
+    
+            // Handle submission of the description
+            if (event.target.id === 'submitDescription') {
+                console.log('Submit description button clicked. Element ID:', event.target.id);
+                const userInput = document.getElementById('user-description').value;
+                blockContainerPage.innerHTML = ''; // Clear the block container before inserting new blocks
+    
+                fetch('/process-description', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ user_input: userInput })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    initialPositions.length = 0; // Clear the initialPositions array
+                    insertHtmlBlocks(data.html_blocks);
+                    const blocks = blockContainerPage.querySelectorAll('.block-item');
+                    blocks.forEach(block => {
+                        block.setAttribute('data-page-id', 'block-container');
+                        block.setAttribute('draggable', true);
+                        block.addEventListener('dragstart', handleDragStart);
+                        block.addEventListener('dragend', handleDragEnd);
+                    });
+                    storeInitialPositions();
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            }
+    
+            // Handle print button click
+            if (event.target.id === 'printButton') {
+                console.log('Print button clicked. Element ID:', event.target.id);
+                openPrintModal();
+            }
+    
+            // Handle generate image button click
+            if (event.target.classList.contains('generate-image-button')) {
+                const blockId = event.target.getAttribute('data-block-id');
+                console.log('Generate image button clicked. Block ID:', blockId);
+                generateImage(blockId);
+            }
+    
+            // Handle page add button
+            if (event.target.id === 'addPageButton') {
+                console.log('Add page button clicked. Element ID:', event.target.id);
+                addPage();
+            }
+    
+            // Handle page remove button
+            if (event.target.id === 'removePageButton') {
+                console.log('Remove page button clicked. Element ID:', event.target.id);
+                removePage();
+            }
+    
+            // Handle toggle button click
+            if (event.target.id === 'toggleButton') {
+                console.log('Toggle button clicked. Element ID:', event.target.id);
+                toggleAllTextBlocks();
+            }
+    
+            // Handle autofill button click
+            if (event.target.id === 'autofillButton') {
+                console.log('Autofill button clicked. Element ID:', event.target.id);
+                autofillBlocks();
+            }
+    
+            // Handle reset button click
+            if (event.target.id === 'resetButton') {
+                console.log('Reset button clicked. Element ID:', event.target.id);
+                handleReset();
+            }
         });
-        storeInitialPositions();
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    });
-    });
    
 
     function toggleAllTextBlocks() {
@@ -108,12 +151,11 @@ document.addEventListener("DOMContentLoaded", function() {
             // Hide all textareas and buttons
             textareas.forEach(textarea => textarea.style.display = 'none');
             generateButtons.forEach(btn => btn.style.display = 'none');
-            document.querySelector('.toggle-text-block-button').textContent = 'Show All Image Descriptions';
         } else {
             // Show all textareas and buttons
             textareas.forEach(textarea => textarea.style.display = 'block');
             generateButtons.forEach(btn => btn.style.display = 'inline-block');
-            document.querySelector('.toggle-text-block-button').textContent = 'Hide All Image Descriptions';
+            
         }
     }
     function autofillBlocks() {
@@ -148,52 +190,13 @@ document.addEventListener("DOMContentLoaded", function() {
         console.log('Autofill complete, all blocks moved to page-container');
     }
 
-
-    // Works great locally, not deployed to huggingface
-    // function printPDF() {
-    //     // Capture the innerHTML of brewRenderer
-    //     var brewRendererContent = document.getElementById('brewRenderer').innerHTML;
-    
-    //     // Open a new window immediately on user interaction
-    //     var previewWindow = window.open('', 'pdf-preview', 'width=800,height=600');
-    
-    //     // Check if the window was blocked
-    //     if (!previewWindow) {
-    //         alert("Popup blocked! Please allow popups for this website to preview the PDF.");
-    //         return;
-    //     }
-    
-    //     // Create a form to send the content to the proxy
-    //     var form = document.createElement("form");
-    //     form.setAttribute("method", "post");
-    //     form.setAttribute("action", "/proxy.html");
-    //     form.setAttribute("target", "pdf-preview");
-    
-    //     // Create a hidden input to store the HTML content
-    //     var hiddenField = document.createElement("input");
-    //     hiddenField.setAttribute("type", "hidden");
-    //     hiddenField.setAttribute("name", "htmlContent");
-    //     hiddenField.setAttribute("value", brewRendererContent);
-    
-    //     form.appendChild(hiddenField);
-    //     document.body.appendChild(form);
-    
-    //     // Submit the form, which will load the proxy.html in the new window
-    //     form.submit();
-    
-    //     // Clean up the form after a short delay
-    //     setTimeout(function() {
-    //         form.remove();
-    //     }, 1000);
-    // }
-    
-    // document.getElementById('printButton').addEventListener('click', printPDF);
-    
+    // This works in principal when deployed. It looks like shit but it does function. 
     function openPrintModal() {
+        // Clone the original content before modifying
+        originalContent = document.body.cloneNode(true);
+
         var brewRendererContent = document.getElementById('brewRenderer').innerHTML;
-        console.log('brewRendererContent:', brewRendererContent);
-    
-        // Fetch proxy.html via AJAX
+
         fetch('/proxy.html', {
             method: 'POST',
             headers: {
@@ -203,32 +206,42 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .then(response => response.text())
         .then(html => {
-            // Insert the fetched HTML into the modal
             document.getElementById('modalPreviewContent').innerHTML = html;
-    
-            // Display the modal
+
             var modal = document.getElementById('printModal');
             modal.style.display = "block";
-    
-            // Attach event listeners to the print and cancel buttons
+
             document.getElementById('print-button').onclick = function() {
-                window.print(); // Trigger print dialog
+                window.print();
             };
-    
+
             document.getElementById('cancel-button').onclick = function() {
-                modal.style.display = "none"; // Close the modal
+                closePrintModal();
             };
-    
+
             document.getElementsByClassName('close')[0].onclick = function() {
-                modal.style.display = "none"; // Close the modal
+                closePrintModal();
             };
         })
         .catch(error => {
             console.error('Error loading the print preview:', error);
         });
     }
-    
-    document.getElementById('printButton').addEventListener('click', openPrintModal);
+
+    function closePrintModal() {
+        var modal = document.getElementById('printModal');
+        modal.style.display = "none";
+        document.getElementById('modalPreviewContent').innerHTML = '';
+
+        // // Restore the original content or state
+        // if (originalContent) {
+        //     document.body = originalContent.cloneNode(true);
+        //     originalContent = null; // Clear the reference
+        // }
+    }
+
+
+
 
 
     // Store initial positions of the blocks
@@ -247,7 +260,7 @@ document.addEventListener("DOMContentLoaded", function() {
         console.log('Initial positions:', initialPositions);
     }
 
-    function sortBlocksById() {
+    function sortBlocksById(blockContainerPage) {
         // Select all blocks inside the block-container
         const blocks = Array.from(blockContainerPage.querySelectorAll('.block-item'));
         console.log('Blocks in blockContainerPage:', blocks);
@@ -261,11 +274,14 @@ document.addEventListener("DOMContentLoaded", function() {
     
         // Clear the block-container before re-appending the sorted blocks
         blockContainerPage.innerHTML = '';
+        
     
         // Re-append the blocks in the sorted order
+        console.log('Contents of blocks', blocks);
         blocks.forEach(block => blockContainerPage.appendChild(block));
     
         console.log('Blocks have been sorted and re-appended based on block-id');
+        console.log('Contents of blockContainerPage', blockContainerPage);
     }
 
     function reinsertBlock(blockContainerPage, blockId, innerHTML) {
@@ -340,8 +356,6 @@ document.addEventListener("DOMContentLoaded", function() {
         // console.log('Final state of blockContainer:', blockContainer.innerHTML);
         initializeTextareaResizing();
     }
-
-    storeInitialPositions();
 
     function adjustTextareaHeight(el, offset = 0) {
         if (el.scrollHeight > 16){
@@ -441,15 +455,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         initializeTextareaResizing();
     }
-    
-
-     document.addEventListener('click', function(event) {
-        if (event.target && event.target.classList.contains('generate-image-button')) {
-            const blockId = event.target.getAttribute('data-block-id');
-            generateImage(blockId);
-        }
-        });
-
+ 
     // Function to generate image
     function generateImage(blockId) {
         const sdPromptElement = document.getElementById(`sdprompt-${blockId}`);
@@ -913,7 +919,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             // Reinsert the block using the refactored function
         reinsertBlock(blockContainerPage, blockId, innerHTML);
-        sortBlocksById();
+        sortBlocksById(blockContainerPage);
             } else {
                 console.log('No data transferred');
             }
@@ -939,84 +945,81 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function handleReset() {
-    console.log('Reset button clicked');
-    
-    // Collect all blocks from all pages
-    const allBlocks = [];
-    const pages = document.querySelectorAll('.page');
-    
-    pages.forEach(page => {
-        console.log(`Processing page with ID: ${page.getAttribute('data-page-id')}`);
+        console.log('Reset button clicked');
         
-        const blocksOnPage = page.querySelectorAll('[data-block-id]');
+        // Collect all blocks from all pages
+        const allBlocks = [];
+        const pages = document.querySelectorAll('.page');
         
-        blocksOnPage.forEach(block => {
-            block.setAttribute('display', 'block');
-            const blockId = block.getAttribute('data-block-id');
-            allBlocks.push({
-                id: blockId,
-                innerHTML: block.innerHTML
+        pages.forEach(page => {
+            console.log(`Processing page with ID: ${page.getAttribute('data-page-id')}`);
+            
+            const blocksOnPage = page.querySelectorAll('[data-block-id]');
+            
+            blocksOnPage.forEach(block => {
+                block.setAttribute('display', 'block');
+                const blockId = block.getAttribute('data-block-id');
+                allBlocks.push({
+                    id: blockId,
+                    innerHTML: block.innerHTML
+                });
+                block.remove();
+                console.log(`Removed block with ID: ${blockId} from page ID: ${page.getAttribute('data-page-id')}`);
             });
-            block.remove();
-            console.log(`Removed block with ID: ${blockId} from page ID: ${page.getAttribute('data-page-id')}`);
         });
-    });
 
-    // Log blocks collected
-    console.log('All blocks collected:', allBlocks);
+        // Log blocks collected
+        console.log('All blocks collected:', allBlocks);
 
-    // Clear all pages
-    pages.forEach(page => {
-        console.log(`Removing page with ID: ${page.getAttribute('data-page-id')}`);
-        page.remove();
-    });
+        // Clear all pages
+        pages.forEach(page => {
+            console.log(`Removing page with ID: ${page.getAttribute('data-page-id')}`);
+            page.remove();
+        });
 
-    // Clear blockContainer before reinserting blocks
-    console.log('Clearing blockContainer...');
-    blockContainer.innerHTML = '';
+        // Clear blockContainer before reinserting blocks
+        console.log('Clearing blockContainer...');
+        blockContainer.innerHTML = '';
 
-    // Check and create blockContainerPage if it doesn't exist
-    let blockContainerPage = document.getElementById('block-page');
-    if (!blockContainerPage) {
+       // Create a new page inside the blockContainer
         blockContainerPage = document.createElement('div');
         blockContainerPage.classList.add('page');
         blockContainerPage.setAttribute('id', 'block-page');
         blockContainer.appendChild(blockContainerPage);
         console.log('Created new blockContainerPage');
-    } else {
-        console.log('blockContainerPage already exists');
-    }
 
-    // Reassign blockContainerPage to the newly created block-page element
-    
-    console.log('blockContainerPage reassigned to:', blockContainerPage);
+        // Reassign blockContainerPage to the newly created block-page element
+        console.log('blockContainerPage reassigned to:', blockContainerPage);
 
-    // Reinsert blocks back into the blockContainer in their original order
-    initialPositions.forEach(pos => {
-        const blockData = allBlocks.find(block => block.id === pos.id);
-        
-        if (blockData) {
-            console.log(`Reinserting block with ID: ${blockData.id} into blockContainerPage`);
-            reinsertBlock(blockContainerPage, blockData.id, blockData.innerHTML);
-            sortBlocksById();
-        } else {
-            console.log(`Block with ID: ${pos.id} not found in collected blocks.`);
-        }
-    });
+        // Reinsert blocks back into the blockContainer in their original order
+        initialPositions.forEach(pos => {
+            const blockData = allBlocks.find(block => block.id === pos.id);
+            
+            if (blockData) {
+                console.log(`Reinserting block with ID: ${blockData.id} into blockContainerPage`);
+                reinsertBlock(blockContainerPage, blockData.id, blockData.innerHTML);
+                sortBlocksById(blockContainerPage);
+            } else {
+                console.log(`Block with ID: ${pos.id} not found in collected blocks.`);
+            }
+        });
 
     // Add a new page after reset
-    addPage();
-    console.log('Added new page after reset.');
+    let currentPage = pageContainer.querySelector('.page'); 
+    console.log('Current page:', currentPage);
+        // If no existing page is found, create the first page
+        if (!currentPage) {
+            currentPage = addPage();
+            currentPage.setAttribute('data-page-id', 'page-0');
+            console.log('No existing pages found. Created the first page:', currentPage.id);
+        }
+            
 
     console.log('Reset complete, all blocks moved back to block-container');
     initializeTextareaResizing();
 }
 
-    // Event listeners for buttons
-    addPageButton.addEventListener('click', addPage);
-    removePageButton.addEventListener('click', removePage);
-    toggleButton.addEventListener('click', toggleAllTextBlocks);
-    autofillButton.addEventListener('click', autofillBlocks);
+
     
     // Event listeners for drag and drop functionality
     blockContainer.addEventListener('dragover', handleDragOver);
@@ -1028,6 +1031,6 @@ document.addEventListener("DOMContentLoaded", function() {
     trashArea.addEventListener('dragover', handleTrashOver);
     trashArea.addEventListener('dragleave', handleTrashLeave);
     trashArea.addEventListener('drop', handleTrashDrop);
-    resetButton.addEventListener('click', handleReset);
+    
     extractBlocks();
 });
