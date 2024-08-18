@@ -222,7 +222,7 @@ document.addEventListener("DOMContentLoaded", function() {
             modal.style.display = "block";
 
             document.getElementById('print-button').onclick = function() {
-                window.print();
+                printIframe.contentWindow.print();
             };
 
             document.getElementById('cancel-button').onclick = function() {
