@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Handle print button click
             if (event.target.id === 'printButton') {
                 console.log('Print button clicked. Element ID:', event.target.id);
-                openPrintModal();
+                printScreen();
             }
     
             // Handle generate image button click
@@ -190,65 +190,12 @@ document.addEventListener("DOMContentLoaded", function() {
         console.log('Autofill complete, all blocks moved to page-container');
     }
 
-    // This works in principal when deployed. It looks like shit but it does function. 
-    function openPrintModal() {
-        // Clone the original content before modifying
-        originalContent = document.body.cloneNode(true);
-        var brewRendererContent = document.getElementById('brewRenderer').innerHTML;
-
-        // Create a hidden iframe or select an existing one
-        var printIframe = document.createElement('iframe');
-        printIframe.style.position = 'fixed';
-        printIframe.style.width = '0px';
-        printIframe.style.height = '0px';
-        printIframe.style.border = 'none'; // Make the iframe invisible
-        document.body.appendChild(printIframe);
-        // Write the modal content to the iframe
-        var iframeDoc = printIframe.contentWindow.document;
-        iframeDoc.open();
-
-        fetch('/proxy.html', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ htmlContent: brewRendererContent }),
-        })
-        .then(response => response.text())
-        .then(html => {
-            document.getElementById('modalPreviewContent').innerHTML = html;
-
-            var modal = document.getElementById('printModal');
-            modal.style.display = "block";
-
-            document.getElementById('print-button').onclick = function() {
-                printIframe.contentWindow.print();
-            };
-
-            document.getElementById('cancel-button').onclick = function() {
-                closePrintModal();
-            };
-
-            document.getElementsByClassName('close')[0].onclick = function() {
-                closePrintModal();
-            };
-            iframeDoc.write(document.getElementById('modalPreviewContent').innerHTML);
-            iframeDoc.close();
-             // Wait for the content to load, then trigger the print dialog
-        printIframe.contentWindow.focus();
-        printIframe.contentWindow.print();
-        })
-        
-        .catch(error => {
-            console.error('Error loading the print preview:', error);
-        });
+    // This works in principal when deployed. It looks like shit but it does function. Still can't print but it is in an iframe. 
+    function printScreen() {
+        window.print()
     }
 
-    function closePrintModal() {
-        var modal = document.getElementById('printModal');
-        modal.style.display = "none";
-        document.getElementById('modalPreviewContent').innerHTML = '';
-    }
+    
 
     // Store initial positions of the blocks
     function storeInitialPositions() {

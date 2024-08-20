@@ -33,11 +33,6 @@ def apply_headers(response):
     response.headers["Cross-Origin-Opener-Policy"] = "same-origin-allow-popups"
     return response
 
-# # Default route for index
-# @app.route('/')
-# def index():
-#     return send_from_directory('.', 'storeUI.html')  # Make sure this points to your main HTML file
-
 @app.route('/')
 def index():
     css_files = {
@@ -49,7 +44,6 @@ def index():
         'store_ui_css': url_for('static', filename='storeUI.css')
     }
     return render_template('storeUI.html', css_files=css_files)
-
 
 CORS(app)# Route to handle the incoming POST request with user description
 
@@ -84,17 +78,6 @@ def generate_image():
         return jsonify({'image_url': image_url})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-    
-# New route to convert HTML to PDF
-@app.route('/proxy.html', methods=['POST'])
-def proxy():
-    data = request.json
-    html_content = data.get('htmlContent', '')
-    print(f"Received HTML content: {html_content}")
-
-    # Render the proxy HTML with the provided content
-    return render_template('proxy.html', html_content=html_content)
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=7860, debug=True)  # Run the app on localhost, port 7860

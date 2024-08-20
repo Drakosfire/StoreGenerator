@@ -14,6 +14,29 @@
     <script src="https://unpkg.com/htmx.org@1.7.0/dist/htmx.min.js"></script>
 
     <style>
+        @media print {
+        /* Hide everything by default */
+        body * {
+            visibility: hidden;
+        }
+
+        /* Specifically show the section you want to print */
+        #brewRenderer, #brewRenderer * {
+            visibility: visible;
+            page-break-before: auto;
+            page-break-after: avoid;
+            page-break-inside: avoid;
+        }
+
+        /* Ensure the printable section takes up the full page */
+        #brewRenderer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: auto;
+        }
+    }
         /* Modal styles */
         .modal {
             display: none; /* Hidden by default */
@@ -69,7 +92,7 @@
             <button id="addPageButton">Add New Page</button>
             <button id="removePageButton">Remove Last Page</button>
             <button id="resetButton">Reset</button>
-            <button id="printButton">Open Tab to print</button>
+            <button id="printButton">Print</button>
         </div>
         <div class="page-container" id="pageContainer">
             
@@ -101,7 +124,7 @@
             <div id="modalPreviewContent"></div>
         </div>
     </div>
-    
+    <div id="iFrameContainer" style="display:none;"></div>
     <script src="scripts.js"></script>
         
     </script>
