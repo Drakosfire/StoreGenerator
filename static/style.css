@@ -166,7 +166,7 @@ body {
     background-color: white;
     border: initial;
     border-style: solid;
-    border-image-source: url('../../dependencies/assets/frameBorder.png');
+    border-image-source: url('./themes/assets/frameBorder.png');
     border-image-slice: 200;
     border-image-width: 47px;
     border-image-outset: .4cm .3cm;
