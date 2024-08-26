@@ -149,6 +149,9 @@
       margin-right:0.1cm;
       margin-left: 0.1cm;
   }
+  .page .classTable.decoration::before {
+    background-image: none;
+  }
   
   .block-page{
     break-inside: avoid;
