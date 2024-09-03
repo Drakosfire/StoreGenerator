@@ -95,7 +95,7 @@
 }
 
 .logo {
-    width: 30%; /* The logo will take up 20% of the width of its container */
+    width: 40%; /* The logo will take up 20% of the width of its container */
     max-width: 300px; /* Set a maximum width so it doesn't get too large on very wide screens */
     height: auto; /* Maintain aspect ratio */
     max-height: 57px; /* Set a maximum height to prevent the logo from getting too tall */
@@ -113,6 +113,7 @@
 .button-container {
     display: flex;
     gap: 10px; /* Space between buttons */
+    width:40%;
     
 }
 .button-container-top {
@@ -121,7 +122,7 @@
 }
 
 .button-container-bottom {
-    justify-content: flex-start; /* Align bottom row buttons to the left */
+    justify-content: flex-end; /* Align bottom row buttons to the left */
 }
    
 .page {
