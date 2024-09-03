@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
     
             // Handle submission of the description
-            if (event.target.id === 'submitDescription') {
+            if (event.target.id === 'submitButton') {
                 console.log('Submit description button clicked. Element ID:', event.target.id);
                 const userInput = document.getElementById('user-description').value;
                 blockContainerPage.innerHTML = ''; // Clear the block container before inserting new blocks
@@ -363,7 +363,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 return;
             }
             
-            const response = await fetch('template_update.html');
+            const response = await fetch('./static/template_update.html');
             if (!response.ok) {
                 throw new Error('Network response was not ok ' + response.statusText);
             }
