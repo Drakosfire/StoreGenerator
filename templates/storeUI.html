@@ -143,7 +143,7 @@
         <div id="floatingToolbar" class="floatingToolbar">
             
             <div class="button-container button-container-top">
-                <img src="/static/images/StoreGeneratorLogo.png" alt="Store Generator Logo" class="logo">
+                
                 <textarea id="user-description" class="user-description-textarea"
                 hx-post="/update-stats" hx-trigger="change"
                 hx-target="#user-description" hx-swap="outerHTML"
@@ -152,7 +152,9 @@
                 <button id="submitButton" class="button-with-image">
                     <img src="/static/images/StoreGeneratorSubmitButton.png" alt="Submit Button" aria-hidden="true">
                 </button>
+                
             </div>
+            <img src="/static/images/StoreGeneratorLogo.png" alt="Store Generator Logo" class="logo">
             <div class="button-container button-container-bottom">
                 <button id="autofillButton" class="button-with-image">Autofill Pages</button>
                 <button id="addPageButton" class="button-with-image">Add New Page</button>
