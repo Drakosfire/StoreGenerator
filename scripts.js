@@ -144,11 +144,11 @@ document.addEventListener("DOMContentLoaded", function() {
         });
    
         const blockContainerLoadingImages = [
-            "./static/images/loadingMimic/Mimic Chest1.png",
-            "./static/images/loadingMimic/Mimic Chest2.png",
-            "./static/images/loadingMimic/Mimic Chest3.png",
-            "./static/images/loadingMimic/Mimic Chest4.png",
-            "./static/images/loadingMimic/Mimic Chest5.png"
+            "/static/images/loadingMimic/Mimic Chest1.png",
+            "/static/images/loadingMimic/Mimic Chest2.png",
+            "/static/images/loadingMimic/Mimic Chest3.png",
+            "/static/images/loadingMimic/Mimic Chest4.png",
+            "/static/images/loadingMimic/Mimic Chest5.png"
         ];
         let currentBlockContainerLoadingImageIndex = 0;
         const loadingImage = document.getElementById('loadingImage');
