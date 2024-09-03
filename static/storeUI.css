@@ -71,7 +71,6 @@
     margin-left: 450px; /* Offset the page Scontent by the width of block-container plus margin */
     width: 900px;
     padding: 2px;
-    padding-top: 100px; /* Adjust based on the toolbar's height + any additional space you want */
     overflow: auto; /* Enable scrolling if needed */
     height: calc(100vh - 80px); /* Adjust the height to consider the toolbar's height */
     box-sizing: border-box; /* Include padding and border in the element's total width and height */
