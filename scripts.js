@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function() {
         console.error('closeModal element not found');
         return;
     }
-  
+    
     // Event delegation for click events
     document.addEventListener('click', function(event) {
             // Log the click event for debugging
@@ -68,6 +68,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 console.log('Submit description button clicked. Element ID:', event.target.id);
                 const userInput = document.getElementById('user-description').value;
                 blockContainerPage.innerHTML = ''; // Clear the block container before inserting new blocks
+                startLoadingAnimation();
     
                 fetch('/process-description', {
                     method: 'POST',
@@ -92,6 +93,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 })
                 .catch((error) => {
                     console.error('Error:', error);
+                })
+                .finally(() => {
+                    stopLoadingAnimation();
                 });
             }
     
@@ -139,6 +143,41 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
    
+        const blockContainerLoadingImages = [
+            "/static/images/loadingMimic/Mimic Chest1.png",
+            "/static/images/loadingMimic/Mimic Chest2.png",
+            "/static/images/loadingMimic/Mimic Chest3.png",
+            "/static/images/loadingMimic/Mimic Chest4.png",
+            "/static/images/loadingMimic/Mimic Chest5.png"
+        ];
+        let currentBlockContainerLoadingImageIndex = 0;
+        const loadingImage = document.getElementById('loadingImage');
+    
+        // Ensure loadingImage element exists before proceeding
+        if (!loadingImage) {
+            console.error("Loading image element not found!");
+            return;
+        }
+    
+        function changeImage() {
+            loadingImage.src = blockContainerLoadingImages[currentBlockContainerLoadingImageIndex];
+            currentBlockContainerLoadingImageIndex = (currentBlockContainerLoadingImageIndex + 1) % blockContainerLoadingImages.length;
+        }
+    
+        // Change the image every 500ms (0.5 seconds)
+        let animationInterval;
+    
+        // Function to start the animation
+        function startLoadingAnimation() {
+            document.getElementById('loadingAnimation').style.display = 'flex';
+            animationInterval = setInterval(changeImage, 500);
+        }
+    
+        // Function to stop the animation
+        function stopLoadingAnimation() {
+            clearInterval(animationInterval);
+            document.getElementById('loadingAnimation').style.display = 'none';
+        }
 
     function toggleAllTextBlocks() {
         const pageContainer = document.querySelector('.page-container');
@@ -358,7 +397,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     async function extractBlocks() {
         try {
-            if (blockContainerPage.children.length > 0) {
+            if (blockContainerPage.children.length > 1) {
                 console.log('Blocks already loaded, skipping fetch');
                 return;
             }
