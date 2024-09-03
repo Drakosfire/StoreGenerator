@@ -35,6 +35,25 @@
             left: 0;
             width: 100%;
             height: auto;
+            padding-bottom: 20px; /* Add some padding at the bottom to prevent cropping */
+            box-sizing: border-box;
+        }
+
+        /* Scale the content to fit the page */
+        #brewRenderer {
+            zoom: 150%; /* Adjust this percentage as necessary */
+        }
+
+        /* Add space between pages */
+        .page {
+            page-break-after: always;
+            margin-bottom: 40px; /* Adjust this to control the space between pages */
+            margin-top: 40px; /* Adjust this to control the space between pages */
+        }
+
+        /* Optional: Add more space to ensure content doesn't get too close to the top of the next page */
+        .page:last-child {
+            margin-bottom: 0; /* Avoid extra space after the last page */
         }
     }
         /* Modal styles */
@@ -119,20 +138,16 @@
 </head>
 
 <body>
-    <div class="grid-container">
-        <div class="block-container" id="blockContainer" >
-            <div class="page" id = "block-page" data-page-id="block-container">
-            <!-- Blocks will be wrapped in a page div and loaded here -->
-             </div>
-        </div>
+    <div class="main-container">
         <div id="floatingToolbar" class="floatingToolbar">
-            <h1>Store Description</h1>
-            <textarea id="user-description" class="user-description-textarea"
-            hx-post="/update-stats" hx-trigger="change"
-            hx-target="#user-description" hx-swap="outerHTML"
-            title="As much or as little description as you want to provide. You can provide specific employees, inventory etc">A very standard gear store run by a fae potted plant named Gorgeous
-            </textarea>
+            
             <div class="button-container button-container-top">
+                <img src="/static/images/StoreGeneratorLogo.png" alt="Store Generator Logo" class="logo">
+                <textarea id="user-description" class="user-description-textarea"
+                hx-post="/update-stats" hx-trigger="change"
+                hx-target="#user-description" hx-swap="outerHTML"
+                title="As much or as little description as you want to provide. You can provide specific employees, inventory etc">A very standard gear store run by a fae potted plant named Gorgeous
+                </textarea>
                 <button id="submitButton" class="button-with-image">Submit</button>
             </div>
             <div class="button-container button-container-bottom">
@@ -144,37 +159,48 @@
                 <button id="toggleButton" class="button-with-image">Toggle Image Descriptions</button>
             </div>
         </div>
-        <div class="page-container" id="pageContainer">
+        <div class="grid-container">
+            <div class="block-container" id="blockContainer" >
+                <div id="loadingAnimation" class="blockContainer-loading-animation">
+                    <img id="loadingImage" src="/static/images/loadingMimic/Mimic Chest1.png" alt="Loading...">
+                </div>
+                <div class="page" id = "block-page" data-page-id="block-container">
+                <!-- Blocks will be wrapped in a page div and loaded here -->
+                </div>
+            </div>
             
-                    
-            <div class="brewRenderer" id="brewRenderer">
+            <div class="page-container" id="pageContainer">
                 
-                <div class="pages" id="pages">
-                    <div id="page-1" class="page" data-page-id="page-0">
-                        <div class="columnWrapper">
-                            <div class="block monster frame wide">
+                        
+                <div class="brewRenderer" id="brewRenderer">
+                    
+                    <div class="pages" id="pages">
+                        <div id="page-1" class="page" data-page-id="page-0">
+                            <div class="columnWrapper">
+                                <div class="block monster frame wide">
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="trash-area" id="trashArea"></div>
+        <div class="trash-area" id="trashArea"></div>
 
-    <!-- The Modal -->
-    <div id="imageModal" class="modal">
-        <span class="close">&times;</span>
-        <img class="modal-content" id="modalImage">
-        <div id="caption"></div>
-    </div>
-    <div id="printModal" class="modal">
-        <div class="modal-content">
+        <!-- The Modal -->
+        <div id="imageModal" class="modal">
             <span class="close">&times;</span>
-            <div id="modalPreviewContent"></div>
+            <img class="modal-content" id="modalImage">
+            <div id="caption"></div>
         </div>
+        <div id="printModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div id="modalPreviewContent"></div>
+            </div>
+        </div>
+        <div id="iFrameContainer" style="display:none;"></div>
     </div>
-    <div id="iFrameContainer" style="display:none;"></div>
     <script src="scripts.js"></script>
         
     </script>
