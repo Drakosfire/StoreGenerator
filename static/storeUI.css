@@ -19,26 +19,24 @@
       background-color: #f9f9f9;
       transition: background-color 0.3s ease, border-color 0.3s ease;
   }
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Full height of the viewport */
+}
 .grid-container {
-              display: grid;
-              grid-template-columns: 1fr 3fr; /* Two columns with the second column being three times as wide */
-              grid-gap: 20px;
-              padding: 20px;
-              height: 100vh;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Grow to fill the remaining space */
+    overflow-y: auto; /* Enable scrolling if content overflows */
           }
-.block-container {
-      position: fixed; /* Lock the block-container in place */
-      top: 20px; /* Distance from the top of the viewport */
-      left: 20px; /* Distance from the left of the viewport */
-      width: 450px; /* Set the width of the block-container */
-      height: calc(100vh - 40px); /* Full viewport height minus top and bottom padding */
-      overflow-y: auto; /* Enable vertical scrolling if needed */
-      border-right: 1px solid #ccc; /* Right border for visual separation */
-      padding-right: 20px; /* Padding inside the block-container */
-      box-sizing: border-box; /* Include padding and border in the element's total width and height */
-      background-color: #f9f9f9; /* Background color */
-      z-index: 1000; /* Ensure it is on top of other elements */
-  }
+
+.block-container, .page-container {
+    flex-grow: 1;
+    padding: 20px;
+}
+
   
 .block-container .page {
       column-count: 1;
@@ -49,11 +47,30 @@
       page-break-before: auto;
       page-break-after: auto;
       
-  }
-.page-container {
-    margin-left: 450px; /* Offset the page content by the width of block-container plus margin */
-    width: 900px;
+}
+
+.blockContainer-loading-animation {
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    transform: translate(-50%, -50%);
+    display: none ;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001; /* Ensure it's above other content in the block-container */
+    background-color: rgba(255, 255, 255, 0.8); /* Optional: Light background to make the loading animation stand out */
     padding: 20px;
+    }
+
+.blockContainer-loading-animation img {
+    width: 200px; /* Adjust size of the loading images */
+    height: auto; /* Maintain aspect ratio */
+}
+
+.page-container {
+    margin-left: 450px; /* Offset the page Scontent by the width of block-container plus margin */
+    width: 900px;
+    padding: 2px;
     padding-top: 100px; /* Adjust based on the toolbar's height + any additional space you want */
     overflow: auto; /* Enable scrolling if needed */
     height: calc(100vh - 80px); /* Adjust the height to consider the toolbar's height */
@@ -61,28 +78,35 @@
 }
 
 #floatingToolbar {
-    position: fixed;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    /* column-count: 2;
-    column-width: 425px; */
-    column-fill: auto;
-    width: 900px; /* Set the width of the floating toolbar */
-    top: 10px; /* Distance from the top of the page */
-    left: 475px; /* Distance from the right side of the page */
-    z-index: 1000; /* Ensure it stays on top of other elements */
-    background-color: #f9f9f9; /* Optional: Background color */
-    padding: 10px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Shadow for a floating effect */
-    border-radius: 8px; /* Optional: Rounded corners */
-    height: 135px; /* Set the height of the floating toolbar */
-    /* background-image: url('/static/images/StoreGeneratorScroll.png'); */
-    background-size: cover; /* Ensure the image covers the entire div */
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	 width: 100%;
+	/* top: 20px; */
+	/* left: 475px; */
+	z-index: 1001;
+	background-color: #f9f9f9;
+	padding: 10px;
+	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+	border-radius: 8px;
+	/* height: 118px; */
+	/* background-image: url('/static/images/StoreGeneratorScroll.png'); */
+	background-size: cover;
 }
+
+.logo {
+    width: 30%; /* The logo will take up 20% of the width of its container */
+    max-width: 300px; /* Set a maximum width so it doesn't get too large on very wide screens */
+    height: auto; /* Maintain aspect ratio */
+    max-height: 57px; /* Set a maximum height to prevent the logo from getting too tall */
+}
+
 #user-description {
+    display: flex;
+    position: left;
     width: 60%; /* Adjusts the width of the textarea */
-    height: 70px; /* Adjust the height as needed */
+    height: 100px; /* Adjust the height as needed */
     resize: none; /* Prevent resizing */
     margin-right: 20px; /* Space between the textarea and buttons */
 }
@@ -90,7 +114,7 @@
 .button-container {
     display: flex;
     gap: 10px; /* Space between buttons */
-    flex-wrap: wrap; /* Allows buttons to wrap to the next line if necessary */
+    
 }
 .button-container-top {
     justify-content: flex-start; /* Align top row buttons to the left */
@@ -100,49 +124,34 @@
 .button-container-bottom {
     justify-content: flex-start; /* Align bottom row buttons to the left */
 }
-
-  
-@media print {
-                            
-    .page {
-        page-break-before: auto;
-        page-break-after: avoid;
-        page-break-inside: avoid;
-        
-    }
-    .columnWrapper {
-        overflow: visible;
-    }
-    
-}
-  
-  .page {
-      column-count: 2;
-      column-gap: .9cm;
-      column-width: 8cm;
-      column-fill: auto;
-      -webkit-column-count: 2;
-      -moz-column-count: 2;
-      -webkit-column-width: 8cm;
-      -moz-column-width: 8cm;
-      -webkit-column-gap: .9cm;
-      -moz-column-gap: .9cm;
-      position: relative;
-      z-index: 15;
-      box-sizing: border-box;
-      width: 215.9mm;
-      height: 279.4mm; /* Original height for print layout */
-      padding: 1.4cm 1.2cm 1.7cm;
-      overflow: hidden;
-      font-family: "BookInsanityRemake";
-      font-size: .34cm;
-      counter-increment: phb-page-numbers;
-      background-color: var(--HB_Color_Background);
-      background-image: url('/static/themes/assets/parchmentBackground.jpg');
-      text-rendering: optimizeLegibility;
-      page-break-before: always;
-      page-break-after: always;
-      contain: size;
+   
+.page {
+    column-count: 2;
+    column-gap: .9cm;
+    column-width: 8cm;
+    column-fill: auto;
+    -webkit-column-count: 2;
+    -moz-column-count: 2;
+    -webkit-column-width: 8cm;
+    -moz-column-width: 8cm;
+    -webkit-column-gap: .9cm;
+    -moz-column-gap: .9cm;
+    position: relative;
+    z-index: 15;
+    box-sizing: border-box;
+    width: 215.9mm;
+    height: 279.4mm; /* Original height for print layout */
+    padding: 1.4cm 1.2cm 1.7cm;
+    overflow: hidden;
+    font-family: "BookInsanityRemake";
+    font-size: .34cm;
+    counter-increment: phb-page-numbers;
+    background-color: var(--HB_Color_Background);
+    background-image: url('/static/themes/assets/parchmentBackground.jpg');
+    text-rendering: optimizeLegibility;
+    page-break-before: always;
+    page-break-after: always;
+    contain: size;
       
   }
   
@@ -229,12 +238,12 @@
       transition: 0.3s;
       }
   
-  .close:hover,
-  .close:focus {
+  .close:hover,.close:focus {
       color: #bbb;
       text-decoration: none;
       cursor: pointer;
       }
+
   input[type="text"]:focus, textarea:focus {
       background-color: #e9e9e9;
       border-color: #aaa;
