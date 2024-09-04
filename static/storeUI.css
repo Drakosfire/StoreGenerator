@@ -154,7 +154,7 @@
     contain: size;
       
   }
-  .page .monster .frame {
+  .page .monster.frame {
     border-image: url('https://media.githubusercontent.com/media/Drakosfire/StoreGenerator/main/static/themes/assets/monsterBorderFancy.png') 14 round;
   }
   .page .monster hr:last-of-type + * {
