@@ -78,6 +78,11 @@ def generate_image():
         return jsonify({'image_url': image_url})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+# Route to handle Getting the store/id    
+@app.route('/store/<store_id>', methods=['GET'])
+def get_store(store_id):
+    return jsonify({'store_id': sh.store_description})
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=7860, debug=True)  # Run the app on localhost, port 7860

@@ -144,11 +144,11 @@ document.addEventListener("DOMContentLoaded", function() {
         });
    
         const blockContainerLoadingImages = [
-            "/static/images/loadingMimic/Mimic Chest1.png",
-            "/static/images/loadingMimic/Mimic Chest2.png",
-            "/static/images/loadingMimic/Mimic Chest3.png",
-            "/static/images/loadingMimic/Mimic Chest4.png",
-            "/static/images/loadingMimic/Mimic Chest5.png"
+            "storegenerator/static/images/loadingMimic/Mimic Chest1.png",
+            "storegenerator/static/images/loadingMimic/Mimic Chest2.png",
+            "storegenerator/static/images/loadingMimic/Mimic Chest3.png",
+            "storegenerator/static/images/loadingMimic/Mimic Chest4.png",
+            "storegenerator/static/images/loadingMimic/Mimic Chest5.png"
         ];
         let currentBlockContainerLoadingImageIndex = 0;
         const loadingImage = document.getElementById('loadingImage');
@@ -917,7 +917,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         // Remove the "over" class and reset the background image
         trashArea.classList.remove('over');
-        trashArea.style.backgroundImage = "url('./closed-mimic-trashcan.png')";
+        trashArea.style.backgroundImage = "url('./storegenerator/closed-mimic-trashcan.png')";
         
         initializeTextareaResizing();
     }
@@ -926,13 +926,13 @@ document.addEventListener("DOMContentLoaded", function() {
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
         trashArea.classList.add('over');
-        trashArea.style.backgroundImage = "url('./mimic_trashcan.png')";
+        trashArea.style.backgroundImage = "url('./storegenerator/mimic_trashcan.png')";
         console.log('Trash over event');
     }
 
     function handleTrashLeave(e) {
         trashArea.classList.remove('over');
-        trashArea.style.backgroundImage = "url('./closed-mimic-trashcan.png')";
+        trashArea.style.backgroundImage = "url('./storegenerator/closed-mimic-trashcan.png')";
         console.log('Trash leave event');
     }
 
