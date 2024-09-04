@@ -917,7 +917,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         // Remove the "over" class and reset the background image
         trashArea.classList.remove('over');
-        trashArea.style.backgroundImage = "url('./storegenerator/closed-mimic-trashcan.png')";
+        trashArea.style.backgroundImage = "url('https://media.githubusercontent.com/media/Drakosfire/StoreGenerator/main/static/images/mimic_trashcan.png')";
         
         initializeTextareaResizing();
     }
@@ -926,13 +926,13 @@ document.addEventListener("DOMContentLoaded", function() {
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
         trashArea.classList.add('over');
-        trashArea.style.backgroundImage = "url('./storegenerator/mimic_trashcan.png')";
+        trashArea.style.backgroundImage = "url('https://media.githubusercontent.com/media/Drakosfire/StoreGenerator/main/static/images/mimic_trashcan.png')";
         console.log('Trash over event');
     }
 
     function handleTrashLeave(e) {
         trashArea.classList.remove('over');
-        trashArea.style.backgroundImage = "url('./storegenerator/closed-mimic-trashcan.png')";
+        trashArea.style.backgroundImage = "url('https://media.githubusercontent.com/media/Drakosfire/StoreGenerator/main/static/images/mimic_trashcan.png')";
         console.log('Trash leave event');
     }
 
