@@ -519,13 +519,33 @@
         overflow: hidden; /* Hide scrollbars */
     }
 
-        .page-container .image-textarea {
-            display: none; /* Hidden by default when in .page-container */
+    .page-container .image-textarea {
+        display: none; /* Hidden by default when in .page-container */
     }
 
-        .page-container .block-page:hover .image-textarea {
-            display: block; /* Show when hovering over .block-page */
+    .page-container .block-page:hover .image-textarea {
+        display: block; /* Show when hovering over .block-page */
     }
+
+    .generate-image-button {
+        width: 100%; /* Adjust the width as needed */
+        height: 30px; /* Adjust the height as needed */
+        background-image: url('https://media.githubusercontent.com/media/Drakosfire/StoreGenerator/main/static/images/StoreGeneratorGenerateButton.png');
+        background-size: contain; /* Make the background image cover the entire button */
+        background-position: center; /* Center the background image */
+        background-repeat: no-repeat; /* Prevent the background image from repeating */
+        background-color: transparent;
+        border: none; /* Remove the default button border */
+        text-align: center; /* Center the text */
+        cursor: pointer; /* Change the cursor to a pointer on hover */
+        padding: 0; /* Remove default padding */
+        display: inline-block; /* Ensure the button behaves as a block element */
+    }
+    .generate-image-button:hover {
+        background-color: transparent;
+        border: 2px solid rgba(255, 255, 255, 0.5); /* Add a semi-transparent white border on hover */
+    }
+    
     .page-container .generate-image-button {
         display: none; /* Hidden by default when in .page-container */
     }
