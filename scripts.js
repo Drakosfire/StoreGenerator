@@ -367,6 +367,7 @@ document.addEventListener("DOMContentLoaded", function() {
             'image-textarea',
             'title-textarea'
         ];
+        let offset;  // Declare offset here
 
         classes.forEach(className => {
             if (className === 'description-textarea') {
