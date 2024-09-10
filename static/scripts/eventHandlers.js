@@ -18,7 +18,7 @@ export function handleClick(event, elements) {
     if (event.target.tagName === 'IMG' && event.target.id.startsWith('generated-image-')) {
         console.log('Image clicked for modal display. Image ID:', event.target.id);
         elements.modal.style.display = 'block';
-        modalImg.src = event.target.src;
+        elements.modalImg.src = event.target.src;
         captionText.innerHTML = event.target.alt;
     }
 
