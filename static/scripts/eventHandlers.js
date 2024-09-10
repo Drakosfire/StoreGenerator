@@ -55,7 +55,7 @@ export function handleClick(event, elements) {
     // Handle page remove button
     if (event.target.id === 'removePageButton') {
         console.log('Remove page button clicked. Element ID:', event.target.id);
-        removePage();
+        removePage(elements);
     }
 
     // Handle toggle button click
@@ -153,18 +153,22 @@ export function generateImage(blockId) {
         console.error('Error:', error);
     });
         }
-// Function to register all event listeners
+
 export function setupEventListeners(elements) {
     // Click event listener
     document.addEventListener('click', (event) => handleClick(event, elements));
+    
     // Event listeners for drag and drop functionality
-    blockContainer.addEventListener('dragover', handleDragOver);
-    blockContainer.addEventListener('drop', handleDrop);
-    pageContainer.addEventListener('dragover', handleDragOver);
-    pageContainer.addEventListener('drop', handleDrop);
+    elements.blockContainer.addEventListener('dragover', handleDragOver);
+    
+    // Use an anonymous function to pass elements to handleDrop
+    elements.blockContainer.addEventListener('drop', (event) => handleDrop(event, elements));
+    elements.pageContainer.addEventListener('dragover', handleDragOver);
+    elements.pageContainer.addEventListener('drop', (event) => handleDrop(event, elements));
     
     // Event listeners for trash area
-    trashArea.addEventListener('dragover', handleTrashOver);
-    trashArea.addEventListener('dragleave', handleTrashLeave);
-    trashArea.addEventListener('drop', handleTrashDrop);
+    elements.trashArea.addEventListener('dragover', handleTrashOver);
+    elements.trashArea.addEventListener('dragleave', handleTrashLeave);
+    elements.trashArea.addEventListener('drop', (event) => handleTrashDrop(event, elements));
 }
+        
