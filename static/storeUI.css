@@ -610,4 +610,29 @@
       color: white;
       background-image: url('/static/images/mimic_trashcan.png'); /* Example image change */
   }
+  .button-with-image {
+    width: 100px; /* Adjust as needed */
+    height: 50px; /* Adjust as needed */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    text-indent: -9999px; /* Hide the button text */
+}
+
+/* Hover effects */
+.button-with-image:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+    background-color: transparent;
+}
+
+.button-with-image:active {
+    transform: scale(0.95);
+    opacity: 0.8;
+    background-color: transparent;
+}
+
   

@@ -94,17 +94,6 @@
             text-decoration: none;
             cursor: pointer;
         }
-        .button-with-image {
-            width: 100px; /* Adjust as needed */
-            height: 50px; /* Adjust as needed */
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-            text-indent: -9999px; /* Hide the button text */
-        }
         
         #submitButton {
             background-image: url('/static/images/StoreGeneratorSubmitButton.png');
@@ -139,34 +128,37 @@
             width: 80px;
         }       
         .generate-image-button {
-    display: inline-flex; /* Use flexbox for better control */
-    align-items: center; /* Center the image vertically */
-    justify-content: center; /* Center the image horizontally */
-    background-color: transparent;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    width: 100%; /* Set the width of the button */
-    max-width: 100%; /* Make sure it’s responsive if needed */
-    transition: transform 0.2s ease, opacity 0.2s ease;
-}
+            display: inline-flex; /* Use flexbox for better control */
+            align-items: center; /* Center the image vertically */
+            justify-content: center; /* Center the image horizontally */
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            width: 100%; /* Set the width of the button */
+            max-width: 100%; /* Make sure it’s responsive if needed */
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
 
-/* Ensure the image fits inside the button */
-.generate-image-button img {
-    width: 50%; /* The image will adapt to the width of the button */
-    height: auto; /* Maintain aspect ratio */
-}
+        /* Ensure the image fits inside the button */
+        .generate-image-button img {
+            width: 50%; /* The image will adapt to the width of the button */
+            height: auto; /* Maintain aspect ratio */
+            
+        }
 
-/* Hover and active effects */
-.generate-image-button:hover {
-    transform: scale(1.05);
-    opacity: 0.9;
-}
+        /* Hover and active effects */
+        .generate-image-button:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+            background-color: transparent;
+        }
 
-.generate-image-button:active {
-    transform: scale(0.95);
-    opacity: 0.8;
-}
+        .generate-image-button:active {
+            transform: scale(0.95);
+            opacity: 0.8;
+            background-color: transparent;
+        }
 
 
 
