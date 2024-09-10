@@ -1,5 +1,8 @@
  // Handle the drop event on the trash area
- export function handleTrashDrop(e) {
+ import { reinsertBlock, sortBlocksById } from './blockHandler.js';
+ import { initializeTextareaResizing } from './handleTextareas.js';
+
+ export function handleTrashDrop(e, elements) {
     e.preventDefault();
     const innerHTML = e.dataTransfer.getData('text/plain');
     const blockId = e.dataTransfer.getData('block-id');
@@ -28,12 +31,12 @@
         }
 
         // Ensure the block is appended to the page wrapper inside blockContainer
-        let blockContainerPage = blockContainer.querySelector('.page');
+        let blockContainerPage = elements.blockContainer.querySelector('.page');
         if (!blockContainerPage) {
             blockContainerPage = document.createElement('div');
             blockContainerPage.classList.add('page');
             blockContainerPage.setAttribute('data-page-id', 'block-container');
-            blockContainer.appendChild(blockContainerPage);
+            elements.blockContainer.appendChild(blockContainerPage);
         }
 
         // Reinsert the block using the refactored function
@@ -44,7 +47,7 @@
         }
     // Remove the "over" class and reset the background image
     trashArea.classList.remove('over');
-    trashArea.style.backgroundImage = "url('./closed-mimic-trashcan.png')";
+    trashArea.style.backgroundImage = "url('./static/images/closed-mimic-trashcan.png')";
     
     initializeTextareaResizing();
 }
@@ -53,12 +56,12 @@ export function handleTrashOver(e) {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
     trashArea.classList.add('over');
-    trashArea.style.backgroundImage = "url('./mimic_trashcan.png')";
+    trashArea.style.backgroundImage = "url('./static/images/mimic_trashcan.png')";
     console.log('Trash over event');
 }
 
 export function handleTrashLeave(e) {
     trashArea.classList.remove('over');
-    trashArea.style.backgroundImage = "url('./closed-mimic-trashcan.png')";
+    trashArea.style.backgroundImage = "url('./static/images/closed-mimic-trashcan.png')";
     console.log('Trash leave event');
 }
