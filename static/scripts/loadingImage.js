@@ -1,6 +1,13 @@
+import {getState} from './state.js';
+
+let currentBlockContainerLoadingImageIndex = 0;
+
 export function changeImage() {
-    loadingImage.src = blockContainerLoadingImages[currentBlockContainerLoadingImageIndex];
-    currentBlockContainerLoadingImageIndex = (currentBlockContainerLoadingImageIndex + 1) % blockContainerLoadingImages.length;
+    const loadingImage = document.getElementById('loadingImage');
+    
+    let state = getState();
+    loadingImage.src = state.blockContainerLoadingImages[currentBlockContainerLoadingImageIndex];
+    currentBlockContainerLoadingImageIndex = (currentBlockContainerLoadingImageIndex + 1) % state.blockContainerLoadingImages.length;
 }
 
 // Change the image every 500ms (0.5 seconds)
