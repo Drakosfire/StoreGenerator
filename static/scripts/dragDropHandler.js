@@ -1,5 +1,6 @@
 import { lockTextareas, unlockTextareas, initializeTextareaResizing } from "./handleTextareas.js";
 import { adjustPageLayout } from "./pageHandler.js";
+import { getColumnFromOffset } from "./pageHandler.js";
 
 export function handleDragStart(e) {
     lockTextareas();
@@ -97,7 +98,7 @@ export function handleDragOver(e) {
     }
 }
 
-export function handleDrop(e) {
+export function handleDrop(e, elements) {
     e.preventDefault();
     // Ensure we are not dropping into a textarea or another block
     if (e.target.classList.contains('block-item', 'block-page', 'description-textarea') || e.target.tagName === 'TEXTAREA') {
@@ -175,9 +176,9 @@ export function handleDrop(e) {
         initializeTextareaResizing();
         // Adjust layouts
         if (originalPageId !== 'block-container') {
-            adjustPageLayout(originalPageId);
+            adjustPageLayout(originalPageId, elements);
         }
-        adjustPageLayout(newPageId, targetColumn);
+        adjustPageLayout(newPageId, elements);
         } else {
         console.log('No data transferred');
     }

@@ -160,8 +160,8 @@ export function reinsertBlock(blockContainerPage, blockId, innerHTML) {
     console.log(`Restored block with ID: ${blockId}`);
 }
 
-export function insertHtmlBlocks(blocks) {
-    console.log('blockContainerPage = ', blockContainerPage)
+export function insertHtmlBlocks(blocks, elements) {
+    console.log('blockContainerPage = ', elements.blockContainerPage)
     console.log('List of blocks:', blocks);
     const parser = new DOMParser();
     
@@ -171,7 +171,7 @@ export function insertHtmlBlocks(blocks) {
         const doc = parser.parseFromString(blockHtml, 'text/html');
         const block = doc.body.firstChild;
         if (block) {
-            blockContainerPage.appendChild(block); // Append the parsed block to the container
+            elements.blockContainerPage.appendChild(block); // Append the parsed block to the container
             console.log('Appended block:', block);
         }
     });

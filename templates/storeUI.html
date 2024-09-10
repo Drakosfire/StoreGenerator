@@ -9,7 +9,7 @@
     <link href="{{ css_files.style_css }}" rel="stylesheet">
     <link href="{{ css_files.phb_style_css }}" rel="stylesheet">
     <link href="{{ css_files.store_ui_css }}" rel="stylesheet">
-    <title>DnD Stat Block</title>
+    <title>DnD Store Generator</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://unpkg.com/htmx.org@1.7.0/dist/htmx.min.js"></script>
 
@@ -38,12 +38,7 @@
             padding-bottom: 20px; /* Add some padding at the bottom to prevent cropping */
             box-sizing: border-box;
         }
-
-        /* Scale the content to fit the page */
-        #brewRenderer {
-            zoom: 150%; /* Adjust this percentage as necessary */
-        }
-
+        
         /* Add space between pages */
         .page {
             page-break-after: always;
@@ -56,11 +51,12 @@
             margin-bottom: 0; /* Avoid extra space after the last page */
         }
     }
+    
         /* Modal styles */
         .modal {
             display: none; /* Hidden by default */
             position: fixed; /* Stay in place */
-            z-index: 1000; /* Sit on top */
+            z-index: 1002; /* Sit on top */
             left: 0;
             top: 0;
             width: 100%; /* Full width */
@@ -69,22 +65,31 @@
             background-color: rgb(0,0,0); /* Fallback color */
             background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
         }
+
+        /* Modal image */
         .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto; /* 15% from the top and centered */
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%; /* Could be more or less, depending on screen size */
-            height: 80%; /* Set an appropriate height for the modal */
-            overflow-y: auto; /* Enable vertical scrolling */
+            margin: auto;
+            display: block;
+            max-width: 90%; /* Restrict image width to 90% of the viewport width */
+            max-height: 90%; /* Restrict image height to 90% of the viewport height */
+            width: auto; /* Ensure aspect ratio is maintained */
+            height: auto; /* Ensure aspect ratio is maintained */
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.8);
+            border-radius: 5px;
         }
+        
+        /* Close button */
         .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
             font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
         }
-        .close:hover, .close:focus {
+                .close:hover, .close:focus {
             color: black;
             text-decoration: none;
             cursor: pointer;
@@ -145,7 +150,7 @@
             <div class="button-container button-container-top">
                 
                 <textarea id="user-description" class="user-description-textarea"
-                hx-post="/update-stats" hx-trigger="change"
+                hx-post="/process-description" hx-trigger="change"
                 hx-target="#user-description" hx-swap="outerHTML"
                 title="As much or as little description as you want to provide. You can provide specific employees, inventory etc">A very standard gear store run by a fae potted plant named Gorgeous
                 </textarea>
@@ -194,19 +199,19 @@
 
         <!-- The Modal -->
         <div id="imageModal" class="modal">
-            <span class="close">&times;</span>
+            <span id="closeModal"  class="close">&times;</span>
             <img class="modal-content" id="modalImage">
             <div id="caption"></div>
         </div>
-        <div id="printModal" class="modal">
+        <!-- <div id="printModal" class="modal">
             <div class="modal-content">
                 <span class="close">&times;</span>
                 <div id="modalPreviewContent"></div>
             </div>
-        </div>
-        <div id="iFrameContainer" style="display:none;"></div>
+        </div> -->
     </div>
-    <script src="scripts.js"></script>
+    <script type="module" src="./static/scripts/main.js"></script>
+
         
     </script>
 </body>
