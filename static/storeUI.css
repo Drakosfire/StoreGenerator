@@ -32,9 +32,23 @@
     overflow-y: auto; /* Enable scrolling if content overflows */
           }
 
-.block-container, .page-container {
-    flex-grow: 1;
+.block-container {
+    width: auto; /* Set a fixed width for the block container */
+    height: 100vh; /* Full viewport height to make it scrollable */
+    overflow-y: auto; /* Allow vertical scrolling */
     padding: 20px;
+    background-color: #f9f9f9; /* Optional: Set a background color */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow to separate it visually */
+    position: fixed; /* Make the container stationary */
+    top: 0;
+    left: 0; /* Position it on the left side of the screen */
+}
+
+.page-container {
+    flex-grow: 1; /* Allow the page container to take the remaining space */
+    margin-left: 320px; /* Add margin to the left to account for the fixed block-container width */
+    padding: 20px; /* Optional padding */
+    overflow-y: auto; /* Allow vertical scrolling if necessary */
 }
 
   
@@ -217,6 +231,7 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       transition: transform 0.3s;
   }
+  
   .block-item:hover {
     transform: translateY(-5px);
     background-color: rgba(255, 255, 255, 0.5); /* Slightly visible background on hover */
