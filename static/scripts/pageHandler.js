@@ -84,8 +84,8 @@ export function addPage(elements) {
     return newPage;
 }
 
-export function removePage() {
-    const pages = pageContainer.querySelectorAll('.page');
+export function removePage(elements) {
+    const pages = elements.pageContainer.querySelectorAll('.page');
     
     if (pages.length > 1) { // Ensure at least one page remains
         const lastPage = pages[pages.length - 1];
@@ -97,7 +97,7 @@ export function removePage() {
             alert(`Cannot remove this page because it contains ${blocks.length} block(s). Please remove the blocks first.`);
         } else {
             // If no blocks are present, allow removal
-            pageContainer.removeChild(lastPage);
+            elements.pageContainer.removeChild(lastPage);
             console.log(`Page removed with ID: ${lastPage.id}`);
         }
     } else {
