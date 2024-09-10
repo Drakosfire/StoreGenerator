@@ -9,7 +9,7 @@
     <link href="{{ css_files.style_css }}" rel="stylesheet">
     <link href="{{ css_files.phb_style_css }}" rel="stylesheet">
     <link href="{{ css_files.store_ui_css }}" rel="stylesheet">
-    <title>DnD Stat Block</title>
+    <title>DnD Store Generator</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://unpkg.com/htmx.org@1.7.0/dist/htmx.min.js"></script>
 
@@ -145,7 +145,7 @@
             <div class="button-container button-container-top">
                 
                 <textarea id="user-description" class="user-description-textarea"
-                hx-post="/update-stats" hx-trigger="change"
+                hx-post="/process-description" hx-trigger="change"
                 hx-target="#user-description" hx-swap="outerHTML"
                 title="As much or as little description as you want to provide. You can provide specific employees, inventory etc">A very standard gear store run by a fae potted plant named Gorgeous
                 </textarea>
