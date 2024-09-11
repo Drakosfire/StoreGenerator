@@ -1,5 +1,5 @@
 // eventHandlers.js
-import { printScreen, handleReset } from './utils.js';
+import { printScreen, handleReset, saveGeneratedData } from './utils.js';
 import { addPage, removePage } from './pageHandler.js';
 import { toggleAllTextBlocks,
         autofillBlocks,
@@ -79,6 +79,12 @@ export function handleClick(event, elements) {
         handleReset(elements);
     }
 
+    // Handle reset button click
+    if (event.target.id === 'saveButton') {
+        console.log('Save button clicked. Element ID:', event.target.id);
+        saveGeneratedData(elements);
+    }
+
 
     if (event.target.id === 'submitButton') {
         let state = getState();
@@ -96,7 +102,10 @@ export function handleClick(event, elements) {
         })
         .then(response => response.json())
         .then(data => {
-            console.log('Success:', data);
+            // console.log('Success:', data);
+            // Store the llm_output in the state for future use
+            state.llm_output = data.llm_output;
+            // console.log('LLM output:', state.llm_output);
             state.initialPositions.length = 0; // Clear the initialPositions array
             insertHtmlBlocks(data.html_blocks, elements);
             const blocks = elements.blockContainerPage.querySelectorAll('.block-item');

@@ -4,6 +4,7 @@ let initialState = {
     initialPositions: [],
     MAX_COLUMN_HEIGHT: 847,
     currentPage:null,
+    llm_output: null,
     blockContainerLoadingImages: [
         "/static/images/loadingMimic/Mimic Chest1.png",
         "/static/images/loadingMimic/Mimic Chest2.png",

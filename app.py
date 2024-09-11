@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, url_for, render_template
 from flask_cors import CORS 
 import os
 import ctypes
+import json
 import store_helper as sh
 import block_builder as block_builder
 import sd_generator as sd
@@ -46,7 +47,7 @@ def process_description():
     print(f"Received user input: {user_input}")
     llm_output = sh.call_llm_and_cleanup(user_input)
     processed_blocks = block_builder.build_blocks(llm_output, block_builder.block_id)
-    return jsonify({'html_blocks': processed_blocks})
+    return jsonify({'html_blocks': processed_blocks, 'llm_output': llm_output})
 
 # Route to generate an image
 @app.route('/generate-image', methods=['POST'])
@@ -63,6 +64,26 @@ def generate_image():
         return jsonify({'image_url': image_url})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+# Route to save the generated data as JSON
+@app.route('/save-generated-data', methods=['POST'])
+def save_generated_data():
+    data = request.json  # Receive JSON data from the client
+
+    # Path to save the JSON file
+    file_path = os.path.join('saved_data', 'generated_data.json')
+
+    try:
+        # Ensure directory exists
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+
+        # Write the JSON data to the file
+        with open(file_path, 'w') as json_file:
+            json.dump(data, json_file, indent=4)
+
+        return jsonify({"message": "Data saved successfully!"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=7860, debug=True)

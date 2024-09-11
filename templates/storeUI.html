@@ -126,7 +126,12 @@
         #printButton {
             background-image: url('/static/images/StoreGeneratorPrintButton.png');
             width: 80px;
-        }       
+        }
+        
+        #saveButton {
+            background-image: url('/static/images/storeGeneratorSaveButton.png');
+            width: 80px;
+        }  
         .generate-image-button {
             display: inline-flex; /* Use flexbox for better control */
             align-items: center; /* Center the image vertically */
@@ -187,7 +192,8 @@
             <div class="button-container button-container-bottom">
                 <button id="autofillButton" class="button-with-image">Autofill Pages</button>
                 <button id="addPageButton" class="button-with-image">Add New Page</button>
-                <button id="removePageButton" class="button-with-image">Remove Last Page</button>                
+                <button id="removePageButton" class="button-with-image">Remove Last Page</button> 
+                <button id="saveButton" class="button-with-image">Print</button>               
                 <button id="printButton" class="button-with-image">Print</button>
                 <button id="resetButton" class="button-with-image">Reset</button>
                 <button id="toggleButton" class="button-with-image">Toggle Image Descriptions</button>
