@@ -25,12 +25,12 @@ os.makedirs('static/images', exist_ok=True)
 @app.route('/')
 def index():
     css_files = {
-        'all_css': url_for('static', filename='all.css'),
-        'font_css': url_for('static', filename='css.css?family=Open+Sans:400,300,600,700'),
-        'bundle_css': url_for('static', filename='bundle.css'),
-        'style_css': url_for('static', filename='style.css'),
-        'phb_style_css': url_for('static', filename='5ePHBstyle.css'),
-        'store_ui_css': url_for('static', filename='storeUI.css')
+        'all_css': url_for('static', filename='./css/all.css'),
+        'font_css': url_for('static', filename='./css/css.css?family=Open+Sans:400,300,600,700'),
+        'bundle_css': url_for('static', filename='./css/bundle.css'),
+        'style_css': url_for('static', filename='./css/style.css'),
+        'phb_style_css': url_for('static', filename='./css/5ePHBstyle.css'),
+        'store_ui_css': url_for('static', filename='./css/storeUI.css')
     }
     return render_template('storeUI.html', css_files=css_files)
 
