@@ -40,8 +40,11 @@ export function handleClick(event, elements) {
     }
 
     // Handle generate image button click
-    if (event.target.classList.contains('generate-image-button')) {
-        const blockId = event.target.getAttribute('data-block-id');
+   
+    const button = event.target.closest('.generate-image-button');
+    
+    if (button) {
+        const blockId = button.getAttribute('data-block-id');
         console.log('Generate image button clicked. Block ID:', blockId);
         generateImage(blockId);
     }
