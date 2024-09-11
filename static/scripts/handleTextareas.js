@@ -1,9 +1,9 @@
 //handleTextareas.js
 
-export function adjustTextareaHeight(el, offset = 0) {
+export function adjustTextareaHeight(el, offset = 5) {
     if (el.scrollHeight > 16){
         el.style.height = 'auto';
-        el.style.height = (el.scrollHeight) + offset + 'px';
+        el.style.height = (el.scrollHeight) + offset + 8 + 'px';
     }
 }
 
@@ -22,10 +22,10 @@ export function initializeTextareaResizing() {
 
     classes.forEach(className => {
         if (className === 'description-textarea') {
-            console.log('Class is ', className, 'offset is 5');
+            console.log('Class is ', className, 'offset is 10');
             offset = 10;
         } else {
-            offset = 0;
+            offset = 5;
         }
 
         console.log('Initializing textareas for class:', className);
