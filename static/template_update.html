@@ -1,5 +1,5 @@
 <div class="page" id="block-page" data-page-id="block-container">
-    <div class="block-item" data-block-id="0" data-page-id="block-container" draggable="true">
+    <div class="block-item" data-block-id="0" type="title" data-page-id="block-container" draggable="true">
         <h1>
             <textarea class="title-textarea" id="user-store-title" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-name" hx-swap="outerHTML" title="Name of store">Enchanted Roots Gear Emporium</textarea>
         </h1>
@@ -8,7 +8,7 @@
         </div>
     </div>
     
-    <div class="block-item" data-block-id="1" data-page-id="block-container" draggable="true">
+    <div class="block-item" data-block-id="1" type="image" data-page-id="block-container" draggable="true">
         <textarea class="image-textarea" id="sdprompt-1" hx-post="/update-stats" hx-trigger="change" hx-target="#user-sd-prompt" hx-swap="outerHTML" title="Storefront image description" style="height: 80px;">A highly detailed fantasy painting of the exterior of a greenhouse that serves double duty as a adventuring gear shop, that is also a greenhouse and is overflowing with plants as well as equipment</textarea>
         <button class="generate-image-button" data-block-id="1">
             <img src="/static/images/StoreGeneratorGenerateButton.png" alt="Generate Image">
@@ -16,7 +16,7 @@
         <img id="generated-image-1" alt="" style="display: none; cursor: pointer;">
     </div>
     
-    <div class="block-item" data-block-id="2" data-page-id="block-container" draggable="true">
+    <div class="block-item" data-block-id="2" type= "store-properties" data-page-id="block-container" draggable="true">
         <div class="block classTable frame decoration">
             <table>
                 <thead>
@@ -76,7 +76,7 @@
         </div>
     </div>
     
-    <div class="block-item" data-block-id="3" data-page-id="block-container" draggable="true">
+    <div class="block-item" data-block-id="3" type ="image" data-page-id="block-container" draggable="true">
         <textarea class="image-textarea" id="sdprompt-3" hx-post="/update-stats" hx-trigger="change" hx-target="#user-sd-prompt" hx-swap="outerHTML" title="Storefront image description" style="height: 48px;">A highly detailed fantasy drawing of a sentient potted plant with glowing tendrils, set in an enchanting gear shop filled with vibrant flora and a myriad of magical items.</textarea>
         <button class="generate-image-button" data-block-id="3">
             <img src="/static/images/StoreGeneratorGenerateButton.png" alt="Generate Image">
@@ -84,7 +84,7 @@
         <img id="generated-image-3" alt="" style="display: none; cursor: pointer;">
     </div>
     
-    <div class="block-item" data-block-id="4" data-page-id="block-container" draggable="true">
+    <div class="block-item" data-block-id="4" type="owner" data-page-id="block-container" draggable="true">
         <h2 id="owner">Owner</h2>
         <h3 id="owner_1"><textarea class="subtitle-textarea" id="user-store-owner-4" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-owner-4t" hx-swap="outerHTML" title="Owner Name">Gorgeous</textarea></h3>
         <table>
@@ -127,7 +127,7 @@
         </table>
     </div>
 
-    <div class="block-item" data-block-id="5" data-page-id="block-container" draggable="true">
+    <div class="block-item" data-block-id="5" type ="image" data-page-id="block-container" draggable="true">
         <textarea class="image-textarea" id="sdprompt-5" hx-post="/update-stats" hx-trigger="change" hx-target="#user-sd-prompt" hx-swap="outerHTML" title="Storefront image description" style="height: 49px;">A highly detailed fantasy image of a half-elf shopkeeper with forest-green eyes and flower-adorned hair, set in a magical gear shop filled with glowing plants and enchanted equipment.</textarea>
         <button class="generate-image-button" data-block-id="5">
             <img src="/static/images/StoreGeneratorGenerateButton.png" alt="Generate Image">
@@ -135,7 +135,7 @@
         <img id="generated-image-5" alt="" style="display: none; cursor: pointer;">
     </div>
     
-    <div class="block-item" data-block-id="6" data-page-id="block-container" draggable="true">
+    <div class="block-item" data-block-id="6" type="employee" data-page-id="block-container" draggable="true">
         <h2 id="employee">Employee</h2>
         <h3 id="owner_1"><textarea class="subtitle-textarea" id="user-store-employee-6" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-employee-6t" hx-swap="outerHTML" title="Employee Name">Briar</textarea></h3>
         <table>
@@ -170,7 +170,7 @@
         </table>
     </div>
     
-    <div class="block-item" data-block-id="7" data-page-id="block-container" draggable="true">
+    <div class="block-item" data-block-id="7" type="customer" data-page-id="block-container" draggable="true">
         <h1 id="store-quests">Customers</h1>
         <h3 id="customer_1">
             <textarea class="subtitle-textarea" id="user-store-customer-7" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-customer-7t" hx-swap="outerHTML" title="Customer Name">Thistle</textarea>
@@ -183,7 +183,7 @@
         </p>
     </div>
     
-    <div class="block-item" data-block-id="8" data-page-id="block-container" draggable="true">
+    <div class="block-item" data-block-id="8" type="quests" data-page-id="block-container" draggable="true">
         <h1 id="store-quests">Store Quests</h1>
         <h3 id="quest_1">
             <textarea class="subtitle-textarea" id="user-store-quest-8" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-quest-8t" hx-swap="outerHTML" title="Quest Name">The Lost Seed</textarea>
@@ -196,7 +196,7 @@
         </p>
     </div>
     
-    <div class="block-item" data-block-id="9" data-page-id="block-container" draggable="true">
+    <div class="block-item" data-block-id="9" type="quests" data-page-id="block-container" draggable="true">
         <h1 id="store-quests">Services</h1>
         <h3 id="service_1">
             <textarea class="subtitle-textarea" id="user-store-service-9" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-service-9t" hx-swap="outerHTML" title="Service Name">Plant Whispering</textarea>
@@ -209,7 +209,7 @@
         </p>
     </div>
     
-    <div class="block-item" data-block-id="10" data-page-id="block-container" draggable="true">
+    <div class="block-item" data-block-id="10" type="services" data-page-id="block-container" draggable="true">
         <h3 id="service_2">
             <textarea class="subtitle-textarea" id="user-store-service-10" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-service-10t" hx-swap="outerHTML" title="Service Name">Enchantment Infusion</textarea>
         </h3>
@@ -221,7 +221,7 @@
         </p>
     </div>
     
-    <div class="block-item" data-block-id="11" data-page-id="block-container" draggable="true">
+    <div class="block-item" data-block-id="11" type="Specialties" data-page-id="block-container" draggable="true">
         <h1 id="store-quests">Specialties</h1>
         <h3 id="specialty_1">
             <textarea class="subtitle-textarea" id="user-store-specialty-11" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-specialty-11t" hx-swap="outerHTML" title="Specialty Name">Fae Light Compass</textarea>
@@ -234,7 +234,7 @@
         </p>
     </div>
     
-    <div class="block-item" data-block-id="12" data-page-id="block-container" draggable="true">
+    <div class="block-item" data-block-id="12" type="securities" data-page-id="block-container" draggable="true">
         <h1 id="store-quests">Security</h1>
         <h3 id="security_1">
             <textarea class="subtitle-textarea" id="user-store-security-12" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-security-12t" hx-swap="outerHTML" title="Security Name">Root Sentinels</textarea>
@@ -247,7 +247,7 @@
         </p>
     </div>
     
-    <div class="block-item" data-block-id="13" data-page-id="block-container" draggable="true">
+    <div class="block-item" data-block-id="13" type="inventory" data-page-id="block-container" draggable="true">
         <div class="block classTable frame decoration">
             <h5 id="inventory">Inventory</h5>
             <table>

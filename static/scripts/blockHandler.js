@@ -171,7 +171,7 @@ export function insertHtmlBlocks(blocks, elements) {
         const doc = parser.parseFromString(blockHtml, 'text/html');
         const block = doc.body.firstChild;
         if (block) {
-            elements.blockContainerPage.appendChild(block); // Append the parsed block to the container
+            elementsblockContainerPage.appendChild(block); // Append the parsed block to the container
             console.log('Appended block:', block);
         }
     });
@@ -201,7 +201,7 @@ export async function extractBlocks(elements) {
         const blocks = doc.querySelectorAll('.block-item');
         
         blocks.forEach((block, index) => {
-            const blockContent = block.innerHTML;
+            const blockContent = block.innerHTML;            
             const blockItem = document.createElement('div');
             blockItem.classList.add('block-item');
             blockItem.innerHTML = blockContent;
@@ -214,6 +214,10 @@ export async function extractBlocks(elements) {
             const pageId = 'block-container';
             blockItem.setAttribute('data-page-id', pageId);
             blockItem.setAttribute('draggable', true);
+
+            // Set block type
+            const blockType = block.getAttribute("type")
+            blockItem.setAttribute('type', blockType)
             
             // Add event listeners for drag and drop functionality
             blockItem.addEventListener('dragstart', handleDragStart);
