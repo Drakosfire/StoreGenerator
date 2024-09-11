@@ -588,9 +588,9 @@
   .trash-area {
       position: fixed;
       bottom: 20px;
-      right: 20px;
-      width: 100px;
-      height: 100px;
+      right: 20%;
+      width: 8vw;
+      height: 8vw;
       
       display: flex;
       align-items: center;
