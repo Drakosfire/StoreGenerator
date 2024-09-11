@@ -83,23 +83,4 @@ export function printScreen() {
     window.print()
 }
 
-// Function to collect all blocks and organize into JSON format
-export function processBlocksIntoJson(json_Data) {
 
-}
-export function saveGeneratedData(jsonData) {
-    fetch('/save-generated-data', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(jsonData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Success:', data);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}

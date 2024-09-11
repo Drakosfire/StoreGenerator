@@ -101,6 +101,7 @@ export function removePage(elements) {
             console.log(`Page removed with ID: ${lastPage.id}`);
         }
     } else {
+        alert(`Cannot remove this page because it is the only page.`);
         console.log('Cannot remove the last page.');
     }
 }

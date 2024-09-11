@@ -1,5 +1,5 @@
 // eventHandlers.js
-import { printScreen, handleReset, saveGeneratedData } from './utils.js';
+import { printScreen, handleReset } from './utils.js';
 import { addPage, removePage } from './pageHandler.js';
 import { toggleAllTextBlocks,
         autofillBlocks,
@@ -9,6 +9,7 @@ import { startLoadingAnimation, stopLoadingAnimation } from './loadingImage.js';
 import { handleDragOver, handleDrop, handleDragStart, handleDragEnd } from './dragDropHandler.js';
 import { handleTrashOver, handleTrashDrop, handleTrashLeave } from './trashHandler.js';
 import { getState } from './state.js';
+import { saveGeneratedData } from './saveHandler.js';
 
 // Function to handle click events
 export function handleClick(event, elements) {    
@@ -82,7 +83,8 @@ export function handleClick(event, elements) {
     // Handle reset button click
     if (event.target.id === 'saveButton') {
         console.log('Save button clicked. Element ID:', event.target.id);
-        saveGeneratedData(elements);
+
+        saveGeneratedData(elements.llm_output);
     }
 
 
