@@ -1,6 +1,11 @@
-import {getState,updateState} from "/static/scripts/state.js";
-import {buildTitleBlock, buildImageBlock, buildStorePropertiesBlock} from "/static/scripts/blockBuilder.js";
+import { getState,updateState } from "/static/scripts/state.js";
+import { buildTitleBlock,
+         buildImageBlock,
+         buildStorePropertiesBlock,
+         buildOwnerBlock,
+        buildEmployeeBlock } from "/static/scripts/blockBuilder.js";
 import { storeInitialPositions } from "/static/scripts/blockHandler.js";
+import { initializeTextareaResizing } from "/static/scripts/handleTextareas.js";
 
 // holding function here until/if needed
 function appendBlockToDOM(newBlock) {
@@ -39,15 +44,38 @@ export function loadHandler(elements) {
     console.log('Container blocks:', containerBlocks);
     let pageBlocks = state.jsonData.pageBlocks;
     let blockId = 0;
-    let containerBlocksList = iterateThroughBlocks(containerBlocks);    
-    let pageBlocksList = iterateThroughBlocks(pageBlocks);
+    // check how many owner blocks there are in total
+    let ownerCount = 0;
+    let employeeCount = 0;
+    for (const [blockId, block] of Object.entries(containerBlocks)) {
+        if (block.type === 'owner') {
+            ownerCount++;
+        }
+        if (block.type === 'employee') {
+            employeeCount++;
+        }
+    }
+    for (const [blockId, block] of Object.entries(pageBlocks)) {
+        if (block.type === 'owner') {
+            ownerCount++;
+        }
+        if (block.type === 'employee') {
+            employeeCount++;
+        }
+    }
+
+    let containerBlocksList = iterateThroughBlocks(containerBlocks, ownerCount, employeeCount);    
+    let pageBlocksList = iterateThroughBlocks(pageBlocks, ownerCount, employeeCount);
     storeInitialPositions(elements.blockContainer);
+    initializeTextareaResizing();
 
      
 }
     // iterate through container blocks, identify their type, and build the html
 
-function iterateThroughBlocks(blocks) {
+function iterateThroughBlocks(blocks, ownerCount, employeeCount) {
+    let ownerID = 0;
+    let employeeID = 0;
     for (const [blockId, block] of Object.entries(blocks)) {
         console.log(`Processing Block ID: ${blockId}, Type: ${block.type}`);
 
@@ -71,17 +99,19 @@ function iterateThroughBlocks(blocks) {
                 appendBlockToDOM(storePropertiesBlockHtml);
                 break;
                 
-            // case 'owner':
-            //     // Call your function to handle owner block
-            //     const ownerBlockHtml = buildOwnerBlock(block, blockId);
-            //     appendBlockToDOM(ownerBlockHtml);
-            //     break;
+            case 'owner':
+                // Call your function to handle owner block
+                ownerID++;
+                const ownerBlockHtml = buildOwnerBlock(block, blockId, ownerCount, ownerID);
+                appendBlockToDOM(ownerBlockHtml);
+                break;
 
-            // case 'employee':
-            //     // Call your function to handle employee block
-            //     const employeeBlockHtml = buildEmployeeBlock(block, blockId);
-            //     appendBlockToDOM(employeeBlockHtml);
-            //     break;
+            case 'employee':
+                // Call your function to handle employee block
+                employeeID++;
+                const employeeBlockHtml = buildEmployeeBlock(block, blockId, employeeCount, employeeID);
+                appendBlockToDOM(employeeBlockHtml);
+                break;
 
             // case 'inventory':
             //     // Handle inventory block, if necessary
@@ -96,8 +126,4 @@ function iterateThroughBlocks(blocks) {
                 break;
         }
     }
-}
-function finishBlockProcessing(block) {
-    // Add any additional processing here
-    console.log('Block processing complete');
 }
