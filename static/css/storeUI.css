@@ -27,28 +27,46 @@
 }
 .grid-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     flex-grow: 1; /* Grow to fill the remaining space */
     overflow-y: auto; /* Enable scrolling if content overflows */
           }
 
+/* Block container (sidebar) */
 .block-container {
-    width: auto; /* Set a fixed width for the block container */
-    height: 100vh; /* Full viewport height to make it scrollable */
+    width: auto; /* Fixed width for the block container */
     overflow-y: auto; /* Allow vertical scrolling */
     padding: 20px;
-    background-color: #f9f9f9; /* Optional: Set a background color */
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow to separate it visually */
-    position: fixed; /* Make the container stationary */
-    top: 0;
-    left: 0; /* Position it on the left side of the screen */
+    background-color: #f9f9f9;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0; /* Prevent shrinking in flex layout */
 }
 
+/* Page container (main content area) */
 .page-container {
-    flex-grow: 1; /* Allow the page container to take the remaining space */
-    margin-left: 320px; /* Add margin to the left to account for the fixed block-container width */
-    padding: 20px; /* Optional padding */
-    overflow-y: auto; /* Allow vertical scrolling if necessary */
+    flex-grow: 1; /* Take the remaining space */
+    padding: 20px;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+
+#floatingToolbar {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	 width: 100%;
+	/* top: 20px; */
+	/* left: 475px; */
+	z-index: 1001;
+	background-color: #f9f9f9;
+	padding: 10px;
+	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+	border-radius: 8px;
+	/* height: 118px; */
+	/* background-image: url('/static/images/StoreGeneratorScroll.png'); */
+	background-size: cover;
 }
 
   
@@ -79,33 +97,6 @@
 .blockContainer-loading-animation img {
     width: 200px; /* Adjust size of the loading images */
     height: auto; /* Maintain aspect ratio */
-}
-
-.page-container {
-    margin-left: 450px; /* Offset the page Scontent by the width of block-container plus margin */
-    width: 900px;
-    padding: 2px;
-    overflow: auto; /* Enable scrolling if needed */
-    height: calc(100vh - 80px); /* Adjust the height to consider the toolbar's height */
-    box-sizing: border-box; /* Include padding and border in the element's total width and height */
-}
-
-#floatingToolbar {
-	position: relative;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	 width: 100%;
-	/* top: 20px; */
-	/* left: 475px; */
-	z-index: 1001;
-	background-color: #f9f9f9;
-	padding: 10px;
-	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-	border-radius: 8px;
-	/* height: 118px; */
-	/* background-image: url('/static/images/StoreGeneratorScroll.png'); */
-	background-size: cover;
 }
 
 .logo {
