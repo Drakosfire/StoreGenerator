@@ -1,10 +1,12 @@
 //handleTextareas.js
 
-export function adjustTextareaHeight(el, offset = 5) {
-    if (el.scrollHeight > 16){
+export function adjustTextareaHeight(el, offset = 0) {
+    // console.log('Adjusting height for:', el.id, 'Current Height:', el.scrollHeight); // Debugging line
+    if (el.scrollHeight > 20){
         el.style.height = 'auto';
-        el.style.height = (el.scrollHeight) + offset + 8 + 'px';
+        el.style.height = (el.scrollHeight + offset) + 'px';
     }
+    // console.log('New Height:', el.style.height); // Debugging line
 }
 
 export function initializeTextareaResizing() {
@@ -25,7 +27,7 @@ export function initializeTextareaResizing() {
             // console.log('Class is ', className, 'offset is 10');
             offset = 10;
         } else {
-            offset = 5;
+            offset = 0;
         }
 
         // console.log('Initializing textareas for class:', className);
