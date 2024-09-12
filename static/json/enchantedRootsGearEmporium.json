@@ -2,16 +2,19 @@
   "containerBlocks" :{
     "block-0":{
       "type": "title",
+      "dataPageId": "block-container",
       "title" : "Enchanted Roots Gear Emporium",
       "description" : "Nestled in the heart of the bustling Market District, Enchanted Roots Gear Emporium is a veritable Eden for adventurers seeking gear with a twist of magic and a dash of the unexpected. A vivid cacophony of wild, glowing flora complements the vast inventory of essential equipment and enchanting curiosities. Enchanted Roots was established by Gorgeous, an intelligent fae plant, after it was discovered by a wandering druid in a mystical forest. With an innate understanding of magical flora and fauna, Gorgeous decided to settle in town and share its treasures with the world. Renowned for its unique owner and unusual collection, adventurers and local townsfolk alike swear by the quality and charm of the items sold here."
     },
     "block-1":{
       "type":"image",
+      "dataPageId": "block-container",
       "sdprompt" : "A highly detailed fantasy painting of the exterior of a greenhouse that serves double duty as a adventuring gear shop, that is also a greenhouse and is overflowing with plants as well as equipment",
-      "img-url": ""
+      "imgUrl": ""
     },
     "block-3": {
       "type":"store-properties",
+      "dataPageId": "block-container",
       "store-size": "Medium",
       "store-location": "Everbright",
       "store-district": "Market District",
@@ -26,42 +29,38 @@
     },
     "block-4":{
       "type":"image",
+      "dataPageId": "block-container",
       "sdprompt" : "A highly detailed fantasy drawing of a sentient potted plant with glowing tendrils, set in an enchanting gear shop filled with vibrant flora and a myriad of magical items.",
-      "img-url": ""
+      "imgUrl": ""
     },
     "block-5": {
       "type":"owner",
-      "owners":[
-        {
-          "name":"Gorgeous",
-          "species":"Fae Plant",
-          "class":"Druid",
-          "description":"A vibrant potted plant with bioluminescent tendrils and a captivating aura.",
-          "personality":"Charming, knowledgeable, with a dry sense of humor.",
-          "secrets":["Contains hidden seeds of a rare, sentient forest.", "Can communicate with other plants within a mile radius."]
-        }
-      ]    
-    
+      "dataPageId": "block-container",
+      "name":"Gorgeous",
+      "species":"Fae Plant",
+      "class":"Druid",
+      "description":"A vibrant potted plant with bioluminescent tendrils and a captivating aura.",
+      "personality":"Charming, knowledgeable, with a dry sense of humor.",
+      "secrets":["Contains hidden seeds of a rare, sentient forest.", "Can communicate with other plants within a mile radius."]
     },
     "block-6":{
       "type":"image",
+      "dataPageId": "block-container",
       "sdprompt" : "A highly detailed fantasy image of a half-elf shopkeeper with forest-green eyes and flower-adorned hair, set in a magical gear shop filled with glowing plants and enchanted equipment.",
-      "img-url": ""
+      "imgUrl": ""
     },
     "block-7":{
       "type":"employee",
-      "employees":[
-        {
-          "name":"Briar",
-          "role":"Shopkeeper",
-          "species":"Half-Elf",
-          "description":"A lithe figure with forest-green eyes and hair adorned with tiny flowers.",
-          "personality":"Warm, effervescent, with an encyclopedic knowledge of magical flora."
-        }
-      ]
+      "dataPageId": "block-container",
+      "name":"Briar",
+      "role":"Shopkeeper",
+      "species":"Half-Elf",
+      "description":"A lithe figure with forest-green eyes and hair adorned with tiny flowers.",
+      "personality":"Warm, effervescent, with an encyclopedic knowledge of magical flora."
     },
     "block-8":{
       "type":"customer",
+      "dataPageId": "block-container",
       "customers":[
         {
           "name":"Thistle",
@@ -72,6 +71,7 @@
     },
     "block-9":{
       "type":"quests",
+      "dataPageId": "block-container",
       "quests":[
         {
           "name":"The Lost Seed",
@@ -82,6 +82,7 @@
     },
     "block-10":{
       "type":"services",
+      "dataPageId": "block-container",
       "services":[
         {
           "name":"Plant Whispering",
@@ -97,6 +98,7 @@
     },
     "block-11":{
       "type":"specialties",
+      "dataPageId": "block-container",
       "specialties":[
         {
           "name":"Fae Light Compass",
@@ -107,6 +109,7 @@
     },
     "block-12":{
       "type":"security",
+      "dataPageId": "block-container",
       "securities":[
         {
           "name":"Root Sentinels",
@@ -115,8 +118,9 @@
         }
       ]
     },
-    "block-11":{
+    "block-13":{
       "type":"inventory",
+      "dataPageId": "block-container",
       "core_inventory": [
           {
             "name": "Traveler's Cloak",
