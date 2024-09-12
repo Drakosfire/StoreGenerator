@@ -30,9 +30,9 @@ import {adjustTextareaHeight,
         } from '/static/scripts/handleTextareas.js';
 import { handleClick,generateImage } from '/static/scripts/eventHandlers.js';
 import { handleReset, printScreen } from '/static/scripts/utils.js';
-import { initialLoadJSON } from '/static/scripts/loadJSONHandler.js';
+import { initialLoadJSON, loadHandler } from '/static/scripts/loadJSONHandler.js';
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     // Initialize DOM elements
     const elements = initializeDOMElements();
     if (!elements) {
@@ -44,7 +44,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const state = getState();
 
     setupEventListeners(elements); // Set up event listeners after DOM initialization
-    extractBlocks(elements);
-    initialLoadJSON();
+//     extractBlocks(elements);
+try {
+        // Wait for the JSON to load into the state
+        await initialLoadJSON();  // Ensure JSON is loaded into the state before proceeding
+
+        // Call loadHandler after JSON is loaded
+        loadHandler(elements);
+    } catch (error) {
+        console.error('Error loading JSON:', error);
+    }
 
 });
