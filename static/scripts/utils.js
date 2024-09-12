@@ -52,6 +52,7 @@ export function handleReset(elements) {
     console.log('blockContainerPage reassigned to:', blockContainerPage);
 
     // Reinsert blocks back into the blockContainer in their original order
+    console.log('Current initial positions:', state.initialPositions);
     state.initialPositions.forEach(pos => {
         const blockData = allBlocks.find(block => block.id === pos.id);
         

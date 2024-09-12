@@ -22,14 +22,14 @@ export function initializeTextareaResizing() {
 
     classes.forEach(className => {
         if (className === 'description-textarea') {
-            console.log('Class is ', className, 'offset is 10');
+            // console.log('Class is ', className, 'offset is 10');
             offset = 10;
         } else {
             offset = 5;
         }
 
-        console.log('Initializing textareas for class:', className);
-        console.log(document.querySelectorAll(`.${className}`));
+        // console.log('Initializing textareas for class:', className);
+        // console.log(document.querySelectorAll(`.${className}`));
         const textareas = document.querySelectorAll(`.${className}`);
         textareas.forEach(textarea => {  
             // console.log('Textarea found:', textarea);                                          
