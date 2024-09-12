@@ -1,5 +1,5 @@
 {
-  "block-container" :{
+  "containerBlocks" :{
     "block-0":{
       "type": "title",
       "title" : "Enchanted Roots Gear Emporium",
@@ -7,7 +7,7 @@
     },
     "block-1":{
       "type":"image",
-      "sd-prompt" : "A highly detailed fantasy painting of the exterior of a greenhouse that serves double duty as a adventuring gear shop, that is also a greenhouse and is overflowing with plants as well as equipment",
+      "sdprompt" : "A highly detailed fantasy painting of the exterior of a greenhouse that serves double duty as a adventuring gear shop, that is also a greenhouse and is overflowing with plants as well as equipment",
       "img-url": ""
     },
     "block-3": {
@@ -26,7 +26,7 @@
     },
     "block-4":{
       "type":"image",
-      "sd-prompt" : "A highly detailed fantasy drawing of a sentient potted plant with glowing tendrils, set in an enchanting gear shop filled with vibrant flora and a myriad of magical items.",
+      "sdprompt" : "A highly detailed fantasy drawing of a sentient potted plant with glowing tendrils, set in an enchanting gear shop filled with vibrant flora and a myriad of magical items.",
       "img-url": ""
     },
     "block-5": {
@@ -45,7 +45,7 @@
     },
     "block-6":{
       "type":"image",
-      "sd-prompt" : "A highly detailed fantasy image of a half-elf shopkeeper with forest-green eyes and flower-adorned hair, set in a magical gear shop filled with glowing plants and enchanted equipment.",
+      "sdprompt" : "A highly detailed fantasy image of a half-elf shopkeeper with forest-green eyes and flower-adorned hair, set in a magical gear shop filled with glowing plants and enchanted equipment.",
       "img-url": ""
     },
     "block-7":{
@@ -209,7 +209,7 @@
       }
 
   },
-    "page-container":{
+    "pageBlocks":{
       "page-0": {
       }
   }

@@ -10,7 +10,7 @@ def load_llm(user_input, prompt_instructions):
     prompt = f"{user_input}"
     print(prompt)
     response = client.chat.completions.create(            
-                    model="gpt-4o-2024-05-13",
+                    model="gpt-4o-2024-08-06",
                     messages=[
                         {
                         "role": "user",

@@ -30,6 +30,7 @@ import {adjustTextareaHeight,
         } from '/static/scripts/handleTextareas.js';
 import { handleClick,generateImage } from '/static/scripts/eventHandlers.js';
 import { handleReset, printScreen } from '/static/scripts/utils.js';
+import { initialLoadJSON } from '/static/scripts/loadJSONHandler.js';
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize DOM elements
@@ -44,4 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     setupEventListeners(elements); // Set up event listeners after DOM initialization
     extractBlocks(elements);
+    initialLoadJSON();
+
 });
