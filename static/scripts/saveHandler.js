@@ -1,4 +1,9 @@
-function processBlocksIntoJson(container) { // Selecting all elements with the 'block-item' class
+// Plan, don't build json from scratch, start with template loaded into state. This will be updated with each generation.
+// Then update the existing key value pairs of the existing state variable.
+// This will lead to a refactor of how the initial page is built. Ultimately less code because exctract blocks is redundant anyway.
+
+function processBlocksIntoJson(container) { 
+    // Selecting all elements with the 'block-item' class
     const blocks = container.querySelectorAll('.block-item');
     
     blocks.forEach((block, index) => {
