@@ -61,64 +61,47 @@
     "block-8":{
       "type":"customer",
       "dataPageId": "block-container",
-      "customers":[
-        {
           "name":"Thistle",
-          "description":"Description: A mischievous forest sprite often seen fluttering among the flora displays.",
-          "influence":"Influence: Helps attract other mythical creatures to the shop."
-        }
-      ]
+          "description":"A mischievous forest sprite often seen fluttering among the flora displays.",
+          "influence":"Helps attract other mythical creatures to the shop."
+        
     },
     "block-9":{
-      "type":"quests",
+      "type":"quest",
       "dataPageId": "block-container",
-      "quests":[
-        {
-          "name":"The Lost Seed",
-          "description":"Description: Gorgeous has lost a mystical seed that grants immense power to the one who plants it. Locate the seed somewhere in the mystical forest, but beware of the enchanted creatures residing there.",
-          "reward":"Reward: An enchanted satchel that holds double its volume without increasing in weight."
-        }
-      ]
+      "name":"The Lost Seed",
+      "description":"Gorgeous has lost a mystical seed that grants immense power to the one who plants it. Locate the seed somewhere in the mystical forest, but beware of the enchanted creatures residing there.",
+      "reward":"An enchanted satchel that holds double its volume without increasing in weight."
     },
     "block-10":{
       "type":"services",
       "dataPageId": "block-container",
-      "services":[
-        {
-          "name":"Plant Whispering",
-          "description":"Description: A unique service where Gorgeous communicates with the plants brought in by customers, diagnosing their needs and healing them.",
-          "price":"Price: 5 gold pieces per session"
-        },
-        {
-          "name":"Enchantment Infusion",
-          "description":"Description: Infuse your regular gear with minor enchantments for enhanced performance.",
-          "price":"Price: 20 gold pieces per item<"
-        }
-      ]
+      "name":"Plant Whispering",
+      "description":"A unique service where Gorgeous communicates with the plants brought in by customers, diagnosing their needs and healing them.",
+      "price":"5 gold pieces per session"
     },
     "block-11":{
-      "type":"specialties",
+      "type":"services",
       "dataPageId": "block-container",
-      "specialties":[
-        {
-          "name":"Fae Light Compass",
-          "description":"A magical compass that not only points north but also glows brightly in the presence of nearby hidden treasures.",
-          "price":"Price: 35 gold pieces"
-        }
-      ]
+      "name":"Enchantment Infusion",
+      "description":"Infuse your regular gear with minor enchantments for enhanced performance.",
+      "price":"20 gold pieces per item"
     },
     "block-12":{
-      "type":"security",
+      "type":"specialties",
       "dataPageId": "block-container",
-      "securities":[
-        {
-          "name":"Root Sentinels",
-          "description":"Description: Invisible roots that prevent theft by entangling or tripping would-be thieves.",
-          "mechanics":"Mechanics: Automatically triggered by any unauthorized attempt to take an item, they immobilize and alert the staff."
-        }
-      ]
+      "name":"Fae Light Compass",
+      "description":"A magical compass that not only points north but also glows brightly in the presence of nearby hidden treasures.",
+      "price":"35 gold pieces"
     },
     "block-13":{
+      "type":"security",
+      "dataPageId": "block-container",
+      "name":"Root Sentinels",
+      "description":"Invisible roots that prevent theft by entangling or tripping would-be thieves.",
+      "mechanics":"Automatically triggered by any unauthorized attempt to take an item, they immobilize and alert the staff."
+      },
+    "block-14":{
       "type":"inventory",
       "dataPageId": "block-container",
       "core_inventory": [

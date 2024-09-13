@@ -44,8 +44,12 @@ export function buildTitleBlock(block, blockId) {
 
 export function buildImageBlock(block, blockId) {
     let imageBlockHtml = `<div class="block-item" type ="image" data-block-id = ${blockId}>
-    <img src="${block.imgUrl}" alt="Store Image" class="store-image" hx-get="/update-stats" hx-trigger="load" hx-target="#user-store-image" hx-swap="outerHTML" title="Store Image">
+    <img src="${block.imgUrl}" alt="" class="store-image" hx-get="/update-stats" hx-trigger="load" hx-target="#user-store-image" hx-swap="outerHTML" >
     <textarea class="image-textarea" id="user-store-image" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-image" hx-swap="outerHTML" title="Store Image">${block.sdprompt}</textarea>
+    <button class="generate-image-button" data-block-id="{block_id}" >
+            <img src="/static/images/StoreGeneratorGenerateButton.png" alt="Generate Image">
+        </button>
+        <img id="generated-image-${blockId}" alt="" style="display: none; cursor: pointer;">
     </div>`;
     const newBlock = finishBlockProcessing(imageBlockHtml);
     return newBlock;
@@ -166,7 +170,7 @@ export function buildEmployeeBlock(block, blockId, employeeCount, employeeId) {
             employeeBlockHtml += `<tr>
                 <td align="left"><strong>${formatKeyToDisplay(key)}</strong></td>
                 <td align="right"><textarea class="string-action-description-textarea" id="user-store-${key}-${blockId}"
-                hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-${key}-${blockId}t" hx-swap="outerHTML"
+                hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-${key}-${blockId}" hx-swap="outerHTML"
                 title="${key}">${block[key]}</textarea></td>
             </tr>`;
         }
@@ -174,45 +178,101 @@ export function buildEmployeeBlock(block, blockId, employeeCount, employeeId) {
     const newBlock = finishBlockProcessing(employeeBlockHtml);
     return newBlock;
 }
+// Function to build a section block block in HTML
+export function buildEntryBlock(section, block, blockId, entryId) {
+    console.log('Building entry block:', section, block, blockId, entryId);
+    let sectionBlockHtml = '';
+    // Begin the HTML block
+    sectionBlockHtml += `<div class="block-item" data-block-id="${blockId} data-page-id=${block.dataPageId}">`;
+    // Add a section title if the entry_id is 1
+    if (entryId === 1) {
+        sectionBlockHtml += `<h1 id="store-${section}">${section}</h1>`;
+    }
+    // Iterate over the block features and generate HTML
+    for (const feature in block) {
+        if (block.hasOwnProperty(feature)) {
+            if (feature !== 'type' && feature !== 'dataPageId') {
+                if (feature === 'name') {
+                    // Add a subtitle textarea for the name feature
+                    sectionBlockHtml += `<h3 id="${section}-${entryId}">
+                        <textarea class="subtitle-textarea" id="user-store-${section}-${blockId}"
+                            hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-${section}-${blockId}t" hx-swap="outerHTML"
+                            title="${section}">${block['name']}</textarea>
+                        </h3>`;
+                } else {
+                    // Add a description textarea for other features
+                    let featureName = formatKeyToDisplay(feature); // Capitalize first letter
+                    sectionBlockHtml += `<p>
+                        <textarea class="string-action-description-textarea" id="user-store-${section}-${blockId}"
+                            hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-${section}-${blockId}t" hx-swap="outerHTML"
+                            title="${section}">${featureName}: ${block[feature]}</textarea>
+                        </p>`;
+                }
+            }
+        }
+    }    
+    // End the HTML block
+    sectionBlockHtml += `</div>`;
+    const newBlock = finishBlockProcessing(sectionBlockHtml);
+    // console.log(newBlock);
+    return newBlock;
+}
+// Function to build the inventory block in HTML
+export function buildInventoryBlock(inventory, blockId) {
+    let inventoryBlockHtml = `<div class="block-item" data-block-id="${blockId}">
+                                <div class="block classTable frame decoration">
+                                    <h5 id="inventory">Inventory</h5>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th align="center">Name</th>
+                                                <th align="center">Type</th>
+                                                <th align="center">Cost</th>
+                                                <th align="center">Properties</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>`;
+
+    // Iterate through each inventory type
+    const inventoryTypes = [
+        "core_inventory", 
+        "weapons", 
+        "armor", 
+        "potions", 
+        "scrolls", 
+        "magical_items", 
+        "mundane_items", 
+        "miscellaneous_items"
+    ];
+
+    inventoryTypes.forEach(type => {
+        let inventoryList = inventory[type];
+        if (inventoryList && inventoryList.length > 0 && inventoryList[0].name !== "") {
+            inventoryList.forEach((item, index) => {
+                let properties = item.properties.join(", "); // Convert properties list to a string
+
+                // Create the HTML for each inventory item
+                inventoryBlockHtml += `<tr>
+                                            <td align="center"><textarea class="string-action-description-textarea" id="user-store-item-name-${blockId}-${index}" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-item-name-${blockId}-${index}" hx-swap="outerHTML" title="Item Name">${item.name}</textarea></td>
+                                            <td align="center"><textarea class="string-action-description-textarea" id="user-store-item-type-${blockId}-${index}" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-item-type-${blockId}-${index}" hx-swap="outerHTML" title="Item Type">${item.type}</textarea></td>
+                                            <td align="center"><textarea class="string-action-description-textarea" id="user-store-item-cost-${blockId}-${index}" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-item-cost-${blockId}-${index}" hx-swap="outerHTML" title="Item Cost">${item.cost}</textarea></td>
+                                            <td align="center"><textarea class="string-action-description-textarea" id="user-store-item-properties-${blockId}-${index}" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-item-properties-${blockId}-${index}" hx-swap="outerHTML" title="Item Properties">${properties}</textarea></td>
+                                        </tr>`;
+            });
+        }
+    });
+
+    // Close the HTML string
+    inventoryBlockHtml += `</tbody>
+                            </table>
+                            </div> 
+                        </div>`;
+
+    // Return the constructed HTML block
+    const newBlock = finishBlockProcessing(inventoryBlockHtml);
+    // console.log(newBlock);
+    return newBlock;
+   
+}
 
 
-// # Block of owner table
-// def build_owner_block(owner, owner_id, owner_title_block, block_id):
-//     # Owner block with values : Name, Race, Class, Description, Personality, Secrets, sd-prompt
-    
-//     # Process owner values into html
-//     owner_name_html = process_into_html('Owner', owner['name'], block_id)
-//     owner_race_html = process_into_html('Species', owner['species'], block_id)
-//     owner_class_html = process_into_html('Class', owner['class'], block_id)
-//     owner_description_html = process_into_html('Description', owner['description'], block_id)
-//     owner_personality_html = process_into_html('Personality', owner['personality'], block_id)
-//     owner_secrets_html = process_secrets_into_html(owner['secrets'], block_id)
-//     # Build owner block html
-//     # If owner_id is 1, add owner_title_block to owner_block_html
-    
-//     owner_block_html = f""""""
-//     owner_block_html += f"""<div class="block-item" data-block-id="{block_id}">"""
-//     if owner_id == 1:
-//         owner_block_html+= owner_title_block
-//     owner_block_html += f"""<h3 id="owner_{owner_id}"><textarea class="subtitle-textarea" id="user-store-rumors-{block_id}"
-//                   hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-rumors-{block_id}t" hx-swap="outerHTML"
-//                   title="Owner Name">{owner['name']}</textarea></h3>"""
-//     owner_block_html += f"""<table>
-//                                 <thead>
-//                                     <tr>
-//                                         <th align="center"></th>
-//                                         <th align="center"></th>
-//                                     </tr>
-//                                 </thead>
-//                                 <tbody>
-//                                     {owner_name_html}
-//                                     {owner_race_html}
-//                                     {owner_class_html}
-//                                     {owner_description_html}
-//                                     {owner_personality_html}
-//                                     {owner_secrets_html}
-//                                 </tbody>
-//                             </table>
-//                             </div>
-//     """
-//     return owner_block_html
