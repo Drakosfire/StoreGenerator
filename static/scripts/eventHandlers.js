@@ -8,8 +8,9 @@ import { toggleAllTextBlocks,
 import { startLoadingAnimation, stopLoadingAnimation } from './loadingImage.js';
 import { handleDragOver, handleDrop, handleDragStart, handleDragEnd } from './dragDropHandler.js';
 import { handleTrashOver, handleTrashDrop, handleTrashLeave } from './trashHandler.js';
-import { getState } from './state.js';
+import { getState, updateState } from './state.js';
 import { saveGeneratedData } from './saveHandler.js';
+import { loadHandler, convertToBlockFormat } from './JSONHandler.js';
 
 // Function to handle click events
 export function handleClick(event, elements) {    
@@ -106,17 +107,11 @@ export function handleClick(event, elements) {
         .then(data => {
             // console.log('Success:', data);
             // Store the llm_output in the state for future use
-            state.llm_output = data.llm_output;
-            // console.log('LLM output:', state.llm_output);
+             
+            updateState('jsonData',convertToBlockFormat(data.llm_output));
+            console.log('LLM output:', state.llm_output);
             state.initialPositions.length = 0; // Clear the initialPositions array
-            insertHtmlBlocks(data.html_blocks, elements);
-            const blocks = elements.blockContainerPage.querySelectorAll('.block-item');
-            blocks.forEach(block => {
-                block.setAttribute('data-page-id', 'block-container');
-                block.setAttribute('draggable', true);
-                block.addEventListener('dragstart', handleDragStart);
-                block.addEventListener('dragend', handleDragEnd);
-            });
+            loadHandler(elements);
             storeInitialPositions(elements.blockContainer);
         })
         .catch((error) => {
@@ -132,11 +127,12 @@ export function handleClick(event, elements) {
 
 // Function to generate image
 export function generateImage(blockId) {
-    const sdPromptElement = document.getElementById(`sdprompt-${blockId}`);
+    console.log(`Generating image for sd-prompt-${blockId}`);
+    const sdPromptElement = document.getElementById(`sd-prompt-${blockId}`);
     const imageElement = document.getElementById(`generated-image-${blockId}`);
     
     if (!sdPromptElement) {
-        console.error('Element with ID sdprompt not found');
+        console.error('Element with ID sd-prompt not found');
         return;
     }
 
