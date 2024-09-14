@@ -358,15 +358,15 @@ def build_section_entry_block(section, entry, entry_id, block_id):
     for feature in entry_features_list:
         if feature == 'name':
             section_block_html += f"""<h3 id="quest={entry_id}">
-                        <textarea class="subtitle-textarea" id="user-store-rumors-{block_id}"
+                        <textarea class="subtitle-textarea" id="user-store-{section}-{block_id}"
                         hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-rumors-{block_id}t" hx-swap="outerHTML"
                         title={section}>{entry['name']}</textarea>
                         </h3>"""
         else:
             feature_name = feature[0].upper() + feature[1:]
             section_block_html += f"""<p>
-                        <textarea class="string-action-description-textarea" id="user-store-rumors-{block_id}"
-                        hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-rumors-{block_id}t" hx-swap="outerHTML"
+                        <textarea class="string-action-description-textarea" id="user-store-{section}-{block_id}"
+                        hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-{section}-{block_id}t" hx-swap="outerHTML"
                         title={section}>{feature_name}: {entry[feature]}</textarea>
                         </p>"""
     
