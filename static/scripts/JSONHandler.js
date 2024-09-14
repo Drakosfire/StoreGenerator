@@ -9,11 +9,18 @@ import { buildTitleBlock,
 import { storeInitialPositions } from "/static/scripts/blockHandler.js";
 import { initializeTextareaResizing } from "/static/scripts/handleTextareas.js";
 
-// holding function here until/if needed
 function appendBlockToDOM(newBlock, pageId) {
-    let blockContainerPage = document.getElementById('block-page');
-    blockContainerPage.appendChild(newBlock);
+    // Find the page using pageId
+    let pageContainer = document.querySelector(`[data-page-id=${pageId}]`);
+    
+    if (!pageContainer) {
+        console.error(`Page with ID ${pageId} not found.`);
+        return;
+    }
+    
+    pageContainer.appendChild(newBlock);
 }
+
 
 // Load JSON data from the server into the state as jsonData
 export async function initialLoadJSON() {
@@ -59,12 +66,9 @@ export function loadHandler(elements) {
     const { pageContainer } = elements;
     
     let state = getState();
-    // console.log('jsonData:', state.jsonData);
     let containerBlocks = state.jsonData['block-container'];
-    console.log('Container blocks:', containerBlocks);
     let pageBlocks = state.jsonData['page-container'];
-    let blockId = 0;
-    // check how many owner blocks there are in total
+    
     let ownerCount = 0;
     let employeeCount = 0;
     for (const [blockId, block] of Object.entries(containerBlocks)) {
@@ -84,13 +88,22 @@ export function loadHandler(elements) {
         }
     }
 
+    // Add indexing to each block
+    let blockIndex = 0;
+    for (const block of Object.values(containerBlocks)) {
+        block['block-container-index'] = blockIndex++;
+    }
+    
+    blockIndex = 0;
+    for (const block of Object.values(pageBlocks)) {
+        block['page-container-index'] = blockIndex++;
+    }
+
     let containerBlocksList = iterateThroughBlocks(containerBlocks, ownerCount, employeeCount);    
     let pageBlocksList = iterateThroughBlocks(pageBlocks, ownerCount, employeeCount);
-    storeInitialPositions(elements.blockContainer);
     initializeTextareaResizing();
-
-     
 }
+
 
 // iterate through container blocks, identify their type, and build the html
 function iterateThroughBlocks(blocks, ownerCount, employeeCount) {
@@ -124,7 +137,7 @@ function iterateThroughBlocks(blocks, ownerCount, employeeCount) {
 
         if (blockTypeMap[block.type]) {
             const blockHtml = blockTypeMap[block.type](block, blockId);  // Call the appropriate function
-            appendBlockToDOM(blockHtml);
+            appendBlockToDOM(blockHtml, block.dataPageId);
         } else {
             console.log(`Unknown block type: ${block.type}`);
         }
