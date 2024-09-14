@@ -1,5 +1,4 @@
 import { getState } from './state.js';
-import { reinsertBlock, sortBlocksById } from './blockHandler.js';
 import { addPage } from './pageHandler.js';
 import { initializeTextareaResizing } from './handleTextareas.js';
 import { loadHandler } from './JSONHandler.js';

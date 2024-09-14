@@ -1,7 +1,7 @@
 import { lockTextareas, unlockTextareas, initializeTextareaResizing } from "./handleTextareas.js";
 import { adjustPageLayout } from "./pageHandler.js";
 import { getColumnFromOffset } from "./pageHandler.js";
-import { buildDropBlock } from "./blockBuilder.js";
+import { buildBlock } from "./blockBuilder.js";
 import { getState } from "./state.js";
 
 export function handleDragStart(e) {
@@ -24,7 +24,7 @@ export function handleDragStart(e) {
     
     // Store the block ID and inner HTML in the data transfer object
     const innerHTML = target.innerHTML;
-    e.dataTransfer.setData('block-id', blockId);
+    e.dataTransfer.setData('data-block-id', blockId);
     e.dataTransfer.setData('text/plain', innerHTML); // Store inner HTML
     e.dataTransfer.setData('data-page-id', pageId); // Store original page ID
     e.dataTransfer.effectAllowed = 'move';
@@ -107,7 +107,7 @@ export function handleDrop(e, elements) {
         console.log('Cannot drop block inside another block or textarea');
         return;
     }
-    const blockId = e.dataTransfer.getData('block-id');
+    const blockId = e.dataTransfer.getData('data-block-id');
     const originalPageId = e.dataTransfer.getData('data-page-id');
 
     if (blockId && originalPageId) {
@@ -122,7 +122,7 @@ export function handleDrop(e, elements) {
             
             return;
         }
-        const newBlockContent = buildDropBlock(state.jsonData[originalPageId][blockId], blockId);
+        const newBlockContent = buildBlock(state.jsonData[originalPageId][blockId], blockId);
         newBlockContent.setAttribute('data-page-id', newPageId);
 
         const target = e.target.closest('.block-item, .block-page');

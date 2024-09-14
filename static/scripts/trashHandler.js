@@ -1,13 +1,20 @@
  // Handle the drop event on the trash area
- import { reinsertBlock, sortBlocksById } from './blockHandler.js';
+ import { sortBlocksById } from './blockHandler.js';
  import { initializeTextareaResizing } from './handleTextareas.js';
+ import { getState } from './state.js';
+ import { buildBlock } from './blockBuilder.js';
 
  export function handleTrashDrop(e, elements) {
     e.preventDefault();
+    let state = getState();
     const innerHTML = e.dataTransfer.getData('text/plain');
-    const blockId = e.dataTransfer.getData('block-id');
+    const blockId = e.dataTransfer.getData('data-block-id');
+    const pageId = e.dataTransfer.getData('data-page-id');
+    const block = state.jsonData[pageId][blockId];    
+
     console.log('Trash Drop event:', e);
-    console.log('Dragged block ID to trash:', blockId);
+    console.log('Dragged block ID to trash:', blockId, 'Page ID:', pageId);
+    console.log('Block:', block);
 
     if (innerHTML && blockId) {
         // Find the dragged element and remove it from the DOM
@@ -40,8 +47,9 @@
         }
 
         // Reinsert the block using the refactored function
-    reinsertBlock(blockContainerPage, blockId, innerHTML);
-    sortBlocksById(blockContainerPage);
+        const newBlock = buildBlock(block, blockId)
+        blockContainerPage.appendChild(newBlock);
+        sortBlocksById(blockContainerPage);        
         } else {
             console.log('No data transferred');
         }
