@@ -1,5 +1,5 @@
 {
-  "containerBlocks" :{
+  "block-container" :{
     "block-0":{
       "type": "title",
       "dataPageId": "block-container",
@@ -25,8 +25,7 @@
       "store-specialties":["Fae Light Compass"],
       "store-rumors":["It's whispered that if a seed from Gorgeous's pot is planted under a full moon, it will sprout a magical beanstalk leading to another realm."],
       "store-reputation":"Renowned for its unique owner and unusual collection, adventurers and local townsfolk alike swear by the quality and charm of the items sold here."
-
-    },
+},
     "block-3":{
       "type":"image",
       "dataPageId": "block-container",
@@ -61,10 +60,10 @@
     "block-7":{
       "type":"customer",
       "dataPageId": "block-container",
-          "name":"Thistle",
-          "description":"A mischievous forest sprite often seen fluttering among the flora displays.",
-          "influence":"Helps attract other mythical creatures to the shop."
-        
+      "name":"Thistle",
+      "description":"A mischievous forest sprite often seen fluttering among the flora displays.",
+      "influence":"Helps attract other mythical creatures to the shop."
+    
     },
     "block-8":{
       "type":"quest",
@@ -196,7 +195,7 @@
       }
 
   },
-    "pageBlocks":{
+    "page-container":{
       "page-0": {
       }
   }

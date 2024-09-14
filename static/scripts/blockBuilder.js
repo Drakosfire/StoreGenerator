@@ -31,8 +31,8 @@ export function processIterable(iterableType, iterable, blockId) {
 
 export function buildTitleBlock(block, blockId) {
     let titleBlockHtml = `<div class="block-item" type="title" data-block-id = ${blockId} data-page-id=${block.dataPageId} draggable="true"><h1>
-    <textarea class="title-textarea" id="user-store-title" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-name" hx-swap="outerHTML" title="Name of store">${block.title}</textarea></h1>
-    <div contenteditable="true" class="description-textarea" id="user-store-description"
+    <textarea class="title-textarea" data-property="title" id="user-store-title" hx-swap="outerHTML" title="Name of store">${block.title}</textarea></h1>
+    <div contenteditable="true" class="description-textarea" data-property="description" id="user-store-description"
         hx-post="/update-stats" hx-trigger="change"
         hx-target="#user-monster-description" hx-swap="outerHTML"
         title="Any amount or style of description">
@@ -43,9 +43,9 @@ export function buildTitleBlock(block, blockId) {
 }
 
 export function buildImageBlock(block, blockId) {
-    let imageBlockHtml = `<div class="block-item" type ="image" data-block-id = ${blockId} data-page-id=${block.dataPageId} draggable="true">
+    let imageBlockHtml = `<div class="block-item" type="image" data-block-id = ${blockId} data-page-id=${block.dataPageId} draggable="true">
     <img src="${block.imgUrl}" alt="" class="store-image" hx-get="/update-stats" hx-trigger="load" hx-target="#user-store-image" hx-swap="outerHTML" >
-    <textarea class="image-textarea" id="sd-prompt-${blockId}" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-image" hx-swap="outerHTML" title="Store Image">${block.sdprompt}</textarea>
+    <textarea class="image-textarea" data-property="sdprompt" id="sd-prompt-${blockId}" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-image" hx-swap="outerHTML" title="Store Image">${block.sdprompt}</textarea>
     <button class="generate-image-button" data-block-id=${blockId} >
             <img src="/static/images/StoreGeneratorGenerateButton.png" alt="Generate Image">
         </button>
@@ -57,7 +57,7 @@ export function buildImageBlock(block, blockId) {
 
 export function buildStorePropertiesBlock(block, blockId) {
     let storePropertiesBlockHtmlStart = `
-    <div class="block-item" type="store-properties" "data-block-id="${blockId}" draggable="true">
+    <div class="block-item" type="store-properties" data-block-id=${blockId} data-page-id=${block.dataPageId} draggable="true">
     <div class="block classTable frame decoration">
         <table>
             <thead>
@@ -76,7 +76,7 @@ export function buildStorePropertiesBlock(block, blockId) {
             storePropertiesBlockHtmlStart += `
                 <tr>
                     <td align="left"><strong>${formatKeyToDisplay(key)}</strong></td>
-                    <td align="right"><textarea class="string-action-description-textarea" id="user-store-${key}-${blockId}"
+                    <td align="right"><textarea class="string-action-description-textarea" data-property="${key}" id="user-store-${key}-${blockId}"
                   hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-${key}-${blockId}t" hx-swap="outerHTML"
                   title="${key}">${block[key]}</textarea></td>
                 </tr>`;
@@ -119,9 +119,9 @@ function buildEmployeeHeadingBlock(employeeCount) {
 }
 export function buildOwnerBlock(block, blockId, ownerCount, ownerId) {
     
-    let ownerBlockHtml = `<div class="block-item" type="owner" data-block-id="${blockId} data-page-id=${block.dataPageId}" draggable="true">`;
+    let ownerBlockHtml = `<div class="block-item" type="owner" data-block-id=${blockId} data-page-id=${block.dataPageId} draggable="true">`;
     if (ownerId === 1) {ownerBlockHtml += buildOwnerHeadingBlock(ownerCount);}
-    ownerBlockHtml += `<h3 id="owner_{owner_id}"><textarea class="subtitle-textarea" id="user-store-owner-${ownerId}"
+    ownerBlockHtml += `<h3 id="owner-${ownerId}"><textarea class="subtitle-textarea" data-property="name" id="user-store-owner-${ownerId}"
                   hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-owner-${ownerId}" hx-swap="outerHTML"
                   title="Owner Name">${block.name}</textarea></h3>`
     ownerBlockHtml += `<table>
@@ -138,8 +138,8 @@ export function buildOwnerBlock(block, blockId, ownerCount, ownerId) {
         } else if (key !== 'type' && key !== 'dataPageId') {
             ownerBlockHtml += `<tr>
                 <td align="left"><strong>${formatKeyToDisplay(key)}</strong></td>
-                <td align="right"><textarea class="string-action-description-textarea" id="user-store-${key}-${blockId}"
-              hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-${key}-${blockId}t" hx-swap="outerHTML"
+                <td align="right"><textarea class="string-action-description-textarea" data-property="${key}" id="user-store-${key}-${blockId}"
+              hx-post="/update-stats" hx-trigger="change" hx-target="user-store-${key}-${blockId}t" hx-swap="outerHTML"
               title="${key}">${block[key]}</textarea></td>
             </tr>`;
         }
@@ -150,9 +150,9 @@ export function buildOwnerBlock(block, blockId, ownerCount, ownerId) {
 
 export function buildEmployeeBlock(block, blockId, employeeCount, employeeId) {
 
-    let employeeBlockHtml = `<div class="block-item" data-block-id="${blockId} data-page-id=${block.dataPageId}" draggable="true">`;
+    let employeeBlockHtml = `<div class="block-item" data-block-id=${blockId} data-page-id=${block.dataPageId} draggable="true">`;
     if (employeeId === 1) {employeeBlockHtml += buildEmployeeHeadingBlock(employeeCount);}
-    employeeBlockHtml += `<h3 id="employee_{employee_id}"><textarea class="subtitle-textarea" id="user-store-employee-${employeeId}"
+    employeeBlockHtml += `<h3 id="employee-${employeeId}"><textarea class="subtitle-textarea" data-property="name" id="user-store-employee-${employeeId}"
                   hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-employee-${employeeId}" hx-swap="outerHTML"
                   title="Employee Name">${block.name}</textarea></h3>`
     employeeBlockHtml += `<table>
@@ -169,7 +169,7 @@ export function buildEmployeeBlock(block, blockId, employeeCount, employeeId) {
         } else if (key !== 'type' && key !== 'dataPageId') {
             employeeBlockHtml += `<tr>
                 <td align="left"><strong>${formatKeyToDisplay(key)}</strong></td>
-                <td align="right"><textarea class="string-action-description-textarea" id="user-store-${key}-${blockId}"
+                <td align="right"><textarea class="string-action-description-textarea" data-property="${key}" id="user-store-${key}-${blockId}"
                 hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-${key}-${blockId}" hx-swap="outerHTML"
                 title="${key}">${block[key]}</textarea></td>
             </tr>`;
@@ -195,7 +195,7 @@ export function buildEntryBlock(section, block, blockId, entryId) {
                 if (feature === 'name') {
                     // Add a subtitle textarea for the name feature
                     sectionBlockHtml += `<h3 id="${section}-${entryId}">
-                        <textarea class="subtitle-textarea" id="user-store-${section}-${blockId}"
+                        <textarea class="subtitle-textarea" data-property="name" id="user-store-${section}-${blockId}"
                             hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-${section}-${blockId}t" hx-swap="outerHTML"
                             title="${section}">${block['name']}</textarea>
                         </h3>`;
@@ -203,7 +203,7 @@ export function buildEntryBlock(section, block, blockId, entryId) {
                     // Add a description textarea for other features
                     let featureName = formatKeyToDisplay(feature); // Capitalize first letter
                     sectionBlockHtml += `<p>
-                        <textarea class="string-action-description-textarea" id="user-store-${section}-${blockId}"
+                        <textarea class="string-action-description-textarea" data-property="${feature}" id="user-store-${section}-${blockId}"
                             hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-${section}-${blockId}t" hx-swap="outerHTML"
                             title="${section}">${featureName}: ${block[feature]}</textarea>
                         </p>`;
@@ -250,8 +250,8 @@ export function buildInventoryBlock(block, blockId) {
         if (inventoryList && inventoryList.length > 0 && inventoryList[0].name !== "") {
             inventoryList.forEach((item, index) => {
                 // Log the item and its properties before processing
-                console.log(`Processing item:`, item);
-                console.log(`item.properties:`, item.properties);
+                // console.log(`Processing item:`, item, `Index:`, index);
+                // console.log(`item.properties:`, item.properties);
     
                 // Ensure properties is an array
                 let properties;
@@ -267,10 +267,10 @@ export function buildInventoryBlock(block, blockId) {
     
                 // Create the HTML for each inventory item
                 inventoryBlockHtml += `<tr>
-                                            <td align="center"><textarea class="string-action-description-textarea" id="user-store-item-name-${blockId}-${index}" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-item-name-${blockId}-${index}" hx-swap="outerHTML" title="Item Name">${item.name}</textarea></td>
-                                            <td align="center"><textarea class="string-action-description-textarea" id="user-store-item-type-${blockId}-${index}" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-item-type-${blockId}-${index}" hx-swap="outerHTML" title="Item Type">${item.type}</textarea></td>
-                                            <td align="center"><textarea class="string-action-description-textarea" id="user-store-item-cost-${blockId}-${index}" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-item-cost-${blockId}-${index}" hx-swap="outerHTML" title="Item Cost">${item.cost}</textarea></td>
-                                            <td align="center"><textarea class="string-action-description-textarea" id="user-store-item-properties-${blockId}-${index}" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-item-properties-${blockId}-${index}" hx-swap="outerHTML" title="Item Properties">${properties}</textarea></td>
+                                            <td align="center"><textarea class="string-action-description-textarea" data-property="${type}-${index}-name" id="user-store-item-name-${blockId}-${index}" hx-post="/update-stats"  title="Item Name">${item.name}</textarea></td>
+                                            <td align="center"><textarea class="string-action-description-textarea" data-property="${type}-${index}-type" id="user-store-item-type-${blockId}-${index}" hx-post="/update-stats"  title="Item Type">${item.type}</textarea></td>
+                                            <td align="center"><textarea class="string-action-description-textarea" data-property="${type}-${index}-cost" id="user-store-item-cost-${blockId}-${index}" hx-post="/update-stats"  title="Item Cost">${item.cost}</textarea></td>
+                                            <td align="center"><textarea class="string-action-description-textarea" data-property="${type}-${index}-properties" id="user-store-item-properties-${blockId}-${index}"  title="Item Properties">${properties}</textarea></td>
                                         </tr>`;
             });
         }
