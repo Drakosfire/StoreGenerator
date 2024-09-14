@@ -12,7 +12,7 @@
       "sdprompt" : "A highly detailed fantasy painting of the exterior of a greenhouse that serves double duty as a adventuring gear shop, that is also a greenhouse and is overflowing with plants as well as equipment",
       "imgUrl": ""
     },
-    "block-3": {
+    "block-2": {
       "type":"store-properties",
       "dataPageId": "block-container",
       "store-size": "Medium",
@@ -27,13 +27,13 @@
       "store-reputation":"Renowned for its unique owner and unusual collection, adventurers and local townsfolk alike swear by the quality and charm of the items sold here."
 
     },
-    "block-4":{
+    "block-3":{
       "type":"image",
       "dataPageId": "block-container",
       "sdprompt" : "A highly detailed fantasy drawing of a sentient potted plant with glowing tendrils, set in an enchanting gear shop filled with vibrant flora and a myriad of magical items.",
       "imgUrl": ""
     },
-    "block-5": {
+    "block-4": {
       "type":"owner",
       "dataPageId": "block-container",
       "name":"Gorgeous",
@@ -43,13 +43,13 @@
       "personality":"Charming, knowledgeable, with a dry sense of humor.",
       "secrets":["Contains hidden seeds of a rare, sentient forest.", "Can communicate with other plants within a mile radius."]
     },
-    "block-6":{
+    "block-5":{
       "type":"image",
       "dataPageId": "block-container",
       "sdprompt" : "A highly detailed fantasy image of a half-elf shopkeeper with forest-green eyes and flower-adorned hair, set in a magical gear shop filled with glowing plants and enchanted equipment.",
       "imgUrl": ""
     },
-    "block-7":{
+    "block-6":{
       "type":"employee",
       "dataPageId": "block-container",
       "name":"Briar",
@@ -58,7 +58,7 @@
       "description":"A lithe figure with forest-green eyes and hair adorned with tiny flowers.",
       "personality":"Warm, effervescent, with an encyclopedic knowledge of magical flora."
     },
-    "block-8":{
+    "block-7":{
       "type":"customer",
       "dataPageId": "block-container",
           "name":"Thistle",
@@ -66,42 +66,42 @@
           "influence":"Helps attract other mythical creatures to the shop."
         
     },
-    "block-9":{
+    "block-8":{
       "type":"quest",
       "dataPageId": "block-container",
       "name":"The Lost Seed",
       "description":"Gorgeous has lost a mystical seed that grants immense power to the one who plants it. Locate the seed somewhere in the mystical forest, but beware of the enchanted creatures residing there.",
       "reward":"An enchanted satchel that holds double its volume without increasing in weight."
     },
-    "block-10":{
+    "block-9":{
       "type":"services",
       "dataPageId": "block-container",
       "name":"Plant Whispering",
       "description":"A unique service where Gorgeous communicates with the plants brought in by customers, diagnosing their needs and healing them.",
       "price":"5 gold pieces per session"
     },
-    "block-11":{
+    "block-10":{
       "type":"services",
       "dataPageId": "block-container",
       "name":"Enchantment Infusion",
       "description":"Infuse your regular gear with minor enchantments for enhanced performance.",
       "price":"20 gold pieces per item"
     },
-    "block-12":{
+    "block-11":{
       "type":"specialties",
       "dataPageId": "block-container",
       "name":"Fae Light Compass",
       "description":"A magical compass that not only points north but also glows brightly in the presence of nearby hidden treasures.",
       "price":"35 gold pieces"
     },
-    "block-13":{
+    "block-12":{
       "type":"security",
       "dataPageId": "block-container",
       "name":"Root Sentinels",
       "description":"Invisible roots that prevent theft by entangling or tripping would-be thieves.",
       "mechanics":"Automatically triggered by any unauthorized attempt to take an item, they immobilize and alert the staff."
       },
-    "block-14":{
+    "block-13":{
       "type":"inventory",
       "dataPageId": "block-container",
       "core_inventory": [

@@ -161,8 +161,8 @@ export function reinsertBlock(blockContainerPage, blockId, innerHTML) {
 }
 
 export function insertHtmlBlocks(blocks, elements) {
-    console.log('blockContainerPage = ', elements.blockContainerPage)
-    console.log('List of blocks:', blocks);
+    // console.log('blockContainerPage = ', elements.blockContainerPage)
+    // console.log('List of blocks:', blocks);
     const parser = new DOMParser();
     
     blocks.forEach(blockHtml => {
@@ -171,7 +171,7 @@ export function insertHtmlBlocks(blocks, elements) {
         const doc = parser.parseFromString(blockHtml, 'text/html');
         const block = doc.body.firstChild;
         if (block) {
-            elementsblockContainerPage.appendChild(block); // Append the parsed block to the container
+            elements.blockContainerPage.appendChild(block); // Append the parsed block to the container
             console.log('Appended block:', block);
         }
     });
