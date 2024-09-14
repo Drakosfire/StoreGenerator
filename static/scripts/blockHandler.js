@@ -41,7 +41,7 @@ export function autofillBlocks(elements) {
     // If no existing page is found, create the first page
     if (!currentPage) {
         currentPage = addPage(elements);
-        console.log('No existing pages found. Created the first page:', currentPage.id);
+        // console.log('No existing pages found. Created the first page:', currentPage.id);
     }
     console.log('Current page:', currentPage);
     // Iterate over each block and move it to the pageContainer

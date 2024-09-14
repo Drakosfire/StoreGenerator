@@ -84,13 +84,11 @@ export function handleClick(event, elements) {
     // Handle reset button click
     if (event.target.id === 'saveButton') {
         console.log('Save button clicked. Element ID:', event.target.id);
-
-        saveGeneratedData(elements.llm_output);
     }
 
 
     if (event.target.id === 'submitButton') {
-        let state = getState();
+        
         console.log('Submit description button clicked. Element ID:', event.target.id);
         const userInput = document.getElementById('user-description').value;
         elements.blockContainerPage.innerHTML = ''; // Clear the block container before inserting new blocks
@@ -109,7 +107,8 @@ export function handleClick(event, elements) {
             // Store the llm_output in the state for future use
              
             updateState('jsonData',convertToBlockFormat(data.llm_output));
-            console.log('LLM output:', state.llm_output);
+            let state = getState();
+            console.log('LLM output:', state.jsonData);
             state.initialPositions.length = 0; // Clear the initialPositions array
             loadHandler(elements);
             storeInitialPositions(elements.blockContainer);
@@ -121,6 +120,7 @@ export function handleClick(event, elements) {
             stopLoadingAnimation();
         });
     }
+    
 }
   
 

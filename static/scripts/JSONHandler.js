@@ -10,7 +10,7 @@ import { storeInitialPositions } from "/static/scripts/blockHandler.js";
 import { initializeTextareaResizing } from "/static/scripts/handleTextareas.js";
 
 // holding function here until/if needed
-function appendBlockToDOM(newBlock) {
+function appendBlockToDOM(newBlock, pageId) {
     let blockContainerPage = document.getElementById('block-page');
     blockContainerPage.appendChild(newBlock);
 }
@@ -32,6 +32,27 @@ export async function initialLoadJSON() {
     }
 }
 
+// functions to pass the json to the flask app and save to the server
+export function saveHandler() {
+    let state = getState();
+    let jsonData = state.jsonData;
+    let jsonDataString = JSON.stringify(jsonData);
+    console.log('jsonDataString:', jsonDataString);
+    fetch('/save-json', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: jsonDataString
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
 
 export function loadHandler(elements) {
     const { blockContainerPage } = elements; 
@@ -39,9 +60,9 @@ export function loadHandler(elements) {
     
     let state = getState();
     // console.log('jsonData:', state.jsonData);
-    let containerBlocks = state.jsonData.containerBlocks;
+    let containerBlocks = state.jsonData['block-container'];
     console.log('Container blocks:', containerBlocks);
-    let pageBlocks = state.jsonData.pageBlocks;
+    let pageBlocks = state.jsonData['page-container'];
     let blockId = 0;
     // check how many owner blocks there are in total
     let ownerCount = 0;
@@ -70,6 +91,7 @@ export function loadHandler(elements) {
 
      
 }
+
 // iterate through container blocks, identify their type, and build the html
 function iterateThroughBlocks(blocks, ownerCount, employeeCount) {
     let blockIDs = {
@@ -110,6 +132,7 @@ function iterateThroughBlocks(blocks, ownerCount, employeeCount) {
 }
     
 export function convertToBlockFormat(originalJson) {
+    // console.log('Original JSON:', originalJson);
     const containerBlocks = {};
     let blockIdCounter = 0;
 
@@ -276,10 +299,11 @@ export function convertToBlockFormat(originalJson) {
         mundane_items: originalJson.inventory.mundane_items,
         miscellaneous_items: originalJson.inventory.miscellaneous_items
     };
+    // console.log('Container blocks:', containerBlocks);
 
     return {
-        containerBlocks,
-        pageBlocks: {
+        'block-container':containerBlocks,
+        'page-container':{
             'page-0': {}
         }
     };
