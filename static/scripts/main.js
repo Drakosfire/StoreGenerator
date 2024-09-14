@@ -4,7 +4,7 @@ import { initializeDOMElements } from '/static/scripts/domInit.js';
 import { getState } from './state.js';
 import { setupEventListeners } from '/static/scripts/eventHandlers.js';
 import { extractBlocks } from '/static/scripts/blockHandler.js';
-import { initialLoadJSON, loadHandler } from '/static/scripts/loadJSONHandler.js';
+import { initialLoadJSON, loadHandler } from '/static/scripts/JSONHandler.js';
 
 document.addEventListener('DOMContentLoaded', async function() {
     // Initialize DOM elements

@@ -43,10 +43,10 @@ export function buildTitleBlock(block, blockId) {
 }
 
 export function buildImageBlock(block, blockId) {
-    let imageBlockHtml = `<div class="block-item" type ="image" data-block-id = ${blockId}>
+    let imageBlockHtml = `<div class="block-item" type ="image" data-block-id = ${blockId} data-page-id=${block.dataPageId} draggable="true">
     <img src="${block.imgUrl}" alt="" class="store-image" hx-get="/update-stats" hx-trigger="load" hx-target="#user-store-image" hx-swap="outerHTML" >
-    <textarea class="image-textarea" id="user-store-image" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-image" hx-swap="outerHTML" title="Store Image">${block.sdprompt}</textarea>
-    <button class="generate-image-button" data-block-id="{block_id}" >
+    <textarea class="image-textarea" id="sd-prompt-${blockId}" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-image" hx-swap="outerHTML" title="Store Image">${block.sdprompt}</textarea>
+    <button class="generate-image-button" data-block-id=${blockId} >
             <img src="/static/images/StoreGeneratorGenerateButton.png" alt="Generate Image">
         </button>
         <img id="generated-image-${blockId}" alt="" style="display: none; cursor: pointer;">
@@ -57,7 +57,7 @@ export function buildImageBlock(block, blockId) {
 
 export function buildStorePropertiesBlock(block, blockId) {
     let storePropertiesBlockHtmlStart = `
-    <div class="block-item" data-block-id="${blockId}">
+    <div class="block-item" type="store-properties" "data-block-id="${blockId}" draggable="true">
     <div class="block classTable frame decoration">
         <table>
             <thead>
@@ -119,7 +119,7 @@ function buildEmployeeHeadingBlock(employeeCount) {
 }
 export function buildOwnerBlock(block, blockId, ownerCount, ownerId) {
     
-    let ownerBlockHtml = `<div class="block-item" data-block-id="${blockId} data-page-id=${block.dataPageId}">`;
+    let ownerBlockHtml = `<div class="block-item" type="owner" data-block-id="${blockId} data-page-id=${block.dataPageId}" draggable="true">`;
     if (ownerId === 1) {ownerBlockHtml += buildOwnerHeadingBlock(ownerCount);}
     ownerBlockHtml += `<h3 id="owner_{owner_id}"><textarea class="subtitle-textarea" id="user-store-owner-${ownerId}"
                   hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-owner-${ownerId}" hx-swap="outerHTML"
@@ -150,7 +150,7 @@ export function buildOwnerBlock(block, blockId, ownerCount, ownerId) {
 
 export function buildEmployeeBlock(block, blockId, employeeCount, employeeId) {
 
-    let employeeBlockHtml = `<div class="block-item" data-block-id="${blockId} data-page-id=${block.dataPageId}">`;
+    let employeeBlockHtml = `<div class="block-item" data-block-id="${blockId} data-page-id=${block.dataPageId}" draggable="true">`;
     if (employeeId === 1) {employeeBlockHtml += buildEmployeeHeadingBlock(employeeCount);}
     employeeBlockHtml += `<h3 id="employee_{employee_id}"><textarea class="subtitle-textarea" id="user-store-employee-${employeeId}"
                   hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-employee-${employeeId}" hx-swap="outerHTML"
@@ -183,7 +183,7 @@ export function buildEntryBlock(section, block, blockId, entryId) {
     console.log('Building entry block:', section, block, blockId, entryId);
     let sectionBlockHtml = '';
     // Begin the HTML block
-    sectionBlockHtml += `<div class="block-item" data-block-id="${blockId} data-page-id=${block.dataPageId}">`;
+    sectionBlockHtml += `<div class="block-item" data-block-id=${blockId} data-page-id=${block.dataPageId} draggable="true">`;
     // Add a section title if the entry_id is 1
     if (entryId === 1) {
         sectionBlockHtml += `<h1 id="store-${section}">${section}</h1>`;
@@ -218,8 +218,8 @@ export function buildEntryBlock(section, block, blockId, entryId) {
     return newBlock;
 }
 // Function to build the inventory block in HTML
-export function buildInventoryBlock(inventory, blockId) {
-    let inventoryBlockHtml = `<div class="block-item" data-block-id="${blockId}">
+export function buildInventoryBlock(block, blockId) {
+    let inventoryBlockHtml = `<div class="block-item" data-block-id=${blockId} data-page-id=${block.dataPageId} draggable="true">
                                 <div class="block classTable frame decoration">
                                     <h5 id="inventory">Inventory</h5>
                                     <table>
@@ -246,11 +246,25 @@ export function buildInventoryBlock(inventory, blockId) {
     ];
 
     inventoryTypes.forEach(type => {
-        let inventoryList = inventory[type];
+        let inventoryList = block[type];
         if (inventoryList && inventoryList.length > 0 && inventoryList[0].name !== "") {
             inventoryList.forEach((item, index) => {
-                let properties = item.properties.join(", "); // Convert properties list to a string
-
+                // Log the item and its properties before processing
+                console.log(`Processing item:`, item);
+                console.log(`item.properties:`, item.properties);
+    
+                // Ensure properties is an array
+                let properties;
+                if (Array.isArray(item.properties)) {
+                    properties = item.properties.join(", ");
+                } else {
+                    console.warn(`item.properties is not an array for item:`, item);
+                    properties = item.properties; // Handle as a string or another type
+                }
+    
+                // Log the processed properties
+                console.log(`Processed properties:`, properties);
+    
                 // Create the HTML for each inventory item
                 inventoryBlockHtml += `<tr>
                                             <td align="center"><textarea class="string-action-description-textarea" id="user-store-item-name-${blockId}-${index}" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-item-name-${blockId}-${index}" hx-swap="outerHTML" title="Item Name">${item.name}</textarea></td>
@@ -261,6 +275,7 @@ export function buildInventoryBlock(inventory, blockId) {
             });
         }
     });
+    
 
     // Close the HTML string
     inventoryBlockHtml += `</tbody>
