@@ -1,6 +1,39 @@
 
 import { handleDragStart, handleDragEnd } from "/static/scripts/dragDropHandler.js";
 
+// iterate through container blocks, identify their type, and build the html
+export function buildDropBlock(block, blockId) {
+    const allBlocks = document.querySelectorAll('[data-block-id]');    
+    const ownerCount = Array.from(allBlocks).filter(block => {return block.getAttribute('type') === 'owner';}).length
+    const employeeCount = Array.from(allBlocks).filter(block => {return block.getAttribute('type') === 'employee';}).length       
+
+
+    // Define a mapping of block types to IDs and logic
+    const blockTypeMap = {
+        'title': (block, blockId) => buildTitleBlock(block, blockId),
+        'image': (block, blockId) => buildImageBlock(block, blockId),
+        'store-properties': (block, blockId) => buildStorePropertiesBlock(block, blockId),
+        'owner': (block, blockId) => buildOwnerBlock(block, blockId, ownerCount, block.ownerId),
+        'employee': (block, blockId) => buildEmployeeBlock(block, blockId, employeeCount, block.employeeId),
+        'customers': (block, blockId) => buildEntryBlock('customers', block, blockId, block.customerId),
+        'quests': (block, blockId) => buildEntryBlock('quests', block, blockId, block.questsId),
+        'services': (block, blockId) => buildEntryBlock('services', block, blockId, block.servicesId),
+        'specialties': (block, blockId) => buildEntryBlock('specialties', block, blockId, block.specialtiesId),
+        'security': (block, blockId) => buildEntryBlock('security', block, blockId, block.securityId),
+        'inventory': (block, blockId) => buildInventoryBlock(block, blockId)
+    };
+
+    
+
+    if (blockTypeMap[block.type]) {
+        const dropBlock = blockTypeMap[block.type](block, blockId);  // Call the appropriate function
+        return dropBlock;
+    } else {
+        console.log(`Unknown block type: ${block.type}`);
+    }
+    
+    }
+
 function finishBlockProcessing(block) {
     const newBlock = document.createElement('div');
     newBlock.innerHTML = block;
@@ -119,7 +152,7 @@ function buildEmployeeHeadingBlock(employeeCount) {
 }
 export function buildOwnerBlock(block, blockId, ownerCount, ownerId) {
     
-    let ownerBlockHtml = `<div class="block-item" type="owner" data-block-id=${blockId} data-page-id=${block.dataPageId} draggable="true">`;
+    let ownerBlockHtml = `<div class="block-item" type="owner" ownerId =${ownerId} data-block-id=${blockId} data-page-id=${block.dataPageId} draggable="true">`;
     if (ownerId === 1) {ownerBlockHtml += buildOwnerHeadingBlock(ownerCount);}
     ownerBlockHtml += `<h3 id="owner-${ownerId}"><textarea class="subtitle-textarea" data-property="name" id="user-store-owner-${ownerId}"
                   hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-owner-${ownerId}" hx-swap="outerHTML"
@@ -150,10 +183,10 @@ export function buildOwnerBlock(block, blockId, ownerCount, ownerId) {
 
 export function buildEmployeeBlock(block, blockId, employeeCount, employeeId) {
 
-    let employeeBlockHtml = `<div class="block-item" data-block-id=${blockId} data-page-id=${block.dataPageId} draggable="true">`;
+    let employeeBlockHtml = `<div class="block-item" type="employee" employeeId=${employeeId} data-block-id=${blockId} data-page-id=${block.dataPageId} draggable="true">`;
     if (employeeId === 1) {employeeBlockHtml += buildEmployeeHeadingBlock(employeeCount);}
-    employeeBlockHtml += `<h3 id="employee-${employeeId}"><textarea class="subtitle-textarea" data-property="name" id="user-store-employee-${employeeId}"
-                  hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-employee-${employeeId}" hx-swap="outerHTML"
+    employeeBlockHtml += `<h3 id="employee-${employeeId}"><textarea class="subtitle-textarea" data-property="name" id="employee-${employeeId}"
+                  hx-post="/update-stats" hx-trigger="change" hx-target="#employee-${employeeId}" hx-swap="outerHTML"
                   title="Employee Name">${block.name}</textarea></h3>`
     employeeBlockHtml += `<table>
                             <thead> 
@@ -169,8 +202,8 @@ export function buildEmployeeBlock(block, blockId, employeeCount, employeeId) {
         } else if (key !== 'type' && key !== 'dataPageId') {
             employeeBlockHtml += `<tr>
                 <td align="left"><strong>${formatKeyToDisplay(key)}</strong></td>
-                <td align="right"><textarea class="string-action-description-textarea" data-property="${key}" id="user-store-${key}-${blockId}"
-                hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-${key}-${blockId}" hx-swap="outerHTML"
+                <td align="right"><textarea class="string-action-description-textarea" data-property="${key}" id="${key}-${blockId}"
+                hx-post="/update-stats" hx-trigger="change" hx-target="#${key}-${blockId}" hx-swap="outerHTML"
                 title="${key}">${block[key]}</textarea></td>
             </tr>`;
         }
@@ -183,7 +216,7 @@ export function buildEntryBlock(section, block, blockId, entryId) {
     console.log('Building entry block:', section, block, blockId, entryId);
     let sectionBlockHtml = '';
     // Begin the HTML block
-    sectionBlockHtml += `<div class="block-item" data-block-id=${blockId} data-page-id=${block.dataPageId} draggable="true">`;
+    sectionBlockHtml += `<div class="block-item" type=${blockId} "${blockId}Id"=${entryId} data-block-id=${blockId} data-page-id=${block.dataPageId} draggable="true">`;
     // Add a section title if the entry_id is 1
     if (entryId === 1) {
         sectionBlockHtml += `<h1 id="store-${section}">${section}</h1>`;
@@ -195,8 +228,8 @@ export function buildEntryBlock(section, block, blockId, entryId) {
                 if (feature === 'name') {
                     // Add a subtitle textarea for the name feature
                     sectionBlockHtml += `<h3 id="${section}-${entryId}">
-                        <textarea class="subtitle-textarea" data-property="name" id="user-store-${section}-${blockId}"
-                            hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-${section}-${blockId}t" hx-swap="outerHTML"
+                        <textarea class="subtitle-textarea" data-property="name" id="${section}-${entryId}"
+                            hx-post="/update-stats" hx-trigger="change" hx-target="#${section}-${entryId}t" hx-swap="outerHTML"
                             title="${section}">${block['name']}</textarea>
                         </h3>`;
                 } else {
