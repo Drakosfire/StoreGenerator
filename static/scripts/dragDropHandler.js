@@ -1,6 +1,8 @@
 import { lockTextareas, unlockTextareas, initializeTextareaResizing } from "./handleTextareas.js";
 import { adjustPageLayout } from "./pageHandler.js";
 import { getColumnFromOffset } from "./pageHandler.js";
+import { buildDropBlock } from "./blockBuilder.js";
+import { getState } from "./state.js";
 
 export function handleDragStart(e) {
     lockTextareas();
@@ -58,8 +60,7 @@ export function handleDragEnd(e) {
 export function handleDragOver(e) {
     e.preventDefault();
     // Get the element currently under the cursor
-    const elementUnderCursor = document.elementFromPoint(e.clientX, e.clientY);
-
+    // const elementUnderCursor = document.elementFromPoint(e.clientX, e.clientY);
     // if (elementUnderCursor) {
     //     // Check if the element is a block or textarea
     //     if (elementUnderCursor.classList.contains('block-item')) {
@@ -99,6 +100,7 @@ export function handleDragOver(e) {
 }
 
 export function handleDrop(e, elements) {
+    let state = getState();
     e.preventDefault();
     // Ensure we are not dropping into a textarea or another block
     if (e.target.classList.contains('block-item', 'block-page', 'description-textarea') || e.target.tagName === 'TEXTAREA') {
@@ -107,9 +109,7 @@ export function handleDrop(e, elements) {
     }
     const blockId = e.dataTransfer.getData('block-id');
     const originalPageId = e.dataTransfer.getData('data-page-id');
-    const innerHTML = e.dataTransfer.getData('text/plain');
-    console.log(`Drop event for block ID: ${blockId} from page ID: ${originalPageId}`);
-    
+
     if (blockId && originalPageId) {
         const originalBlock = document.querySelector(`[data-block-id="${blockId}"]`);
         const newPage = e.target.closest('.page');
@@ -122,20 +122,11 @@ export function handleDrop(e, elements) {
             
             return;
         }
-
-        const newBlockContent = document.createElement('div');
-        newBlockContent.classList.add('block-page');
-        newBlockContent.innerHTML = originalBlock.innerHTML; // Transfer inner content only
-
-        // Add necessary attributes and event listeners
-        newBlockContent.setAttribute('data-block-id', blockId);
+        const newBlockContent = buildDropBlock(state.jsonData[originalPageId][blockId], blockId);
         newBlockContent.setAttribute('data-page-id', newPageId);
-        console.log('newPageID:', newPageId);
-        newBlockContent.setAttribute('draggable', true);
-        newBlockContent.addEventListener('dragstart', handleDragStart);
-        newBlockContent.addEventListener('dragend', handleDragEnd);
 
         const target = e.target.closest('.block-item, .block-page');
+        console.log('target:', target);
         let targetColumn = 1;
         if (target) {
             const bounding = target.getBoundingClientRect();
@@ -155,7 +146,6 @@ export function handleDrop(e, elements) {
             } else {
                 console.log('Inserting before the target');
                 target.parentNode.insertBefore(newBlockContent, target);
-                
             }
 
             // Remove highlight borders
@@ -164,7 +154,6 @@ export function handleDrop(e, elements) {
         } else {
             console.log('No valid drop target found, appending to the end');
             newPage.querySelector('.block.monster.frame.wide').appendChild(newBlockContent);
-            
         }
 
         // Remove the original block from the original container
@@ -179,8 +168,93 @@ export function handleDrop(e, elements) {
             adjustPageLayout(originalPageId, elements);
         }
         adjustPageLayout(newPageId, elements);
-        } else {
-        console.log('No data transferred');
-    }
-    
+    } else {
+    console.log('No data transferred');
+    }   
 }
+
+    
+// export function handleDrop(e, elements) {
+//     e.preventDefault();
+//     // Ensure we are not dropping into a textarea or another block
+//     if (e.target.classList.contains('block-item', 'block-page', 'description-textarea') || e.target.tagName === 'TEXTAREA') {
+//         console.log('Cannot drop block inside another block or textarea');
+//         return;
+//     }
+//     const blockId = e.dataTransfer.getData('block-id');
+//     const originalPageId = e.dataTransfer.getData('data-page-id');
+//     const innerHTML = e.dataTransfer.getData('text/plain');
+//     console.log(`Drop event for block ID: ${blockId} from page ID: ${originalPageId}`);
+    
+//     if (blockId && originalPageId) {
+//         const originalBlock = document.querySelector(`[data-block-id="${blockId}"]`);
+//         const newPage = e.target.closest('.page');
+//         console.log(`Over page ${newPage} from page ID: ${originalPageId}`);
+//         const newPageId = newPage.getAttribute('data-page-id');
+        
+//         // Ensure the original block exists before proceeding
+//         if (!originalBlock || !newPage) {
+//             console.error(`Block with ID ${blockId} on page ${originalPageId} not found`);
+            
+//             return;
+//         }
+
+//         const newBlockContent = document.createElement('div');
+//         newBlockContent.classList.add('block-page');
+//         newBlockContent.innerHTML = originalBlock.innerHTML; // Transfer inner content only
+
+//         // Add necessary attributes and event listeners
+//         newBlockContent.setAttribute('data-block-id', blockId);
+//         newBlockContent.setAttribute('data-page-id', newPageId);
+//         console.log('newPageID:', newPageId);
+//         newBlockContent.setAttribute('draggable', true);
+//         newBlockContent.addEventListener('dragstart', handleDragStart);
+//         newBlockContent.addEventListener('dragend', handleDragEnd);
+
+//         const target = e.target.closest('.block-item, .block-page');
+//         let targetColumn = 1;
+//         if (target) {
+//             const bounding = target.getBoundingClientRect();
+//             const offset = e.clientY - bounding.top;
+
+//             console.log('Drop target found:', target);
+//             console.log('Bounding rectangle:', bounding);
+//             console.log('Offset from top:', offset);
+//             console.log('Target height:', bounding.height);
+//             console.log('Insert before or after decision point (height / 2):', bounding.height / 2);
+
+//             targetColumn = getColumnFromOffset(target, offset);
+//             if (offset > bounding.height / 2) {
+//                 console.log('Inserting after the target');
+//                 target.parentNode.insertBefore(newBlockContent, target.nextSibling);
+               
+//             } else {
+//                 console.log('Inserting before the target');
+//                 target.parentNode.insertBefore(newBlockContent, target);
+//             }
+
+//             // Remove highlight borders
+//             target.style['border-bottom'] = '';
+//             target.style['border-top'] = '';
+//         } else {
+//             console.log('No valid drop target found, appending to the end');
+//             newPage.querySelector('.block.monster.frame.wide').appendChild(newBlockContent);
+//         }
+
+//         // Remove the original block from the original container
+//         originalBlock.parentNode.removeChild(originalBlock);
+
+//         // Reset opacity of dragged element
+//         newBlockContent.style.opacity = '1';
+//         console.log(`Moved existing block with ID: ${blockId} to page ID: ${newPageId}`);
+//         initializeTextareaResizing();
+//         // Adjust layouts
+//         if (originalPageId !== 'block-container') {
+//             adjustPageLayout(originalPageId, elements);
+//         }
+//         adjustPageLayout(newPageId, elements);
+//         } else {
+//         console.log('No data transferred');
+//     }
+    
+// }
