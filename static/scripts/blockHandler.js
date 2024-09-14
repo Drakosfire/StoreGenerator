@@ -84,81 +84,32 @@ export function storeInitialPositions(blockContainer) {
 export function sortBlocksById(blockContainerPage) {
     // Select all blocks inside the block-container
     const blocks = Array.from(blockContainerPage.querySelectorAll('.block-item'));
-    console.log('Blocks in blockContainerPage:', blocks);
+    console.log('Initial Blocks in blockContainerPage:', blocks);
 
-    // Sort the blocks based on their block-id attribute
+    // Sort the blocks based on the numeric portion of their block-id attribute
     blocks.sort((a, b) => {
-        const idA = parseInt(a.getAttribute('data-block-id'), 10);
-        const idB = parseInt(b.getAttribute('data-block-id'), 10);
+        // Extract the numeric part of the block-id (e.g., 'block-1' -> 1)
+        const idA = parseInt(a.getAttribute('data-block-id').match(/\d+/), 10);
+        const idB = parseInt(b.getAttribute('data-block-id').match(/\d+/), 10);
+        console.log('Comparing:', idA, idB);
         return idA - idB; // Ascending order
+    });
+
+    // Log the IDs after sorting
+    blocks.forEach(block => {
+        console.log('Block ID after sorting:', block.getAttribute('data-block-id'));
     });
 
     // Clear the block-container before re-appending the sorted blocks
     blockContainerPage.innerHTML = '';
-    
 
     // Re-append the blocks in the sorted order
-    console.log('Contents of blocks', blocks);
     blocks.forEach(block => blockContainerPage.appendChild(block));
 
     console.log('Blocks have been sorted and re-appended based on block-id');
     console.log('Contents of blockContainerPage', blockContainerPage);
 }
 
-export function reinsertBlock(blockContainerPage, blockId, innerHTML) {
-    const state = getState();
-    const originalPosition = state.initialPositions.find(pos => pos.id === blockId);
-    console.log('Original position:', originalPosition);
-
-    if (originalPosition) {
-        const blocks = blockContainerPage.querySelectorAll('.block-item');
-        console.log('Blocks in blockContainerPage:', blocks);
-
-        // Adding debugging output for index details
-        console.log(`Attempting to insert block with ID: ${blockId} at original index: ${originalPosition.index}`);
-
-        const newBlock = document.createElement('div');
-        newBlock.classList.add('block-item');
-        newBlock.setAttribute('data-block-id', blockId);
-        newBlock.setAttribute('data-page-id', 'block-container');
-        newBlock.innerHTML = innerHTML;
-        newBlock.setAttribute('draggable', true);
-        newBlock.addEventListener('dragstart', handleDragStart);
-        newBlock.addEventListener('dragend', handleDragEnd);
-
-        if (originalPosition.index < blocks.length) {
-            const referenceNode = blocks[originalPosition.index];
-
-            // Debugging output to ensure the correct reference node is identified
-            console.log(`Reference node index: ${originalPosition.index}, Node:`, referenceNode);
-
-            if (referenceNode && referenceNode.parentNode === blockContainerPage) {
-                console.log(`Inserting before block at index: ${originalPosition.index}`);
-                blockContainerPage.insertBefore(newBlock, referenceNode);
-            } else {
-                console.warn('Reference node does not belong to blockContainerPage, appending to the end');
-                blockContainerPage.appendChild(newBlock);
-            }
-        } else {
-            console.log('Original index exceeds current blocks, appending block to the end');
-            blockContainerPage.appendChild(newBlock);
-        }
-    } else {
-        console.warn('Original position not found, appending block to the end of blockContainerPage');
-        const newBlock = document.createElement('div');
-        newBlock.classList.add('block-item');
-        newBlock.setAttribute('data-block-id', blockId);
-        newBlock.setAttribute('data-page-id', 'block-container');
-        newBlock.innerHTML = innerHTML;
-        newBlock.setAttribute('draggable', true);
-        newBlock.addEventListener('dragstart', handleDragStart);
-        newBlock.addEventListener('dragend', handleDragEnd);
-
-        blockContainerPage.appendChild(newBlock);
-    }
-
-    console.log(`Restored block with ID: ${blockId}`);
-}
 
 export function insertHtmlBlocks(blocks, elements) {
     // console.log('blockContainerPage = ', elements.blockContainerPage)

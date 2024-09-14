@@ -2,7 +2,7 @@
 import { handleDragStart, handleDragEnd } from "/static/scripts/dragDropHandler.js";
 
 // iterate through container blocks, identify their type, and build the html
-export function buildDropBlock(block, blockId) {
+export function buildBlock(block, blockId) {
     const allBlocks = document.querySelectorAll('[data-block-id]');    
     const ownerCount = Array.from(allBlocks).filter(block => {return block.getAttribute('type') === 'owner';}).length
     const employeeCount = Array.from(allBlocks).filter(block => {return block.getAttribute('type') === 'employee';}).length       
