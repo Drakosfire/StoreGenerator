@@ -7,14 +7,15 @@
  export function handleTrashDrop(e, elements) {
     e.preventDefault();
     let state = getState();
+    // console.log('jsonData:', state.jsonData);
     const innerHTML = e.dataTransfer.getData('text/plain');
     const blockId = e.dataTransfer.getData('data-block-id');
     const pageId = e.dataTransfer.getData('data-page-id');
-    const block = state.jsonData[pageId][blockId];    
+    const block = state.jsonData[blockId];    
 
-    console.log('Trash Drop event:', e);
-    console.log('Dragged block ID to trash:', blockId, 'Page ID:', pageId);
-    console.log('Block:', block);
+    // console.log('Trash Drop event:', e);
+    // console.log('Dragged block ID to trash:', blockId, 'Page ID:', pageId);
+    // console.log('Block:', block);
 
     if (innerHTML && blockId) {
         // Find the dragged element and remove it from the DOM

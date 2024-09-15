@@ -122,7 +122,7 @@ export function handleDrop(e, elements) {
             
             return;
         }
-        const newBlockContent = buildBlock(state.jsonData[originalPageId][blockId], blockId);
+        const newBlockContent = buildBlock(state.jsonData[blockId], blockId);
         newBlockContent.setAttribute('data-page-id', newPageId);
 
         const target = e.target.closest('.block-item, .block-page');

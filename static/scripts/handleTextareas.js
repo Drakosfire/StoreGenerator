@@ -71,13 +71,13 @@ function handleInputChange(event, blockId, pageId, property) {
      
     let state = getState();
     console.log('State before update:', state.jsonData);
-    console.log('State before update:', state.jsonData[pageId][blockId][property]);
-    let block = state.jsonData[pageId][blockId];
+    console.log('State before update:', state.jsonData[blockId][property]);
+    let block = state.jsonData[blockId];
     console.log('Block:', block);
     console.log('Block property:', block[property]);
     block[property] = event.target.value !== undefined ? event.target.value : event.target.textContent;
     updateState('jsonData', state.jsonData);
-    console.log('State after update:', state.jsonData[pageId][blockId][property]);
+    console.log('State after update:', state.jsonData[blockId][property]);
 }
 
 export function lockTextareas() {
