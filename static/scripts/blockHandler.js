@@ -1,14 +1,8 @@
-// If initialPositions is stored in state.js
 import { getState } from './state.js';
-
-// Import the drag and drop handlers from dragDropHandler.js
 import { handleDragStart, handleDragEnd } from './dragDropHandler.js';
-
-// Import the textarea resizing function from handleTextareas.js
 import { initializeTextareaResizing } from './handleTextareas.js';
-
-// Import the page layout functions from pageHandler.js
 import { adjustPageLayout, addPage } from './pageHandler.js';
+import { finishBlockProcessing } from './blockBuilder.js';
 
 const state = getState();
 
@@ -84,24 +78,29 @@ export function storeInitialPositions(blockContainer) {
 export function sortBlocksById(blockContainerPage) {
     // Select all blocks inside the block-container
     const blocks = Array.from(blockContainerPage.querySelectorAll('.block-item'));
-    console.log('Initial Blocks in blockContainerPage:', blocks);
+    // console.log('Initial Blocks in blockContainerPage:', blocks);
 
     // Sort the blocks based on the numeric portion of their block-id attribute
     blocks.sort((a, b) => {
         // Extract the numeric part of the block-id (e.g., 'block-1' -> 1)
         const idA = parseInt(a.getAttribute('data-block-id').match(/\d+/), 10);
         const idB = parseInt(b.getAttribute('data-block-id').match(/\d+/), 10);
-        console.log('Comparing:', idA, idB);
+        // console.log('Comparing:', idA, idB);
         return idA - idB; // Ascending order
     });
 
     // Log the IDs after sorting
     blocks.forEach(block => {
-        console.log('Block ID after sorting:', block.getAttribute('data-block-id'));
+        // console.log('Block ID after sorting:', block.getAttribute('data-block-id'));
     });
 
     // Clear the block-container before re-appending the sorted blocks
     blockContainerPage.innerHTML = '';
+    blocks.forEach(block => {
+        blockContainerPage.appendChild(block);
+        // Re-attach event listeners to the block here
+        finishBlockProcessing(block);
+    });
 
     // Re-append the blocks in the sorted order
     blocks.forEach(block => blockContainerPage.appendChild(block));
