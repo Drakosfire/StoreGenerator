@@ -34,9 +34,15 @@ export function buildBlock(block, blockId) {
     
     }
 
-function finishBlockProcessing(block) {
-    const newBlock = document.createElement('div');
-    newBlock.innerHTML = block;
+export function finishBlockProcessing(block) {
+    let newBlock;
+    if (block instanceof HTMLElement && block.tagName.toLowerCase() === 'div') {
+        newBlock = block;
+    } else {
+        newBlock = document.createElement('div');
+        newBlock.innerHTML = block.trim();
+        newBlock = newBlock.firstChild;
+    }
     newBlock.addEventListener('dragstart', handleDragStart);
     newBlock.addEventListener('dragend', handleDragEnd);
     return newBlock;
