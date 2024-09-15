@@ -24,7 +24,6 @@ function appendBlockToDOM(newBlock, pageId) {
 
 // Load JSON data from the server into the state as jsonData
 export async function initialLoadJSON() {
-    let state = getState();    
     try {
     const response = await fetch('/static/json/enchantedRootsGearEmporium.json');
         if (!response.ok) {
@@ -66,20 +65,12 @@ export function loadHandler(elements) {
     const { pageContainer } = elements;
     
     let state = getState();
-    let containerBlocks = state.jsonData['block-container'];
-    let pageBlocks = state.jsonData['page-container'];
+    let blocks = state.jsonData;
+    
     
     let ownerCount = 0;
     let employeeCount = 0;
-    for (const [blockId, block] of Object.entries(containerBlocks)) {
-        if (block.type === 'owner') {
-            ownerCount++;
-        }
-        if (block.type === 'employee') {
-            employeeCount++;
-        }
-    }
-    for (const [blockId, block] of Object.entries(pageBlocks)) {
+    for (const [blockId, block] of Object.entries(blocks)) {
         if (block.type === 'owner') {
             ownerCount++;
         }
@@ -88,19 +79,14 @@ export function loadHandler(elements) {
         }
     }
 
-    // Add indexing to each block
-    let blockIndex = 0;
-    for (const block of Object.values(containerBlocks)) {
-        block['block-container-index'] = blockIndex++;
-    }
+    // Future feature: allow for indexing position on page
     
-    blockIndex = 0;
-    for (const block of Object.values(pageBlocks)) {
-        block['page-container-index'] = blockIndex++;
-    }
+    // let blockIndex = 0;
+    // for (const block of Object.values(pageBlocks)) {
+    //     block['page-container-index'] = blockIndex++;
+    // }
 
-    let containerBlocksList = iterateThroughBlocks(containerBlocks, ownerCount, employeeCount);    
-    let pageBlocksList = iterateThroughBlocks(pageBlocks, ownerCount, employeeCount);
+    iterateThroughBlocks(blocks, ownerCount, employeeCount);    
     initializeTextareaResizing();
 }
 
@@ -314,12 +300,8 @@ export function convertToBlockFormat(originalJson) {
     };
     // console.log('Container blocks:', containerBlocks);
 
-    return {
-        'block-container':containerBlocks,
-        'page-container':{
-            'page-0': {}
-        }
-    };
+    return containerBlocks;
+        
 }
 
 
