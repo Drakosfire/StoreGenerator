@@ -1,5 +1,6 @@
-from flask import Flask, request, jsonify, url_for, render_template
+from flask import Flask, request, jsonify, url_for, render_template, send_from_directory
 from flask_cors import CORS 
+from werkzeug.utils import secure_filename
 import os
 import ctypes
 import json
@@ -34,6 +35,11 @@ def index():
     }
     return render_template('storeUI.html', css_files=css_files)
 
+@app.route('/saved_data/<path:filename>')
+def serve_saved_data(filename):
+    # Construct the full path to the file
+    return send_from_directory('saved_data', filename)
+
 @app.after_request
 def apply_headers(response):
     response.headers["Cross-Origin-Opener-Policy"] = "same-origin-allow-popups"
@@ -66,12 +72,13 @@ def generate_image():
         return jsonify({'error': str(e)}), 500
     
 # Route to save the generated data as JSON
-@app.route('/save-generated-data', methods=['POST'])
+@app.route('/save-json', methods=['POST'])
 def save_generated_data():
     data = request.json  # Receive JSON data from the client
+    filename = data.get('filename', 'default_generated_data')
 
     # Path to save the JSON file
-    file_path = os.path.join('saved_data', 'generated_data.json')
+    file_path = os.path.join('saved_data',filename, f'{filename}.json')
 
     try:
         # Ensure directory exists
@@ -82,6 +89,47 @@ def save_generated_data():
             json.dump(data, json_file, indent=4)
 
         return jsonify({"message": "Data saved successfully!"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# Helper function to check allowed file extensions
+def allowed_file(filename):
+    allowed_extensions = {'png', 'jpg', 'jpeg', 'gif'}
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
+
+# Route to upload images and save them
+@app.route('/upload-image', methods=['POST'])
+def upload_image():
+    if 'image' not in request.files:
+        return jsonify({"error": "No image file provided"}), 400
+
+    # Get the image file and additional data
+    image = request.files['image']
+    directory_name = request.form.get('directoryName')
+    block_id = request.form.get('blockId')
+
+    # Validate and sanitize inputs
+    if not allowed_file(image.filename):
+        return jsonify({"error": "File type not allowed"}), 400
+    if not directory_name or not block_id:
+        return jsonify({"error": "Invalid directory name or block ID"}), 400
+
+    # Ensure the directory exists
+    directory_path = os.path.join('saved_data', directory_name)
+    os.makedirs(directory_path, exist_ok=True)
+
+    # Save the image with a secure filename
+    filename = secure_filename(f"{block_id}_{image.filename}")
+    image_path = os.path.join(directory_path, filename)
+
+    try:
+        # Save the image file
+        image.save(image_path)
+
+        # Return the URL for the image
+        file_url = f'/saved_data/{directory_name}/{filename}'
+        return jsonify({"fileUrl": file_url}), 200
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
