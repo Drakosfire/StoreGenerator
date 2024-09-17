@@ -40,7 +40,6 @@ export function handleClick(event, elements) {
         console.log('Print button clicked. Element ID:', event.target.id);
         printScreen();
     }
-
     // Handle generate image button click
 
     const button = event.target.closest('.generate-image-button');
