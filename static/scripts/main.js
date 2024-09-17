@@ -6,7 +6,7 @@ import { setupEventListeners } from '/static/scripts/eventHandlers.js';
 import { extractBlocks } from '/static/scripts/blockHandler.js';
 import { initialLoadJSON, loadHandler } from '/static/scripts/JSONHandler.js';
 
-document.addEventListener('DOMContentLoaded', async function() {
+document.addEventListener('DOMContentLoaded', async function () {
     // Initialize DOM elements
     const elements = initializeDOMElements();
     if (!elements) {
@@ -18,8 +18,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     const state = getState();
 
     setupEventListeners(elements); // Set up event listeners after DOM initialization
-//     extractBlocks(elements);
-try {
+    //     extractBlocks(elements);
+    try {
         // Wait for the JSON to load into the state
         await initialLoadJSON();  // Ensure JSON is loaded into the state before proceeding
 

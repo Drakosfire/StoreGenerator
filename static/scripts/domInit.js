@@ -15,7 +15,7 @@ export function initializeDOMElements() {
     elements.captionText = document.getElementById('caption');
     elements.closeModal = document.getElementsByClassName('close')[0];
     elements.loadingImage = document.getElementById('loadingImage');
-    
+
     // Note: Dynamic elements (e.g., sdPromptElement, imageElement) might need specific handling depending on when they are created.
 
     // Check for null elements and log errors
