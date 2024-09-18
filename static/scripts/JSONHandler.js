@@ -24,14 +24,15 @@ function appendBlockToDOM(newBlock, pageId) {
 
 // Load JSON data from the server into the state as jsonData
 export async function initialLoadJSON() {
+    console.log('Loading JSON data from the server');
     try {
-        const response = await fetch('/static/json/enchantedRootsGearEmporium.json');
+        const response = await fetch('/saved_data/Enchanted_Roots_Gear_Emporium/Enchanted_Roots_Gear_Emporium.json');
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
         }
         const data = await response.json();
         updateState('jsonData', data);
-        // console.log('State after updating jsonData:', getState().jsonData); 
+        console.log('State after updating jsonData:', getState().jsonData);
     }
     catch (error) {
         console.error('Template store not loaded into state:', error);
