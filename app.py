@@ -93,6 +93,19 @@ async def profile(request: Request):
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/saved_data", StaticFiles(directory="saved_data"), name="saved_data")
 
+@app.get("/list-loading-images")
+async def list_loading_images():
+    # Path to the folder containing loading images
+    loading_images_folder = os.path.join('static', 'images', 'loadingMimic')
+    try:
+        # List all files in the directory
+        files = os.listdir(loading_images_folder)
+        # Filter and get only the image files
+        image_files = [f"/static/images/loadingMimic/{file}" for file in files if file.endswith(('.png', '.jpg', '.jpeg', '.gif'))]
+        return {"images": image_files}
+    except FileNotFoundError:
+        return {"images": []}
+    
 # Jinja2 templates
 templates = Jinja2Templates(directory="templates")
 
@@ -204,8 +217,8 @@ async def upload_image(request: Request, image: UploadFile = File(...), director
             buffer.write(image.file.read())
 
         # Return the URL for the image
-        file_url = f'/saved_data/{directoryName}/{filename}'
-        return {"fileUrl": file_url}
+        
+        return {"fileUrl": image_path}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
