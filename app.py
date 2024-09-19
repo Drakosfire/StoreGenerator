@@ -4,6 +4,10 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from authlib.integrations.starlette_client import OAuth
+from starlette.config import Config
+from starlette.middleware.sessions import SessionMiddleware
+from starlette.responses import RedirectResponse
 import os
 import json
 import ctypes
@@ -28,6 +32,63 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Configuration for OAuth
+config = Config('.env')  # You can store your credentials in an .env file for security
+oauth = OAuth(config)
+# Secret key for session management
+app.add_middleware(SessionMiddleware, secret_key=config('SESSION_SECRET_KEY'))
+
+# Register the Google OAuth client
+google = oauth.register(
+    name='google',
+    client_id=config('GOOGLE_CLIENT_ID'),
+    client_secret=config('GOOGLE_CLIENT_SECRET'),
+    authorize_url='https://accounts.google.com/o/oauth2/auth',
+    server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
+    authorize_params=None,
+    access_token_url='https://oauth2.googleapis.com/token',
+    authorize_redirect_uri='http://localhost:7860/auth/callback',
+    client_kwargs={'scope': 'openid profile email'},
+)
+print(google)
+@app.get('/')
+async def homepage():
+    return {"message": "Welcome to the OAuth demo"}
+
+@app.get('/login')
+async def login(request: Request):
+    redirect_uri = request.url_for('auth_callback')  # The route to redirect back to after authentication
+    return await google.authorize_redirect(request, redirect_uri)
+
+@app.get('/auth/callback')
+async def auth_callback(request: Request):
+    try:
+        # Retrieve the token from Google
+        token = await google.authorize_access_token(request)
+        print(f"Access Token: {token}")
+        
+        # Access the user information from the token
+        user_info = token.get('userinfo')
+        if not user_info:
+            raise ValueError("User info not found in token")
+
+        print(f"User Info: {user_info}")
+
+        # Store user information in session or database
+        request.session['user'] = dict(user_info)
+        return RedirectResponse(url='/storegenerator')
+        
+    except Exception as e:
+        print(f"Error during token exchange: {e}")
+        raise HTTPException(status_code=400, detail="Error during authorization")
+
+@app.get('/profile')
+async def profile(request: Request):
+    user = request.session.get('user')
+    if not user:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    return user
+
 # Serve static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/saved_data", StaticFiles(directory="saved_data"), name="saved_data")
@@ -41,7 +102,7 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
 # Route to serve the main page
-@app.get("/", response_class=HTMLResponse)
+@app.get("/storegenerator", response_class=HTMLResponse)
 async def index(request: Request):
     css_files = {
         'all_css': '/static/css/all.css',
@@ -90,11 +151,19 @@ class SaveJsonRequest(BaseModel):
     jsonData: dict
 
 @app.post('/save-json')
-async def save_generated_data(data: SaveJsonRequest):
+async def save_generated_data(request: Request,data: SaveJsonRequest):
     filename = data.filename
+    user = request.session.get('user')
+    if not user:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    
+    # Use the user's unique ID to create a directory for the images
+    user_id = user.get('sub')
+    user_directory = os.path.join('saved_data', user_id, filename)
+    os.makedirs(user_directory, exist_ok=True)
 
     # Path to save the JSON file
-    file_path = os.path.join('saved_data', filename, f'{filename}.json')
+    file_path = os.path.join(user_directory, f'{filename}.json')
 
     try:
         # Ensure directory exists
@@ -110,20 +179,24 @@ async def save_generated_data(data: SaveJsonRequest):
 
 # Route to upload images and save them
 @app.post('/upload-image')
-async def upload_image(image: UploadFile = File(...), directoryName: str = Form(...), blockId: str = Form(...)):
+async def upload_image(request: Request, image: UploadFile = File(...), directoryName: str = Form(...), blockId: str = Form(...)):
     # Validate and sanitize inputs
     if not allowed_file(image.filename):
         raise HTTPException(status_code=400, detail="File type not allowed")
     if not directoryName or not blockId:
         raise HTTPException(status_code=400, detail="Invalid directory name or block ID")
-
-    # Ensure the directory exists
-    directory_path = os.path.join('saved_data', directoryName)
-    os.makedirs(directory_path, exist_ok=True)
+    user = request.session.get('user')
+    if not user:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    
+    # Use the user's unique ID to create a directory for the images
+    user_id = user.get('sub')
+    user_directory = os.path.join('saved_data', user_id, directoryName)
+    os.makedirs(user_directory, exist_ok=True)
 
     # Save the image with a secure filename
     filename = (f"{blockId}_{image.filename}")
-    image_path = os.path.join(directory_path, filename)
+    image_path = os.path.join(user_directory, filename)
 
     try:
         # Save the image file
@@ -139,4 +212,4 @@ async def upload_image(image: UploadFile = File(...), directoryName: str = Form(
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=7860, reload=True)
+    uvicorn.run(app, host="localhost", port=7860)
