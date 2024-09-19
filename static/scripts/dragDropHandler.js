@@ -59,21 +59,6 @@ export function handleDragEnd(e) {
 
 export function handleDragOver(e) {
     e.preventDefault();
-    // Get the element currently under the cursor
-    // const elementUnderCursor = document.elementFromPoint(e.clientX, e.clientY);
-    // if (elementUnderCursor) {
-    //     // Check if the element is a block or textarea
-    //     if (elementUnderCursor.classList.contains('block-item')) {
-    //         console.log('Dragging over a block-item:', elementUnderCursor);
-    //         console.log('Block ID:', elementUnderCursor.getAttribute('data-block-id'));
-    //     } else if (elementUnderCursor.tagName === 'TEXTAREA') {
-    //         console.log('Dragging over a textarea:', elementUnderCursor);
-    //     } else {
-    //         // Log other elements if needed
-    //         console.log('Dragging over another element:', elementUnderCursor.tagName);
-    //     }
-    // }  
-     // Check if the drop target is a TEXTAREA or any other non-droppable area
     if (e.target.tagName === 'TEXTAREA' || e.target.closest('.block-item')) {
         e.dataTransfer.dropEffect = 'none'; // Indicate that drop is not allowed
         return;

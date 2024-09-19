@@ -26,7 +26,7 @@ function appendBlockToDOM(newBlock, pageId) {
 export async function initialLoadJSON() {
     console.log('Loading JSON data from the server');
     try {
-        const response = await fetch('/saved_data/Enchanted_Roots_Gear_Emporium/Enchanted_Roots_Gear_Emporium.json');
+        const response = await fetch('/static/Enchanted_Roots_Gear_Emporium/Enchanted_Roots_Gear_Emporium.json');
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
         }
