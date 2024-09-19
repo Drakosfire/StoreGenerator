@@ -140,6 +140,7 @@ export function generateImage(blockId) {
     }
 
     const sdPrompt = sdPromptElement.value;
+    console.log('sdPrompt:', sdPrompt);
 
     fetch('/generate-image', {
         method: 'POST',

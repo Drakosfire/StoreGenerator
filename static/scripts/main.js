@@ -1,10 +1,14 @@
 // main.js
 
 import { initializeDOMElements } from '/static/scripts/domInit.js';
-import { getState } from './state.js';
+import { getState, updateState } from './state.js';
 import { setupEventListeners } from '/static/scripts/eventHandlers.js';
 import { extractBlocks } from '/static/scripts/blockHandler.js';
-import { initialLoadJSON, loadHandler } from '/static/scripts/JSONHandler.js';
+import { loadHandler } from '/static/scripts/JSONHandler.js';
+import { initialLoadJSON } from '/static/scripts/domInit.js';
+import { fetchLoadingImages } from '/static/scripts/loadingImage.js';
+
+
 
 document.addEventListener('DOMContentLoaded', async function () {
     // Initialize DOM elements
@@ -16,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // Set up initial state
     const state = getState();
-
+    fetchLoadingImages();
     setupEventListeners(elements); // Set up event listeners after DOM initialization
     //     extractBlocks(elements);
     try {
