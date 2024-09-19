@@ -9,7 +9,7 @@
         "type": "image",
         "dataPageId": "block-container",
         "sdprompt": "A highly detailed fantasy painting of the exterior of a greenhouse with a store sign that says \"Enchanted Roots Gear Emporium\" that serves double duty as a adventuring gear shop, that is also a greenhouse and is overflowing with plants as well as equipment",
-        "imgUrl": "/saved_data/Enchanted_Roots_Gear_Emporium/block-1_image.jpeg"
+        "imgUrl": "/static/Enchanted_Roots_Gear_Emporium/block-1_image.jpeg"
     },
     "block-2": {
         "type": "store-properties",
@@ -36,7 +36,7 @@
         "type": "image",
         "dataPageId": "block-container",
         "sdprompt": "A highly detailed fantasy drawing of a sentient potted plant with glowing tendrils, set in an enchanting gear shop filled with vibrant flora and a myriad of magical items.",
-        "imgUrl": "/saved_data/Enchanted_Roots_Gear_Emporium/block-3_image.jpeg"
+        "imgUrl": "/static/Enchanted_Roots_Gear_Emporium/block-3_image.jpeg"
     },
     "block-4": {
         "type": "owner",
@@ -55,7 +55,7 @@
         "type": "image",
         "dataPageId": "block-container",
         "sdprompt": "A highly detailed fantasy image of a half-elf shopkeeper with forest-green eyes and flower-adorned hair, set in a magical gear shop filled with glowing plants and enchanted equipment.",
-        "imgUrl": "/saved_data/Enchanted_Roots_Gear_Emporium/block-5_image.jpeg"
+        "imgUrl": "/static/Enchanted_Roots_Gear_Emporium/block-5_image.jpeg"
     },
     "block-6": {
         "type": "employee",
