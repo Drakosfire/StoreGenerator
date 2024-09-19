@@ -10,7 +10,8 @@ import { startLoadingAnimation, stopLoadingAnimation } from './loadingImage.js';
 import { handleDragOver, handleDrop, } from './dragDropHandler.js';
 import { handleTrashOver, handleTrashDrop, handleTrashLeave } from './trashHandler.js';
 import { getState, updateState } from './state.js';
-import { loadHandler, convertToBlockFormat, saveHandler } from './JSONHandler.js';
+import { loadHandler, saveHandler } from './saveLoadHandler.js';
+import { convertToBlockFormat } from './jsonToBlocks.js';
 
 // Function to handle click events
 export function handleClick(event, elements) {

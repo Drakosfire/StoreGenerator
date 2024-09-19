@@ -1,6 +1,5 @@
 import { lockTextareas, unlockTextareas, initializeTextareaResizing } from "./handleTextareas.js";
-import { adjustPageLayout } from "./pageHandler.js";
-import { getColumnFromOffset } from "./pageHandler.js";
+import { adjustPageLayout, getColumnFromOffset } from "./pageHandler.js";
 import { buildBlock } from "./blockBuilder.js";
 import { getState } from "./state.js";
 

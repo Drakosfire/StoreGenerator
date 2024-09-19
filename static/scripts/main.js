@@ -3,8 +3,7 @@
 import { initializeDOMElements } from '/static/scripts/domInit.js';
 import { getState, updateState } from './state.js';
 import { setupEventListeners } from '/static/scripts/eventHandlers.js';
-import { extractBlocks } from '/static/scripts/blockHandler.js';
-import { loadHandler } from '/static/scripts/JSONHandler.js';
+import { loadHandler } from './saveLoadHandler.js';
 import { initialLoadJSON } from '/static/scripts/domInit.js';
 import { fetchLoadingImages } from '/static/scripts/loadingImage.js';
 

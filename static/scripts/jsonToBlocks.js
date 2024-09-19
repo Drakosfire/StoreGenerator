@@ -1,4 +1,3 @@
-import { getState, updateState } from "/static/scripts/state.js";
 import {
     buildTitleBlock,
     buildImageBlock,
@@ -8,7 +7,6 @@ import {
     buildEntryBlock,
     buildInventoryBlock
 } from "/static/scripts/blockBuilder.js";
-import { initializeTextareaResizing } from "/static/scripts/handleTextareas.js";
 
 function appendBlockToDOM(newBlock, pageId) {
     // Find the page using pageId
@@ -21,184 +19,8 @@ function appendBlockToDOM(newBlock, pageId) {
 
     pageContainer.appendChild(newBlock);
 }
-
-// Load JSON data from the server into the state as jsonData
-export async function initialLoadJSON() {
-    console.log('Loading JSON data from the server');
-    try {
-        const response = await fetch('/static/Enchanted_Roots_Gear_Emporium/Enchanted_Roots_Gear_Emporium.json');
-        if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
-        }
-        const data = await response.json();
-        updateState('jsonData', data);
-        console.log('State after updating jsonData:', getState().jsonData);
-    }
-    catch (error) {
-        console.error('Template store not loaded into state:', error);
-    }
-}
-
-async function uploadImages(imagesToUpload, sanitizedTitle) {
-    console.log('Images to upload:', imagesToUpload);
-    const uploadPromises = imagesToUpload.map(async (image) => {
-        try {
-            console.log('Uploading image:', image.imgUrl);
-            if (!image.imgUrl) {  // Check if imgUrl is defined
-                throw new Error('imgUrl is undefined for block ID: ' + image.blockId);
-            }
-            const formData = new FormData();
-            const response = await fetch(image.imgUrl);
-
-            if (!response.ok) {
-                throw new Error(`Failed to fetch image: ${response.statusText}`);
-            }
-
-            const blob = await response.blob();
-            console.log('Blob size:', blob.size);
-            console.log('Blob type:', blob.type);
-
-            // Set a proper file name with extension based on blob type
-            let extension = blob.type.split('/')[1];
-            if (!extension) {
-                extension = 'png'; // Default to png if type not found
-            }
-
-            formData.append('image', blob, `image.${extension}`);
-            formData.append('directoryName', sanitizedTitle);
-            formData.append('blockId', image.blockId);
-
-            console.log('FormData for upload:', Array.from(formData.entries()));
-
-            return fetch('/upload-image', {
-                method: 'POST',
-                body: formData
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Image upload failed');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.fileUrl) {
-                        console.log('Image uploaded successfully. Url:', data.fileUrl);
-                        return { blockId: image.blockId, fileUrl: data.fileUrl };
-                    } else {
-                        throw new Error('Error uploading image: ' + data.error);
-                    }
-                });
-        } catch (error) {
-            console.error('Error during image upload:', error);
-            throw error;
-        }
-    });
-
-    // Execute all uploads and return the results
-    return Promise.all(uploadPromises);
-}
-
-
-// Function to save JSON data to the server
-async function saveJson(dataToSend) {
-    return fetch('/save-json', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(dataToSend)
-    })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Success:', data);
-            return data;
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-}
-
-// Main save handler
-export async function saveHandler() {
-    let state = getState();
-    let jsonData = state.jsonData;
-    // console.log('JSON Data:', jsonData);
-    let title = '';
-    for (const blockId in jsonData) {
-        if (jsonData[blockId].type === 'title') {
-            title = jsonData[blockId].title;
-            break;
-        }
-    }
-    let sanitizedTitle = title.replace(/\W+/g, '_').trim('_');
-
-    // Prepare image data for upload
-    let imagesToUpload = [];
-    for (const blockId in jsonData) {
-        const block = jsonData[blockId];
-        if (block.type === 'image' && block.imgUrl !== '') {
-            console.log('Image block:', block);
-            imagesToUpload.push({
-                blockId: blockId, imgUrl: block.imgUrl
-            });
-        }
-    }
-
-    try {
-        // Upload images and get new URLs
-        if (imagesToUpload.length > 0) {
-            const uploadedImages = await uploadImages(imagesToUpload, sanitizedTitle);
-            uploadedImages.forEach(({ blockId, fileUrl }) => {
-                jsonData[blockId].imgUrl = fileUrl;
-            });
-        }
-
-        // Prepare data to send to the backend
-        let dataToSend = {
-            filename: sanitizedTitle,
-            jsonData: jsonData
-        };
-
-        // Save the JSON data to the server
-        await saveJson(dataToSend);
-    } catch (error) {
-        console.error('Error during save process:', error);
-    }
-}
-
-export function loadHandler(elements) {
-    const { blockContainerPage } = elements;
-    const { pageContainer } = elements;
-
-    let state = getState();
-    let blocks = state.jsonData;
-
-
-    let ownerCount = 0;
-    let employeeCount = 0;
-    for (const [blockId, block] of Object.entries(blocks)) {
-        if (block.type === 'owner') {
-            ownerCount++;
-        }
-        if (block.type === 'employee') {
-            employeeCount++;
-        }
-    }
-
-    // Future feature: allow for indexing position on page
-
-    // let blockIndex = 0;
-    // for (const block of Object.values(pageBlocks)) {
-    //     block['page-container-index'] = blockIndex++;
-    // }
-
-    iterateThroughBlocks(blocks, ownerCount, employeeCount);
-    initializeTextareaResizing();
-}
-
-
 // iterate through container blocks, identify their type, and build the html
-function iterateThroughBlocks(blocks, ownerCount, employeeCount) {
+export function iterateThroughBlocks(blocks, ownerCount, employeeCount) {
     let blockIDs = {
         ownerID: 1,
         employeeID: 1,
@@ -409,5 +231,3 @@ export function convertToBlockFormat(originalJson) {
     return containerBlocks;
 
 }
-
-
