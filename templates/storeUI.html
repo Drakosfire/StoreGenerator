@@ -153,6 +153,11 @@
             width: 80px;
         }
 
+        #loadButton {
+            background-image: url('/static/images/storeGeneratorLoadButton.png');
+            width: 80px;
+        }
+
         .generate-image-button {
             display: inline-flex;
             /* Use flexbox for better control */
@@ -216,6 +221,10 @@
                 <button id="addPageButton" class="button-with-image">Add New Page</button>
                 <button id="removePageButton" class="button-with-image">Remove Last Page</button>
                 <button id="saveButton" class="button-with-image">Print</button>
+                <button id="loadButton" class="button-with-image">Load</button>
+                <select id="savedStoresDropdown">
+                    <option value="">Select a saved store</option>
+                </select>
                 <button id="printButton" class="button-with-image">Print</button>
                 <button id="resetButton" class="button-with-image">Reset</button>
                 <button id="toggleButton" class="button-with-image">Toggle Image Descriptions</button>
