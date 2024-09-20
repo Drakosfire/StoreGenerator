@@ -1,3 +1,5 @@
+import { getState } from './state.js';
+
 let currentBlockContainerLoadingImageIndex = 0;
 let preloadedImages = [];
 
@@ -11,13 +13,14 @@ function preloadImages(imageUrls) {
 }
 
 export function changeImage() {
+    let state = getState();
     const loadingImage = document.getElementById('loadingImage');
 
     // Use the preloaded image objects directly
     const currentImage = preloadedImages[currentBlockContainerLoadingImageIndex];
     loadingImage.src = currentImage.src; // Use the fully-loaded image src
 
-    currentBlockContainerLoadingImageIndex = (currentBlockContainerLoadingImageIndex + 1) % state.blockContainerLoadingImages.length;
+    currentBlockContainerLoadingImageIndex = (currentBlockContainerLoadingImageIndex + 1) % preloadedImages.length;
 }
 
 // Change the image every 500ms (0.5 seconds)
