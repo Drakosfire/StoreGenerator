@@ -10,8 +10,9 @@ import { startLoadingAnimation, stopLoadingAnimation } from './loadingImage.js';
 import { handleDragOver, handleDrop, } from './dragDropHandler.js';
 import { handleTrashOver, handleTrashDrop, handleTrashLeave } from './trashHandler.js';
 import { getState, updateState } from './state.js';
-import { loadHandler, saveHandler } from './saveLoadHandler.js';
+import { loadHandler, saveHandler, fetchSavedStores } from './saveLoadHandler.js';
 import { convertToBlockFormat } from './jsonToBlocks.js';
+
 
 // Function to handle click events
 export function handleClick(event, elements) {
@@ -87,6 +88,12 @@ export function handleClick(event, elements) {
         console.log('Save button clicked. Element ID:', event.target.id);
     }
 
+    // Handle load button click
+    if (event.target.id === 'loadButton') {
+        fetchSavedStores();
+        console.log('Load button clicked. Element ID:', event.target.id);
+    }
+
     if (event.target.id === 'submitButton') {
 
         console.log('Submit description button clicked. Element ID:', event.target.id);
@@ -105,12 +112,13 @@ export function handleClick(event, elements) {
             .then(data => {
                 // console.log('Success:', data);
                 // Store the llm_output in the state for future use
-
-                updateState('jsonData', convertToBlockFormat(data.llm_output));
                 let state = getState();
-                console.log('LLM output:', state.jsonData);
+                console.log('State before:', state);
+                updateState('jsonData', convertToBlockFormat(data.llm_output));
+
+                console.log('State after:', state.jsonData);
                 state.initialPositions.length = 0; // Clear the initialPositions array
-                loadHandler(elements);
+                loadHandler();
                 storeInitialPositions(elements.blockContainer);
             })
             .catch((error) => {
@@ -125,24 +133,40 @@ export function handleClick(event, elements) {
 // Function to generate image
 export function generateImage(blockId) {
     let state = getState();
-    let block = state.jsonData[blockId];
-    console.log(`Generating image for sd-prompt-${blockId}`);
+
+    // Check if state.jsonData exists
+    if (!state.jsonData) {
+        console.error('Error: jsonData is undefined in the state.');
+        return;
+    }
+
+    // Check if the blockId exists in jsonData
+    let block = state.jsonData.storeData[blockId];
+    if (!block) {
+        console.error(`Error: No block found with ID ${blockId} in jsonData.`);
+        return;
+    }
+
+    // Get the elements related to the block
     const sdPromptElement = document.getElementById(`sd-prompt-${blockId}`);
     const imageElement = document.getElementById(`generated-image-${blockId}`);
 
+    // Check if the required elements exist
     if (!sdPromptElement) {
-        console.error('Element with ID sd-prompt not found');
+        console.error(`Error: Element with ID sd-prompt-${blockId} not found.`);
         return;
     }
 
     if (!imageElement) {
-        console.error('Element with ID generated-image not found');
+        console.error(`Error: Element with ID generated-image-${blockId} not found.`);
         return;
     }
 
+    // Get the prompt text
     const sdPrompt = sdPromptElement.value;
     console.log('sdPrompt:', sdPrompt);
 
+    // Proceed with generating the image
     fetch('/generate-image', {
         method: 'POST',
         headers: {
@@ -150,20 +174,33 @@ export function generateImage(blockId) {
         },
         body: JSON.stringify({ sd_prompt: sdPrompt })
     })
-        .then(response => response.json())
+        .then(response => {
+            // Check if response is OK (status 200-299)
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.status} ${response.statusText}`);
+            }
+            return response.json();
+        })
         .then(data => {
-            console.log('Received data:', data);
+            // Check if the data contains the image URL
+            if (!data.image_url) {
+                throw new Error('Error: Image URL not found in the response.');
+            }
+
+            // Update the block and the image element
             block['imgUrl'] = data.image_url;
             imageElement.src = data.image_url;
             imageElement.style.display = 'block';
 
-            // Log the image element's HTML structure
+            // Log the updated image element's HTML structure
             console.log('Updated imageElement HTML:', imageElement.outerHTML);
         })
         .catch((error) => {
-            console.error('Error:', error);
+            // Catch and log any errors
+            console.error('Error:', error.message || error);
         });
 }
+
 
 export function setupEventListeners(elements) {
     // Click event listener
