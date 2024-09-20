@@ -2,6 +2,7 @@ import { getState, updateState } from "/static/scripts/state.js";
 import { initializeTextareaResizing } from "/static/scripts/handleTextareas.js";
 import { uploadImages } from "/static/scripts/imageHandler.js";
 import { iterateThroughBlocks } from "/static/scripts/jsonToBlocks.js";
+import { clearBlocks } from "./utils.js";
 
 
 // Function to save JSON data to the server
@@ -27,11 +28,11 @@ async function saveJson(dataToSend) {
 export async function saveHandler() {
     let state = getState();
     let jsonData = state.jsonData;
-    // console.log('JSON Data:', jsonData);
+    console.log('JSON Data:', jsonData);
     let title = '';
-    for (const blockId in jsonData) {
-        if (jsonData[blockId].type === 'title') {
-            title = jsonData[blockId].title;
+    for (const blockId in jsonData.storeData) {
+        if (jsonData.storeData[blockId].type === 'title') {
+            title = jsonData.storeData[blockId].title;
             break;
         }
     }
@@ -39,8 +40,8 @@ export async function saveHandler() {
 
     // Prepare image data for upload
     let imagesToUpload = [];
-    for (const blockId in jsonData) {
-        const block = jsonData[blockId];
+    for (const blockId in jsonData.storeData) {
+        const block = jsonData.storeData[blockId];
         if (block.type === 'image' && block.imgUrl !== '') {
             console.log('Image block:', block);
             imagesToUpload.push({
@@ -54,7 +55,7 @@ export async function saveHandler() {
         if (imagesToUpload.length > 0) {
             const uploadedImages = await uploadImages(imagesToUpload, sanitizedTitle);
             uploadedImages.forEach(({ blockId, fileUrl }) => {
-                jsonData[blockId].imgUrl = fileUrl;
+                jsonData.storeData[blockId].imgUrl = fileUrl;
             });
         }
 
@@ -69,17 +70,17 @@ export async function saveHandler() {
     } catch (error) {
         console.error('Error during save process:', error);
     }
-    updateState('jsonData', jsonData);
+    console.log('Saved JSON data:', jsonData);
+    updateState('jsonData', jsonData.storeData);
 }
 
-export function loadHandler(elements) {
-    const { blockContainerPage } = elements;
-    const { pageContainer } = elements;
-
+export function loadHandler() {
+    clearBlocks();
     let state = getState();
-    let blocks = state.jsonData;
-
-
+    console.log('State:', state);
+    let blocks = state.jsonData.storeData;
+    console.log('jsonData:', state.jsonData);
+    console.log('Blocks:', blocks);
     let ownerCount = 0;
     let employeeCount = 0;
     for (const [blockId, block] of Object.entries(blocks)) {
@@ -100,6 +101,61 @@ export function loadHandler(elements) {
 
     iterateThroughBlocks(blocks, ownerCount, employeeCount);
     initializeTextareaResizing();
+}
+
+// Function to fetch the list of saved stores from the server
+export async function fetchSavedStores() {
+    try {
+        const response = await fetch('/list-saved-stores');
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Fetched saved stores:', data.stores);
+
+            // Populate the UI with the list of stores (e.g., in a dropdown)
+            populateSavedStoresDropdown(data.stores);
+        } else {
+            console.error('Failed to fetch saved stores');
+        }
+    } catch (error) {
+        console.error('Error fetching saved stores:', error);
+    }
+}
+
+// Function to populate the dropdown with saved stores
+function populateSavedStoresDropdown(stores) {
+    const dropdown = document.getElementById('savedStoresDropdown');
+    dropdown.innerHTML = '';  // Clear any existing options
+
+    stores.forEach((store) => {
+        const option = document.createElement('option');
+        option.value = store;
+        option.textContent = store;  // Display the store name
+        dropdown.appendChild(option);
+    });
+    dropdown.onchange = loadSelectedStore;
+}
+
+// Function to load the selected store
+export async function loadSelectedStore() {
+    const dropdown = document.getElementById('savedStoresDropdown');
+    const selectedStore = dropdown.value;  // Get the selected store's name
+
+    if (selectedStore) {
+        try {
+            const response = await fetch(`/load-store?storeName=${encodeURIComponent(selectedStore)}`);
+            if (response.ok) {
+                const responseData = await response.json();
+                console.log('Loaded response data:', responseData);
+                // Now you can update the UI with the loaded store data
+                updateState('jsonData', responseData);
+                loadHandler();
+            } else {
+                console.error('Failed to load the store');
+            }
+        } catch (error) {
+            console.error('Error loading the store:', error);
+        }
+    }
 }
 
 
