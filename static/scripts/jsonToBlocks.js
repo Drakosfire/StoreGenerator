@@ -227,7 +227,7 @@ export function convertToBlockFormat(originalJson) {
         miscellaneous_items: originalJson.inventory.miscellaneous_items
     };
     // console.log('Container blocks:', containerBlocks);
-
-    return containerBlocks;
+    console.log('Converted to block format:', containerBlocks);
+    return { storeData: containerBlocks };
 
 }
