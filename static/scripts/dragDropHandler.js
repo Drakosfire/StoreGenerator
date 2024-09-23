@@ -105,10 +105,19 @@ export function handleDrop(e, elements) {
             console.error(`Block with ID ${blockId} on page ${originalPageId} not found`);
             
             return;
+        }   
+        let newBlockContent;
+        if (state.jsonData.storeData[blockId]) {
+            console.log('state.jsonData.storeData[blockId]:', state.jsonData.storeData[blockId]);
+            newBlockContent = buildBlock(state.jsonData.storeData[blockId], blockId);
+            if (newBlockContent) {
+                newBlockContent.setAttribute('data-page-id', newPageId);
+            } else {
+                console.error(`Failed to build block for blockId: ${blockId}`);
+            }
+        } else {
+            console.error(`No data found for blockId: ${blockId}`);
         }
-        const newBlockContent = buildBlock(state.jsonData[blockId], blockId);
-        newBlockContent.setAttribute('data-page-id', newPageId);
-
         const target = e.target.closest('.block-item, .block-page');
         console.log('target:', target);
         let targetColumn = 1;

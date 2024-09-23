@@ -1,17 +1,17 @@
- // Handle the drop event on the trash area
- import { sortBlocksById } from './blockHandler.js';
- import { initializeTextareaResizing } from './handleTextareas.js';
- import { getState } from './state.js';
- import { buildBlock } from './blockBuilder.js';
+// Handle the drop event on the trash area
+import { sortBlocksById } from './blockHandler.js';
+import { initializeTextareaResizing } from './handleTextareas.js';
+import { getState } from './state.js';
+import { buildBlock } from './blockBuilder.js';
 
- export function handleTrashDrop(e, elements) {
+export function handleTrashDrop(e, elements) {
     e.preventDefault();
     let state = getState();
     // console.log('jsonData:', state.jsonData);
     const innerHTML = e.dataTransfer.getData('text/plain');
     const blockId = e.dataTransfer.getData('data-block-id');
     const pageId = e.dataTransfer.getData('data-page-id');
-    const block = state.jsonData[blockId];    
+    const block = state.jsonData.storeData[blockId];
 
     // console.log('Trash Drop event:', e);
     // console.log('Dragged block ID to trash:', blockId, 'Page ID:', pageId);
@@ -50,14 +50,14 @@
         // Reinsert the block using the refactored function
         const newBlock = buildBlock(block, blockId)
         blockContainerPage.appendChild(newBlock);
-        sortBlocksById(blockContainerPage);        
-        } else {
-            console.log('No data transferred');
-        }
+        sortBlocksById(blockContainerPage);
+    } else {
+        console.log('No data transferred');
+    }
     // Remove the "over" class and reset the background image
     trashArea.classList.remove('over');
     trashArea.style.backgroundImage = "url('./static/images/closed-mimic-trashcan.png')";
-    
+
     initializeTextareaResizing();
 }
 
