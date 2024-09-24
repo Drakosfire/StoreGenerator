@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         await initialLoadJSON();  // Ensure JSON is loaded into the state before proceeding
 
         // Call loadHandler after JSON is loaded
-        loadHandler(elements);
+        loadHandler();
     } catch (error) {
         console.error('Error loading JSON:', error);
     }

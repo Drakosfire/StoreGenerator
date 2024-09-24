@@ -56,6 +56,7 @@ export function autofillBlocks(elements) {
             console.log('Moved to a new page:', currentPage.getAttribute('data-page-id'));            
         }
     });
+    initializeTextareaResizing();
 console.log('Autofill complete, all blocks moved to page-container');
 }
 

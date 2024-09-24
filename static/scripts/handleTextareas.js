@@ -2,8 +2,11 @@
 import {getState, updateState} from './state.js';
 
 export function adjustTextareaHeight(el, offset = 0) {
-    // console.log('Adjusting height for:', el.id, 'Current Height:', el.scrollHeight); // Debugging line
-    if (el.scrollHeight > 20){
+    if (el.classList.contains('description-textarea')) {
+        return;
+    }
+    console.log('Adjusting height for:', el.id, 'Class List:', el.classList); // Debugging line
+    if (el.scrollHeight > 20) {
         el.style.height = 'auto';
         el.style.height = (el.scrollHeight + offset) + 'px';
     }
@@ -13,14 +16,14 @@ export function adjustTextareaHeight(el, offset = 0) {
 export function initializeTextareaResizing() {
     const classes = [
         'description-textarea',
-        'user-description-textarea',
         'heading-textarea',
-        'properties-textarea',
-        'string-stat-textarea',
-        'string-action-description-textarea',
         'image-textarea',
-        'title-textarea',
+        'properties-textarea',
+        'string-action-description-textarea',
+        'string-stat-textarea',
         'subtitle-textarea',
+        'title-textarea',
+        'user-description-textarea',
     ];
     let offset;  // Declare offset here
 
