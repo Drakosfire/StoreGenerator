@@ -1,13 +1,10 @@
 // main.js
 
-import { initializeDOMElements } from '/static/scripts/domInit.js';
+import { initializeDOMElements, initialLoadJSON } from './domInit.js';
 import { getState, updateState } from './state.js';
-import { setupEventListeners } from '/static/scripts/eventHandlers.js';
+import { setupEventListeners } from './eventHandlers.js';
 import { loadHandler } from './saveLoadHandler.js';
-import { initialLoadJSON } from '/static/scripts/domInit.js';
-import { fetchLoadingImages } from '/static/scripts/loadingImage.js';
-
-
+import { fetchLoadingImages } from './loadingImage.js';
 
 document.addEventListener('DOMContentLoaded', async function () {
     // Initialize DOM elements

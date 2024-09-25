@@ -1,7 +1,7 @@
-import { getState, updateState } from "/static/scripts/state.js";
-import { initializeTextareaResizing } from "/static/scripts/handleTextareas.js";
-import { uploadImages } from "/static/scripts/imageHandler.js";
-import { iterateThroughBlocks } from "/static/scripts/jsonToBlocks.js";
+import { getState, updateState } from "./state.js";
+import { initializeTextareaResizing } from "./handleTextareas.js";
+import { uploadImages } from "./imageHandler.js";
+import { iterateThroughBlocks } from "./jsonToBlocks.js";
 import { clearBlocks } from "./utils.js";
 
 
@@ -132,13 +132,15 @@ function populateSavedStoresDropdown(stores) {
         option.textContent = store;  // Display the store name
         dropdown.appendChild(option);
     });
-    dropdown.onchange = loadSelectedStore;
+    dropdown.onchange = loadSelectedStore();
+    console.log('Dropdown:', dropdown);
 }
 
 // Function to load the selected store
 export async function loadSelectedStore() {
     const dropdown = document.getElementById('savedStoresDropdown');
     const selectedStore = dropdown.value;  // Get the selected store's name
+    console.log('Selected store:', selectedStore);
 
     if (selectedStore) {
         try {

@@ -26,5 +26,10 @@ RUN mkdir -p saved_data && chown -R user:user .
 # Expose port 7860 for the FastAPI app
 EXPOSE 7860
 
+# Set environment variables
+ENV OAUTH_REDIRECT_URI=http://dev.dungeonmind.net:7860/auth/callback
+ENV APP_HOST=0.0.0.0
+ENV APP_PORT=7860
+
 # Define the command to run the FastAPI app with Uvicorn 
-CMD ["python", "-m", "uvicorn", "app:app", "--host", "0.0.0.0", "--port", "7860"]
+CMD ["python", "app.py"]

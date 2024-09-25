@@ -4,9 +4,9 @@ from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 import os
 import json
-import block_builder as block_builder
-import store_helper as store_helper
-import sd_generator as sd
+import storegenerator.block_builder as block_builder
+import storegenerator.store_helper as store_helper
+import storegenerator.sd_generator as sd
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
@@ -144,6 +144,7 @@ async def load_store(storeName: str, request: Request):
     
     # Load the main JSON file for the store 
     store_file_path = os.path.join(store_directory, f'{storeName}.json')
+    print(f"Loading store from {store_file_path}")
     
     try:
         with open(store_file_path, 'r') as json_file:

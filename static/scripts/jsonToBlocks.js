@@ -6,7 +6,7 @@ import {
     buildEmployeeBlock,
     buildEntryBlock,
     buildInventoryBlock
-} from "/static/scripts/blockBuilder.js";
+} from "./blockBuilder.js";
 
 function appendBlockToDOM(newBlock, pageId) {
     // Find the page using pageId

@@ -12,18 +12,18 @@ export function getColumnFromOffset(block, offset) {
     // Log details for debugging
     console.log('Block offset:', offset);
     console.log('Relative offset:', relativeOffset);
-    
+
     const columnNumber = Math.ceil(relativeOffset / columnWidth);
 
     // Ensure the column number is within valid bounds (1 or 2)
     const validColumnNumber = Math.min(Math.max(columnNumber, 1), 2);
 
-    
+
     return validColumnNumber;
 }
 
 
- // Function to get the height of a column by index
+// Function to get the height of a column by index
 export function getColumnHeights(pageElement, elements) {
     const columns = [0, 0]; // Assuming two columns for simplicity
     const blocks = pageElement.querySelectorAll('.block-page');
@@ -60,7 +60,7 @@ export function addPage(elements) {
     newPage.classList.add('page');
     newPage.setAttribute('data-page-id', `page-${pageCounter}`);
     newPage.id = `page-${pageCounter}`;
-                    
+
     const columnWrapper = document.createElement('div');
     columnWrapper.classList.add('columnWrapper');
 
@@ -86,7 +86,7 @@ export function addPage(elements) {
 
 export function removePage(elements) {
     const pages = elements.pageContainer.querySelectorAll('.page');
-    
+
     if (pages.length > 1) { // Ensure at least one page remains
         const lastPage = pages[pages.length - 1];
         const blocks = lastPage.querySelectorAll('.block-page'); // Check for blocks inside the last page
@@ -129,7 +129,7 @@ export function handleColumnOverflow(page, targetColumn, elements) {
     const overflowBlocks = blocks.slice(overflowStartIndex);
     const overflowHeight = overflowBlocks.reduce((acc, block) => acc + block.offsetHeight, 0);
 
-     // Get the next page if it exists
+    // Get the next page if it exists
     const nextPage = getNextPage(page);
     if (nextPage) {
         const nextPageBlocks = nextPage.querySelectorAll('.block-page, .block-item');
@@ -162,7 +162,7 @@ export function handleColumnOverflow(page, targetColumn, elements) {
         console.error('New monster frame not found in the new page');
         return;
     }
-    
+
     overflowBlocks.forEach(block => {
         newMonsterFrame.appendChild(block);
         block.setAttribute('data-page-id', newPage.getAttribute('data-page-id'));
