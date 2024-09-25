@@ -53,4 +53,3 @@ async def profile(request: Request):
     if not user:
         raise HTTPException(status_code=401, detail="Unauthorized")
     return user
-
