@@ -20,7 +20,7 @@ export function initializeDOMElements() {
 export async function initialLoadJSON() {
     console.log('Loading JSON data from the server');
     try {
-        const response = await fetch('/static/Enchanted_Roots_Gear_Emporium/Enchanted_Roots_Gear_Emporium.json');
+        const response = await fetch('/storegenerator/static/Enchanted_Roots_Gear_Emporium/Enchanted_Roots_Gear_Emporium.json');
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
         }
