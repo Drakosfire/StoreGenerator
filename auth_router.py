@@ -23,7 +23,7 @@ google = oauth.register(
     authorize_url='https://accounts.google.com/o/oauth2/auth',
     server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
     access_token_url='https://oauth2.googleapis.com/token',
-    authorize_redirect_uri='http://localhost:7860/auth/callback',
+    authorize_redirect_uri='http://l/auth/callback',
     client_kwargs={'scope': 'openid profile email'},
 )
 

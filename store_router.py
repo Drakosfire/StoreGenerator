@@ -7,6 +7,7 @@ import json
 import storegenerator.block_builder as block_builder
 import storegenerator.store_helper as store_helper
 import storegenerator.sd_generator as sd
+import logging
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
@@ -78,25 +79,37 @@ def allowed_file(filename):
 # Route to upload images and save them
 @router.post('/upload-image')
 async def upload_image(request: Request, image: UploadFile = File(...), directoryName: str = Form(...), blockId: str = Form(...)):
+    logger = logging.getLogger(__name__)
+    logger.info(f"Uploading image: {image.filename}, directory: {directoryName}, blockId: {blockId}")
     if not allowed_file(image.filename):
+        logger.warning(f"File type not allowed: {image.filename}")
         raise HTTPException(status_code=400, detail="File type not allowed")
     user = request.session.get('user')
     if not user:
+        logger.warning("Unauthorized access attempt")
         raise HTTPException(status_code=401, detail="Unauthorized")
     
     user_id = user.get('sub')
     user_directory = os.path.join('saved_data', user_id, directoryName)
-    os.makedirs(user_directory, exist_ok=True)
+    logger.info(f"User directory: {user_directory}")
+    try:
+        os.makedirs(user_directory, exist_ok=True)
+    except Exception as e:
+        logger.error(f"Error creating directory: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error creating directory: {str(e)}")
 
     filename = f"{blockId}_{image.filename}"
     image_path = os.path.join(user_directory, filename)
+    logger.info(f"Saving image to: {image_path}")
 
     try:
         with open(image_path, "wb") as buffer:
-            buffer.write(image.file.read())
+            buffer.write(await image.read())
+        logger.info(f"Image saved successfully: {image_path}")
         return {"fileUrl": image_path}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Error saving image: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error saving image: {str(e)}")
 
 @router.get("/list-loading-images")
 async def list_loading_images():
