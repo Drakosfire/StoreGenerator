@@ -112,6 +112,7 @@ async def upload_image(request: Request, image: UploadFile = File(...), director
         raise HTTPException(status_code=500, detail=f"Error saving image: {str(e)}")
 
 @router.get("/list-loading-images")
+
 async def list_loading_images():
     # Path to the folder containing loading images
     loading_images_folder = os.path.join('storegenerator', 'static', 'images', 'loadingMimic')

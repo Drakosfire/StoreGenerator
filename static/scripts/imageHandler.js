@@ -29,24 +29,23 @@ export async function uploadImages(imagesToUpload, sanitizedTitle) {
 
             console.log('FormData for upload:', Array.from(formData.entries()));
 
-            return fetch('/upload-image', {
+            const uploadResponse = await fetch('/upload-image', {
                 method: 'POST',
                 body: formData
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Image upload failed');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.fileUrl) {
-                        console.log('Image uploaded successfully. Url:', data.fileUrl);
-                        return { blockId: image.blockId, fileUrl: data.fileUrl };
-                    } else {
-                        throw new Error('Error uploading image: ' + data.error);
-                    }
-                });
+            });
+
+            if (!uploadResponse.ok) {
+                const errorText = await uploadResponse.text();
+                throw new Error(`Image upload failed: ${uploadResponse.status} ${uploadResponse.statusText}. ${errorText}`);
+            }
+
+            const data = await uploadResponse.json();
+            if (data.fileUrl) {
+                console.log('Image uploaded successfully. Url:', data.fileUrl);
+                return { blockId: image.blockId, fileUrl: data.fileUrl };
+            } else {
+                throw new Error('Error uploading image: ' + data.error);
+            }
         } catch (error) {
             console.error('Error during image upload:', error);
             throw error;
