@@ -26,8 +26,13 @@ RUN mkdir -p saved_data && chown -R user:user .
 # Expose port 7860 for the FastAPI app
 EXPOSE 7860
 
+# Use build arguments for environment-specific variables
+ARG ENVIRONMENT=development
+ARG OAUTH_REDIRECT_URI=http://localhost:7860/auth/callback
+
 # Set environment variables
-ENV OAUTH_REDIRECT_URI=http://dev.dungeonmind.net:7860/auth/callback
+ENV ENVIRONMENT=${ENVIRONMENT}
+ENV OAUTH_REDIRECT_URI=${OAUTH_REDIRECT_URI}
 ENV APP_HOST=0.0.0.0
 ENV APP_PORT=7860
 

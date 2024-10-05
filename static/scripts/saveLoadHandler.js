@@ -72,6 +72,7 @@ export async function saveHandler() {
     }
     console.log('Saved JSON data:', jsonData);
     updateState('jsonData', jsonData.storeData);
+    initializeSavedStoresDropdown();
 }
 
 export function loadHandler() {
@@ -109,34 +110,54 @@ export async function fetchSavedStores() {
         const response = await fetch('/list-saved-stores');
         if (response.ok) {
             const data = await response.json();
-            console.log('Fetched saved stores:', data.stores);
-
-            // Populate the UI with the list of stores (e.g., in a dropdown)
-            populateSavedStoresDropdown(data.stores);
+            console.log('Fetched saved stores:', data);
+            return data;
+        } else if (response.status === 401) {
+            console.log('User not logged in');
+            return { stores: [], message: 'Please log in to view saved stores' };
         } else {
             console.error('Failed to fetch saved stores');
+            return { stores: [], message: 'Failed to fetch saved stores' };
         }
     } catch (error) {
         console.error('Error fetching saved stores:', error);
+        return { stores: [], message: 'Error fetching saved stores' };
     }
 }
 
 // Function to populate the dropdown with saved stores
-function populateSavedStoresDropdown(stores) {
+function populateSavedStoresDropdown(data) {
     const dropdown = document.getElementById('savedStoresDropdown');
+    const loadButton = document.getElementById('loadButton');
     dropdown.innerHTML = '';  // Clear any existing options
 
-    stores.forEach((store) => {
+    if (data.stores && data.stores.length > 0) {
+        data.stores.forEach((store) => {
+            const option = document.createElement('option');
+            option.value = store;
+            option.textContent = store;  // Display the store name
+            dropdown.appendChild(option);
+        });
+        dropdown.disabled = false;
+        loadButton.disabled = false;
+    } else {
         const option = document.createElement('option');
-        option.value = store;
-        option.textContent = store;  // Display the store name
+        option.value = "";
+        option.textContent = data.message || "No saved stores available";
         dropdown.appendChild(option);
-    });
-    dropdown.onchange = loadSelectedStore();
-    console.log('Dropdown:', dropdown);
+        dropdown.disabled = true;
+        loadButton.disabled = true;
+    }
+    console.log('Dropdown populated:', dropdown);
 }
 
-// Function to load the selected store
+// New function to initialize the dropdown
+export async function initializeSavedStoresDropdown() {
+    const data = await fetchSavedStores();
+    populateSavedStoresDropdown(data);
+}
+
+// Modify loadSelectedStore to handle the case when no store is selected
 export async function loadSelectedStore() {
     const dropdown = document.getElementById('savedStoresDropdown');
     const selectedStore = dropdown.value;  // Get the selected store's name
@@ -148,15 +169,18 @@ export async function loadSelectedStore() {
             if (response.ok) {
                 const responseData = await response.json();
                 console.log('Loaded response data:', responseData);
-                // Now you can update the UI with the loaded store data
                 updateState('jsonData', responseData);
                 loadHandler();
             } else {
                 console.error('Failed to load the store');
+                alert('Failed to load the store. Please try again.');
             }
         } catch (error) {
             console.error('Error loading the store:', error);
+            alert('Error loading the store. Please try again.');
         }
+    } else {
+        alert('Please select a store to load.');
     }
 }
 

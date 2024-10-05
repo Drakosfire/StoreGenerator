@@ -12,7 +12,7 @@ import { handleTrashOver, handleTrashDrop, handleTrashLeave } from './trashHandl
 import { getState, updateState } from './state.js';
 import { loadHandler, saveHandler, fetchSavedStores } from './saveLoadHandler.js';
 import { convertToBlockFormat } from './jsonToBlocks.js';
-
+import { loadSelectedStore, initializeSavedStoresDropdown } from './saveLoadHandler.js';
 
 // Function to handle click events
 export function handleClick(event, elements) {
@@ -90,8 +90,8 @@ export function handleClick(event, elements) {
 
     // Handle load button click
     if (event.target.id === 'loadButton') {
-        fetchSavedStores();
         console.log('Load button clicked. Element ID:', event.target.id);
+        loadSelectedStore();
     }
 
     if (event.target.id === 'submitButton') {
@@ -218,5 +218,8 @@ export function setupEventListeners(elements) {
     elements.trashArea.addEventListener('dragover', handleTrashOver);
     elements.trashArea.addEventListener('dragleave', handleTrashLeave);
     elements.trashArea.addEventListener('drop', (event) => handleTrashDrop(event, elements));
+
+    // Add this line to initialize the dropdown when the page loads
+    initializeSavedStoresDropdown();
 }
 
