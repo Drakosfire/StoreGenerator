@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 from fastapi.templating import Jinja2Templates
 from auth_router import router as auth_router
-from store_router import router as store_router
+from store_operations import router as store_operations
 import os
 
 app = FastAPI()
@@ -29,7 +29,7 @@ templates = Jinja2Templates(directory="templates")
 
 # Routers
 app.include_router(auth_router)
-app.include_router(store_router)
+app.include_router(store_operations)
 
 @app.get('/')
 async def homepage():
