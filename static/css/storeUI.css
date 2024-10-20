@@ -116,13 +116,13 @@ textarea {
 }
 
 .logo {
-    width: 40%;
+    width: auto;
     /* The logo will take up 20% of the width of its container */
     max-width: 300px;
     /* Set a maximum width so it doesn't get too large on very wide screens */
     height: auto;
     /* Maintain aspect ratio */
-    max-height: 57px;
+    max-height: 80px;
     /* Set a maximum height to prevent the logo from getting too tall */
 }
 
