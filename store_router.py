@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, HTTPException, File, UploadFile, Form
+from fastapi import APIRouter, Request, HTTPException, File, UploadFile, Form, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
@@ -7,11 +7,26 @@ import json
 import block_builder as block_builder
 import store_helper as store_helper
 import sd_generator as sd
+import httpx
+from httpx import AsyncClient
+import logging
+from dotenv import load_dotenv
+
+# Load the .env file
+load_dotenv()
 
 router = APIRouter()
 
-# Environment variable for DungeonMind API URL
-DUNGEONMIND_API_URL = os.getenv("DUNGEONMIND_API_URL")
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Get the DUNGEONMIND_API_URL with a default value
+DUNGEONMIND_API_URL = os.getenv("DUNGEONMIND_API_URL", "http://localhost:7860")
+logger.info(f"DUNGEONMIND_API_URL set to: {DUNGEONMIND_API_URL}")
+
+CURRENT_USER_URL = f"{DUNGEONMIND_API_URL}/auth/current-user"  # Add /auth/ to the path
+
 templates = Jinja2Templates(directory="templates")
 
 # Models
@@ -24,6 +39,37 @@ class GenerateImageRequest(BaseModel):
 class SaveJsonRequest(BaseModel):
     filename: str
     jsonData: dict
+
+# Add this new function to get the current user
+async def get_current_user(request: Request):
+    logger.info(f"Attempting to get current user from {DUNGEONMIND_API_URL}/auth/current-user")
+    
+    # Extract cookies from the incoming request
+    cookies = request.cookies
+
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(
+                f"{DUNGEONMIND_API_URL}/auth/current-user",
+                cookies=cookies,
+                follow_redirects=True
+            )
+            logger.info(f"Response status code: {response.status_code}")
+            logger.debug(f"Response content: {response.text}")
+            
+            if response.status_code == 200:
+                user_data = response.json()
+                logger.info(f"Successfully retrieved user data: {user_data}")
+                return user_data
+            elif response.status_code == 401:
+                logger.warning("User not authenticated")
+                return None
+            else:
+                logger.error(f"Unexpected status code: {response.status_code}")
+                return None
+        except Exception as e:
+            logger.error(f"An error occurred while getting current user: {str(e)}")
+            return None
 
 # Route to serve the main page
 @router.get("/storegenerator", response_class=HTMLResponse)
@@ -57,12 +103,11 @@ async def generate_image(data: GenerateImageRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post('/save-json')
-async def save_generated_data(request: Request, data: SaveJsonRequest):
-    user = request.session.get('user')
-    if not user:
+async def save_generated_data(request: Request, data: SaveJsonRequest, current_user: dict = Depends(get_current_user)):
+    if not current_user:
         raise HTTPException(status_code=401, detail="Unauthorized")
     
-    user_id = user.get('sub')
+    user_id = current_user.get('sub')
     user_directory = os.path.join('saved_data', user_id, data.filename)
     os.makedirs(user_directory, exist_ok=True)
 
@@ -80,14 +125,19 @@ def allowed_file(filename):
 
 # Route to upload images and save them
 @router.post('/upload-image')
-async def upload_image(request: Request, image: UploadFile = File(...), directoryName: str = Form(...), blockId: str = Form(...)):
+async def upload_image(
+    request: Request,
+    image: UploadFile = File(...),
+    directoryName: str = Form(...),
+    blockId: str = Form(...),
+    current_user: dict = Depends(get_current_user)
+):
     if not allowed_file(image.filename):
         raise HTTPException(status_code=400, detail="File type not allowed")
-    user = request.session.get('user')
-    if not user:
+    if not current_user:
         raise HTTPException(status_code=401, detail="Unauthorized")
     
-    user_id = user.get('sub')
+    user_id = current_user.get('sub')
     user_directory = os.path.join('saved_data', user_id, directoryName)
     os.makedirs(user_directory, exist_ok=True)
 
@@ -115,43 +165,36 @@ async def list_loading_images():
         return {"images": []}
 
 @router.get("/list-saved-stores")
-async def list_saved_stores(request: Request):
+async def list_saved_stores(request: Request, current_user: dict = Depends(get_current_user)):
     print("Listing saved stores")
-    # Get the user's session info (assuming OAuth is implemented)
-    user = request.session.get('user')
-    if not user:
+    if not current_user:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
-    # Get the user ID (using OAuth 'sub' for unique identification)
-    user_id = user.get('sub')
-
-    # Path to the user's saved stores directory
-    user_directory = os.path.join('saved_data', user_id)
-    
-    try:
-        # List all saved stores (subdirectories) in the user's directory
-        saved_stores = [store for store in os.listdir(user_directory) if os.path.isdir(os.path.join(user_directory, store))]
-        return {"stores": saved_stores}
-
-    except FileNotFoundError:
-        return {"stores": []}  # Return an empty list if no stores are found
+    async with httpx.AsyncClient() as client:
+        response = await client.get(
+            f"{DUNGEONMIND_API_URL}/store/list-saved-stores",
+            cookies=request.cookies
+        )
+        if response.status_code == 200:
+            return response.json()
+        elif response.status_code == 404:
+            return {"stores": []}
+        else:
+            raise HTTPException(status_code=response.status_code, detail="Error fetching saved stores")
 
 @router.get("/load-store")
-async def load_store(storeName: str, request: Request):
-    user = request.session.get('user')
-    if not user:
+async def load_store(storeName: str, request: Request, current_user: dict = Depends(get_current_user)):
+    if not current_user:
         raise HTTPException(status_code=401, detail="Unauthorized")
     
-    user_id = user.get('sub')
-    store_directory = os.path.join('saved_data', user_id, storeName)
-    
-    # Load the main JSON file for the store 
-    store_file_path = os.path.join(store_directory, f'{storeName}.json')
-    
-    try:
-        with open(store_file_path, 'r') as json_file:
-            store_data = json.load(json_file)
-        
-        return store_data
-    except FileNotFoundError:
-        raise HTTPException(status_code=404, detail="Store not found")
+    async with httpx.AsyncClient() as client:
+        response = await client.get(
+            f"{DUNGEONMIND_API_URL}/store/load-store?storeName={storeName}",
+            cookies=request.cookies
+        )
+        if response.status_code == 200:
+            return response.json()
+        elif response.status_code == 404:
+            raise HTTPException(status_code=404, detail="Store not found")
+        else:
+            raise HTTPException(status_code=response.status_code, detail="Error loading store")
