@@ -9,6 +9,9 @@ import store_helper as store_helper
 import sd_generator as sd
 
 router = APIRouter()
+
+# Environment variable for DungeonMind API URL
+DUNGEONMIND_API_URL = os.getenv("DUNGEONMIND_API_URL")
 templates = Jinja2Templates(directory="templates")
 
 # Models
