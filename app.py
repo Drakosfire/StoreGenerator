@@ -22,18 +22,14 @@ app.add_middleware(SessionMiddleware, secret_key=os.getenv("SESSION_SECRET_KEY")
 
 # Static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
-app.mount("/saved_data", StaticFiles(directory="saved_data"), name="saved_data")
 
 # Jinja2 templates
 templates = Jinja2Templates(directory="templates")
 
 # Routers
-app.include_router(auth_router)
+
 app.include_router(store_operations)
 
-@app.get('/')
-async def homepage():
-    return {"message": "Welcome to the OAuth demo"}
 
 if __name__ == "__main__":
     import uvicorn
