@@ -1,11 +1,11 @@
 //handleTextareas.js
-import {getState, updateState} from './state.js';
+import { getState, updateState } from './state.js';
 
 export function adjustTextareaHeight(el, offset = 0) {
     if (el.classList.contains('description-textarea')) {
         return;
     }
-    console.log('Adjusting height for:', el.id, 'Class List:', el.classList); // Debugging line
+    // console.log('Adjusting height for:', el.id, 'Class List:', el.classList); // Debugging line
     if (el.scrollHeight > 20) {
         el.style.height = 'auto';
         el.style.height = (el.scrollHeight + offset) + 'px';
@@ -38,17 +38,17 @@ export function initializeTextareaResizing() {
         // console.log('Initializing textareas for class:', className);
         // console.log(document.querySelectorAll(`.${className}`));
         const textareas = document.querySelectorAll(`.${className}`);
-        textareas.forEach(textarea => {  
+        textareas.forEach(textarea => {
             // console.log('Textarea found:', textarea);                                          
-        
+
             // Adjust height on page load
             adjustTextareaHeight(textarea, offset);
             // Adjust height on input
-            textarea.addEventListener('input', function() {
+            textarea.addEventListener('input', function () {
                 adjustTextareaHeight(textarea);
             });
             textarea.addEventListener('input', (event) => {
-                let parentBlock = event.target.closest('.block-item') !== null ? event.target.closest('.block-item') : event.target.closest('.block-page') ; // Find the closest parent with class 'block-item'
+                let parentBlock = event.target.closest('.block-item') !== null ? event.target.closest('.block-item') : event.target.closest('.block-page'); // Find the closest parent with class 'block-item'
                 console.log('Parent block:', parentBlock);
                 if (parentBlock) {
                     let blockId = parentBlock.getAttribute('data-block-id');
@@ -66,12 +66,12 @@ export function initializeTextareaResizing() {
 }
 
 function handleInputChange(event, blockId, pageId, property) {
-     // Log the event details
+    // Log the event details
     console.log('Input change detected:', event.target);
     console.log('Page ID:', pageId);
     console.log('Block ID:', blockId);
     console.log('Property being updated:', property);
-     
+
     let state = getState();
     console.log('State before update:', state.jsonData);
     console.log('State before update:', state.jsonData[blockId][property]);
@@ -85,33 +85,33 @@ function handleInputChange(event, blockId, pageId, property) {
 
 export function lockTextareas() {
     const textareas = document.querySelectorAll('textarea');
-    
+
     textareas.forEach(textarea => {
         textarea.setAttribute('disabled', true);
     });
-    
+
     const descriptionTextareas = document.querySelectorAll('.description-textarea');
-    
+
     descriptionTextareas.forEach(descriptionTextarea => {
         descriptionTextarea.removeAttribute('contenteditable');
     });
-    
+
     console.log('All textareas have been locked.');
 }
 
 export function unlockTextareas() {
     const textareas = document.querySelectorAll('textarea');
-    
+
     textareas.forEach(textarea => {
         textarea.removeAttribute('disabled');
     });
-    
+
     const descriptionTextareas = document.querySelectorAll('.description-textarea');
-    
+
     descriptionTextareas.forEach(descriptionTextarea => {
         descriptionTextarea.setAttribute('contenteditable', 'true');
     });
-    
+
     console.log('All textareas have been unlocked.');
 }
 

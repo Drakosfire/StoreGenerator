@@ -1,11 +1,14 @@
-
 import { handleDragStart, handleDragEnd } from "/static/scripts/dragDropHandler.js";
+import { getDungeonMindApiUrl } from '/static/scripts/config.js';
+
+
+
 
 // iterate through container blocks, identify their type, and build the html
 export function buildBlock(block, blockId) {
-    const allBlocks = document.querySelectorAll('[data-block-id]');    
-    const ownerCount = Array.from(allBlocks).filter(block => {return block.getAttribute('type') === 'owner';}).length
-    const employeeCount = Array.from(allBlocks).filter(block => {return block.getAttribute('type') === 'employee';}).length       
+    const allBlocks = document.querySelectorAll('[data-block-id]');
+    const ownerCount = Array.from(allBlocks).filter(block => { return block.getAttribute('type') === 'owner'; }).length
+    const employeeCount = Array.from(allBlocks).filter(block => { return block.getAttribute('type') === 'employee'; }).length
 
 
     // Define a mapping of block types to IDs and logic
@@ -23,7 +26,7 @@ export function buildBlock(block, blockId) {
         'inventory': (block, blockId) => buildInventoryBlock(block, blockId)
     };
 
-    
+
 
     if (blockTypeMap[block.type]) {
         const dropBlock = blockTypeMap[block.type](block, blockId);  // Call the appropriate function
@@ -31,8 +34,8 @@ export function buildBlock(block, blockId) {
     } else {
         console.log(`Unknown block type: ${block.type}`);
     }
-    
-    }
+
+}
 
 export function finishBlockProcessing(block) {
     let newBlock;
@@ -50,21 +53,21 @@ export function finishBlockProcessing(block) {
 
 // Helper function to format the keys for display purposes
 function formatKeyToDisplay(key) {
-    return key.replace('store','').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    return key.replace('store', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 }
 
 // Take in a specific iterable type and iterable, and return the html for that iterable
 
 export function processIterable(iterableType, iterable, blockId) {
     // console.log('Processing iterable:', iterable);
-    
+
     let iterableHtml = `<tr>
         <td align="left"><strong>${formatKeyToDisplay(iterableType)}</strong></td>
         <td align="right"><textarea class="string-action-description-textarea" id="user-store-${iterableType}-${blockId}"
         hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-${iterableType}-${blockId}t" hx-swap="outerHTML"
         title="${formatKeyToDisplay(iterableType)}">${iterable.join(', ')}</textarea></td>
     </tr>`;
-    
+
     return iterableHtml;
 }
 
@@ -82,13 +85,20 @@ export function buildTitleBlock(block, blockId) {
 }
 
 export function buildImageBlock(block, blockId) {
-    let imageBlockHtml = `<div class="block-item" type="image" data-block-id = ${blockId} data-page-id=${block.dataPageId} draggable="true">
-    <img src="${block.imgUrl}" alt="" class="store-image" hx-get="/update-stats" hx-trigger="load" hx-target="#user-store-image" hx-swap="outerHTML" >
-    <textarea class="image-textarea" data-property="sdprompt" id="sd-prompt-${blockId}" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-image" hx-swap="outerHTML" title="Store Image">${block.sdprompt}</textarea>
-    <button class="generate-image-button" data-block-id=${blockId} >
+    const DUNGEONMIND_API_URL = getDungeonMindApiUrl();
+
+    // Prepend the DUNGEONMIND_API_URL to the image source if it's a relative URL
+    const imageUrl = block.imgUrl && !block.imgUrl.startsWith('http')
+        ? `${DUNGEONMIND_API_URL}${block.imgUrl}`
+        : block.imgUrl || '';
+
+    let imageBlockHtml = `
+    <div class="block-item" type="image" data-block-id="${blockId}" data-page-id="${block.dataPageId}" draggable="true">
+        <img id="generated-image-${blockId}" alt="" src="${imageUrl}" class="store-image" style="cursor: pointer; ${imageUrl ? '' : 'display: none;'}">
+        <textarea class="image-textarea" data-property="sdprompt" id="sd-prompt-${blockId}" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-image" hx-swap="outerHTML" title="Store Image">${block.sdprompt || ''}</textarea>
+        <button class="generate-image-button" data-block-id="${blockId}">
             <img src="/static/images/StoreGeneratorGenerateButton.png" alt="Generate Image">
-        </button>
-        <img id="generated-image-${blockId}" alt="" style="display: none; cursor: pointer;">
+        </button>        
     </div>`;
     const newBlock = finishBlockProcessing(imageBlockHtml);
     return newBlock;
@@ -107,7 +117,7 @@ export function buildStorePropertiesBlock(block, blockId) {
                 </tr>
             </thead>
             <tbody>`;
-    
+
     for (let key in block) {
         if (Array.isArray(block[key])) {
             storePropertiesBlockHtmlStart += processIterable(key, block[key], blockId);
@@ -138,7 +148,7 @@ function buildOwnerHeadingBlock(ownerCount) {
         return '';
     } else if (ownerCount === 1) {
         let ownerHeading = `<h2>Owner</h2>`;
-    return ownerHeading;
+        return ownerHeading;
     } else {
         let ownerHeading = `<h2>Owners</h2>`;
         return ownerHeading;
@@ -150,16 +160,16 @@ function buildEmployeeHeadingBlock(employeeCount) {
         return '';
     } else if (employeeCount === 1) {
         let employeeHeading = `<h2>Employee</h2>`;
-    return employeeHeading;
+        return employeeHeading;
     } else {
         let employeeHeading = `<h2>Employees</h2>`;
         return employeeHeading;
     }
 }
 export function buildOwnerBlock(block, blockId, ownerCount, ownerId) {
-    
+
     let ownerBlockHtml = `<div class="block-item" type="owner" ownerId =${ownerId} data-block-id=${blockId} data-page-id=${block.dataPageId} draggable="true">`;
-    if (ownerId === 1) {ownerBlockHtml += buildOwnerHeadingBlock(ownerCount);}
+    if (ownerId === 1) { ownerBlockHtml += buildOwnerHeadingBlock(ownerCount); }
     ownerBlockHtml += `<h3 id="owner-${ownerId}"><textarea class="subtitle-textarea" data-property="name" id="user-store-owner-${ownerId}"
                   hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-owner-${ownerId}" hx-swap="outerHTML"
                   title="Owner Name">${block.name}</textarea></h3>`
@@ -190,7 +200,7 @@ export function buildOwnerBlock(block, blockId, ownerCount, ownerId) {
 export function buildEmployeeBlock(block, blockId, employeeCount, employeeId) {
 
     let employeeBlockHtml = `<div class="block-item" type="employee" employeeId=${employeeId} data-block-id=${blockId} data-page-id=${block.dataPageId} draggable="true">`;
-    if (employeeId === 1) {employeeBlockHtml += buildEmployeeHeadingBlock(employeeCount);}
+    if (employeeId === 1) { employeeBlockHtml += buildEmployeeHeadingBlock(employeeCount); }
     employeeBlockHtml += `<h3 id="employee-${employeeId}"><textarea class="subtitle-textarea" data-property="name" id="employee-${employeeId}"
                   hx-post="/update-stats" hx-trigger="change" hx-target="#employee-${employeeId}" hx-swap="outerHTML"
                   title="Employee Name">${block.name}</textarea></h3>`
@@ -249,7 +259,7 @@ export function buildEntryBlock(section, block, blockId, entryId) {
                 }
             }
         }
-    }    
+    }
     // End the HTML block
     sectionBlockHtml += `</div>`;
     const newBlock = finishBlockProcessing(sectionBlockHtml);
@@ -274,13 +284,13 @@ export function buildInventoryBlock(block, blockId) {
 
     // Iterate through each inventory type
     const inventoryTypes = [
-        "core_inventory", 
-        "weapons", 
-        "armor", 
-        "potions", 
-        "scrolls", 
-        "magical_items", 
-        "mundane_items", 
+        "core_inventory",
+        "weapons",
+        "armor",
+        "potions",
+        "scrolls",
+        "magical_items",
+        "mundane_items",
         "miscellaneous_items"
     ];
 
@@ -291,7 +301,7 @@ export function buildInventoryBlock(block, blockId) {
                 // Log the item and its properties before processing
                 // console.log(`Processing item:`, item, `Index:`, index);
                 // console.log(`item.properties:`, item.properties);
-    
+
                 // Ensure properties is an array
                 let properties;
                 if (Array.isArray(item.properties)) {
@@ -300,10 +310,10 @@ export function buildInventoryBlock(block, blockId) {
                     console.warn(`item.properties is not an array for item:`, item);
                     properties = item.properties; // Handle as a string or another type
                 }
-    
+
                 // Log the processed properties
                 console.log(`Processed properties:`, properties);
-    
+
                 // Create the HTML for each inventory item
                 inventoryBlockHtml += `<tr>
                                             <td align="center"><textarea class="string-action-description-textarea" data-property="${type}-${index}-name" id="user-store-item-name-${blockId}-${index}" hx-post="/update-stats"  title="Item Name">${item.name}</textarea></td>
@@ -314,7 +324,7 @@ export function buildInventoryBlock(block, blockId) {
             });
         }
     });
-    
+
 
     // Close the HTML string
     inventoryBlockHtml += `</tbody>
@@ -326,7 +336,9 @@ export function buildInventoryBlock(block, blockId) {
     const newBlock = finishBlockProcessing(inventoryBlockHtml);
     // console.log(newBlock);
     return newBlock;
-   
+
 }
+
+
 
 

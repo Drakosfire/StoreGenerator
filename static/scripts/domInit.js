@@ -1,6 +1,10 @@
 // domInit.js
 import { updateState, getState } from './state.js';
 import { buildElements } from './utils.js';
+import { getDungeonMindApiUrl } from './config.js';
+
+
+
 // Function to initialize and retrieve necessary DOM elements
 export function initializeDOMElements() {
     const elements = buildElements();
@@ -18,9 +22,11 @@ export function initializeDOMElements() {
 
 // Load JSON data from the server into the state as jsonData
 export async function initialLoadJSON() {
+    const DUNGEONMIND_API_URL = getDungeonMindApiUrl();
     console.log('Loading JSON data from the server');
     try {
-        const response = await fetch('/static/Enchanted_Roots_Gear_Emporium/Enchanted_Roots_Gear_Emporium.json');
+        console.log('DUNGEONMIND_API_URL:', DUNGEONMIND_API_URL);
+        const response = await fetch(`${DUNGEONMIND_API_URL}/static/Enchanted_Roots_Gear_Emporium/Enchanted_Roots_Gear_Emporium.json`);
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
         }
