@@ -8,7 +8,6 @@ import block_builder as block_builder
 import store_helper as store_helper
 import sd_generator as sd
 import httpx
-from httpx import AsyncClient
 import logging
 from dotenv import load_dotenv
 
@@ -39,6 +38,7 @@ class GenerateImageRequest(BaseModel):
 class SaveJsonRequest(BaseModel):
     filename: str
     jsonData: dict
+
 
 # Add this new function to get the current user
 async def get_current_user(request: Request):
@@ -172,3 +172,20 @@ async def load_store(storeName: str, request: Request, current_user: dict = Depe
             raise HTTPException(status_code=404, detail="Store not found")
         else:
             raise HTTPException(status_code=response.status_code, detail="Error loading store")
+
+@router.get("/list-loading-images")
+async def list_loading_images():
+    # Path to the folder containing loading images
+    loading_images_folder = os.path.join('static', 'images', 'loadingMimic')
+    try:
+        # List all files in the directory
+        files = os.listdir(loading_images_folder)
+        # Filter and get only the image files
+        image_files = [f"/static/images/loadingMimic/{file}" for file in files if file.endswith(('.png', '.jpg', '.jpeg', '.gif'))]
+        return {"images": image_files}
+    except FileNotFoundError:
+        return {"images": []}
+
+@router.get("/api-config")
+async def get_api_config():
+    return {"DUNGEONMIND_API_URL": os.getenv("DUNGEONMIND_API_URL", "http://localhost:7860")}
