@@ -8,7 +8,6 @@ import block_builder as block_builder
 import store_helper as store_helper
 import sd_generator as sd
 import httpx
-from httpx import AsyncClient
 import logging
 from dotenv import load_dotenv
 
@@ -39,6 +38,7 @@ class GenerateImageRequest(BaseModel):
 class SaveJsonRequest(BaseModel):
     filename: str
     jsonData: dict
+
 
 # Add this new function to get the current user
 async def get_current_user(request: Request):
@@ -107,23 +107,17 @@ async def save_generated_data(request: Request, data: SaveJsonRequest, current_u
     if not current_user:
         raise HTTPException(status_code=401, detail="Unauthorized")
     
-    user_id = current_user.get('sub')
-    user_directory = os.path.join('saved_data', user_id, data.filename)
-    os.makedirs(user_directory, exist_ok=True)
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            f"{DUNGEONMIND_API_URL}/store/save-store",
+            json={"name": data.filename, **data.jsonData},
+            cookies=request.cookies
+        )
+        if response.status_code == 200:
+            return response.json()
+        else:
+            raise HTTPException(status_code=response.status_code, detail="Error saving data")
 
-    file_path = os.path.join(user_directory, f'{data.filename}.json')
-    try:
-        with open(file_path, 'w') as json_file:
-            json.dump(data.jsonData, json_file, indent=4)
-        return {"message": "Data saved successfully!"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-# Helper function to check allowed file extensions
-def allowed_file(filename):
-    allowed_extensions = {'png', 'jpg', 'jpeg', 'gif'}
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
-
-# Route to upload images and save them
 @router.post('/upload-image')
 async def upload_image(
     request: Request,
@@ -132,63 +126,32 @@ async def upload_image(
     blockId: str = Form(...),
     current_user: dict = Depends(get_current_user)
 ):
-    if not allowed_file(image.filename):
-        logger.warning(f"File type not allowed: {image.filename}")
-        raise HTTPException(status_code=400, detail="File type not allowed")
     if not current_user:
         raise HTTPException(status_code=401, detail="Unauthorized")
     
-    user_id = current_user.get('sub')
-    user_directory = os.path.join('saved_data', user_id, directoryName)
-    logger.info(f"User directory: {user_directory}")
-    try:
-        os.makedirs(user_directory, exist_ok=True)
-    except Exception as e:
-        logger.error(f"Error creating directory: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Error creating directory: {str(e)}")
-
-    filename = f"{blockId}_{image.filename}"
-    image_path = os.path.join(user_directory, filename)
-    logger.info(f"Saving image to: {image_path}")
-
-    try:
-        with open(image_path, "wb") as buffer:
-            buffer.write(await image.read())
-        logger.info(f"Image saved successfully: {image_path}")
-        return {"fileUrl": image_path}
-    except Exception as e:
-        logger.error(f"Error saving image: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Error saving image: {str(e)}")
-
-@router.get("/list-loading-images")
-
-async def list_loading_images():
-    # Path to the folder containing loading images
-    loading_images_folder = os.path.join('storegenerator', 'static', 'images', 'loadingMimic')
-    try:
-        # List all files in the directory
-        files = os.listdir(loading_images_folder)
-        # Filter and get only the image files
-        image_files = [f"storegenerator/static/images/loadingMimic/{file}" for file in files if file.endswith(('.png', '.jpg', '.jpeg', '.gif'))]
-        return {"images": image_files}
-    except FileNotFoundError:
-        return {"images": []}
-
-@router.get("/list-saved-stores")
-async def list_saved_stores(request: Request, current_user: dict = Depends(get_current_user)):
-    print("Listing saved stores")
-    if not current_user:
-        raise HTTPException(status_code=401, detail="Unauthorized")
-
     async with httpx.AsyncClient() as client:
-        response = await client.get(
-            f"{DUNGEONMIND_API_URL}/store/list-saved-stores",
+        files = {"image": (image.filename, image.file, image.content_type)}
+        data = {"directoryName": directoryName, "blockId": blockId}
+        response = await client.post(
+            f"{DUNGEONMIND_API_URL}/store/upload-image",
+            files=files,
+            data=data,
             cookies=request.cookies
         )
         if response.status_code == 200:
             return response.json()
-        elif response.status_code == 404:
-            return {"stores": []}
+        else:
+            raise HTTPException(status_code=response.status_code, detail="Error uploading image")
+
+@router.get("/list-saved-stores")
+async def list_saved_stores(request: Request, current_user: dict = Depends(get_current_user)):
+    if not current_user:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f"{DUNGEONMIND_API_URL}/store/list-saved-stores", cookies=request.cookies)
+        if response.status_code == 200:
+            return response.json()
         else:
             raise HTTPException(status_code=response.status_code, detail="Error fetching saved stores")
 
@@ -199,7 +162,8 @@ async def load_store(storeName: str, request: Request, current_user: dict = Depe
     
     async with httpx.AsyncClient() as client:
         response = await client.get(
-            f"{DUNGEONMIND_API_URL}/store/load-store?storeName={storeName}",
+            f"{DUNGEONMIND_API_URL}/store/load-store",
+            params={"storeName": storeName},
             cookies=request.cookies
         )
         if response.status_code == 200:
@@ -208,3 +172,20 @@ async def load_store(storeName: str, request: Request, current_user: dict = Depe
             raise HTTPException(status_code=404, detail="Store not found")
         else:
             raise HTTPException(status_code=response.status_code, detail="Error loading store")
+
+@router.get("/list-loading-images")
+async def list_loading_images():
+    # Path to the folder containing loading images
+    loading_images_folder = os.path.join('static', 'images', 'loadingMimic')
+    try:
+        # List all files in the directory
+        files = os.listdir(loading_images_folder)
+        # Filter and get only the image files
+        image_files = [f"/static/images/loadingMimic/{file}" for file in files if file.endswith(('.png', '.jpg', '.jpeg', '.gif'))]
+        return {"images": image_files}
+    except FileNotFoundError:
+        return {"images": []}
+
+@router.get("/api-config")
+async def get_api_config():
+    return {"DUNGEONMIND_API_URL": os.getenv("DUNGEONMIND_API_URL", "http://localhost:7860")}

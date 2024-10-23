@@ -44,9 +44,9 @@ export async function fetchLoadingImages() {
         const response = await fetch('/list-loading-images');
         if (response.ok) {
             const data = await response.json();
-
             // Preload images to cache
             preloadImages(data.images);
+            console.log('Loading images preloaded');
         } else {
             console.error('Failed to load loading images');
         }

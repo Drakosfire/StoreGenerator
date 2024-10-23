@@ -4,10 +4,14 @@ import { initializeDOMElements, initialLoadJSON } from './domInit.js';
 import { getState, updateState } from './state.js';
 import { setupEventListeners } from './eventHandlers.js';
 import { loadHandler } from './saveLoadHandler.js';
-import { fetchLoadingImages } from './loadingImage.js';
+import { initialLoadJSON } from '/static/scripts/domInit.js';
+import { fetchLoadingImages } from '/static/scripts/loadingImage.js';
+import { loadConfig } from './config.js';
+
 
 document.addEventListener('DOMContentLoaded', async function () {
     // Initialize DOM elements
+    await loadConfig();
     const elements = initializeDOMElements();
     if (!elements) {
         console.error('DOM initialization failed.');
@@ -28,5 +32,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     } catch (error) {
         console.error('Error loading JSON:', error);
     }
+
 
 });

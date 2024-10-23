@@ -1,5 +1,8 @@
+import { handleDragStart, handleDragEnd } from "/static/scripts/dragDropHandler.js";
+import { getDungeonMindApiUrl } from '/static/scripts/config.js';
 
-import { handleDragStart, handleDragEnd } from "./dragDropHandler.js";
+
+
 
 // iterate through container blocks, identify their type, and build the html
 export function buildBlock(block, blockId) {
@@ -82,13 +85,20 @@ export function buildTitleBlock(block, blockId) {
 }
 
 export function buildImageBlock(block, blockId) {
-    let imageBlockHtml = `<div class="block-item" type="image" data-block-id = ${blockId} data-page-id=${block.dataPageId} draggable="true">
-    <img src="${block.imgUrl}" alt="" class="store-image" hx-get="/update-stats" hx-trigger="load" hx-target="#user-store-image" hx-swap="outerHTML" >
-    <textarea class="image-textarea" data-property="sdprompt" id="sd-prompt-${blockId}" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-image" hx-swap="outerHTML" title="Store Image">${block.sdprompt}</textarea>
-    <button class="generate-image-button" data-block-id=${blockId} >
+    const DUNGEONMIND_API_URL = getDungeonMindApiUrl();
+
+    // Prepend the DUNGEONMIND_API_URL to the image source if it's a relative URL
+    const imageUrl = block.imgUrl && !block.imgUrl.startsWith('http')
+        ? `${DUNGEONMIND_API_URL}${block.imgUrl}`
+        : block.imgUrl || '';
+
+    let imageBlockHtml = `
+    <div class="block-item" type="image" data-block-id="${blockId}" data-page-id="${block.dataPageId}" draggable="true">
+        <img id="generated-image-${blockId}" alt="" src="${imageUrl}" class="store-image" style="cursor: pointer; ${imageUrl ? '' : 'display: none;'}">
+        <textarea class="image-textarea" data-property="sdprompt" id="sd-prompt-${blockId}" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-image" hx-swap="outerHTML" title="Store Image">${block.sdprompt || ''}</textarea>
+        <button class="generate-image-button" data-block-id="${blockId}">
             <img src="/static/images/StoreGeneratorGenerateButton.png" alt="Generate Image">
-        </button>
-        <img id="generated-image-${blockId}" alt="" style="display: none; cursor: pointer;">
+        </button>        
     </div>`;
     const newBlock = finishBlockProcessing(imageBlockHtml);
     return newBlock;
@@ -328,5 +338,7 @@ export function buildInventoryBlock(block, blockId) {
     return newBlock;
 
 }
+
+
 
 
