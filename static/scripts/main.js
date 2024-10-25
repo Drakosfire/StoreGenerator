@@ -4,7 +4,6 @@ import { initializeDOMElements, initialLoadJSON } from './domInit.js';
 import { getState, updateState } from './state.js';
 import { setupEventListeners } from './eventHandlers.js';
 import { loadHandler } from './saveLoadHandler.js';
-import { initialLoadJSON } from '/static/scripts/domInit.js';
 import { fetchLoadingImages } from '/static/scripts/loadingImage.js';
 import { loadConfig } from './config.js';
 
@@ -35,3 +34,4 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 
 });
+

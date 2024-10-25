@@ -5,6 +5,7 @@ import { iterateThroughBlocks } from "./jsonToBlocks.js";
 import { clearBlocks } from "./utils.js";
 
 
+
 // Function to save JSON data to the server
 async function saveJson(dataToSend) {
     return fetch('/save-json', {
@@ -107,7 +108,7 @@ export function loadHandler() {
 // Function to fetch the list of saved stores from the server
 export async function fetchSavedStores() {
     try {
-        const response = await fetch('/list-saved-stores');
+        const response = await fetch(`/list-saved-stores`);
         if (response.ok) {
             const data = await response.json();
             console.log('Fetched saved stores:', data);
