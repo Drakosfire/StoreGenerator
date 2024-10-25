@@ -52,7 +52,8 @@ async def get_current_user(request: Request):
             response = await client.get(
                 f"{DUNGEONMIND_API_URL}/auth/current-user",
                 cookies=cookies,
-                follow_redirects=True
+                follow_redirects=True,
+                headers={"Origin": "http://localhost:3001"},  # Add this line
             )
             logger.info(f"Response status code: {response.status_code}")
             logger.debug(f"Response content: {response.text}")
@@ -186,6 +187,3 @@ async def list_loading_images():
     except FileNotFoundError:
         return {"images": []}
 
-@router.get("/api-config")
-async def get_api_config():
-    return {"DUNGEONMIND_API_URL": os.getenv("DUNGEONMIND_API_URL", "http://localhost:7860")}

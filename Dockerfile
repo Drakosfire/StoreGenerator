@@ -23,8 +23,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Ensure the 'saved_data' and other writable directories are owned by the "user"
 RUN mkdir -p saved_data && chown -R user:user .
 
-# Expose port 7860 for the FastAPI app
-EXPOSE 7860
+# Expose port 3001 for the FastAPI app
+EXPOSE 3001
 
 # Use build arguments for environment-specific variables
 ARG ENVIRONMENT=development
@@ -34,7 +34,7 @@ ARG OAUTH_REDIRECT_URI=http://localhost:7860/auth/callback
 ENV ENVIRONMENT=${ENVIRONMENT}
 ENV OAUTH_REDIRECT_URI=${OAUTH_REDIRECT_URI}
 ENV APP_HOST=0.0.0.0
-ENV APP_PORT=7860
+ENV APP_PORT=3001
 
 # Define the command to run the FastAPI app with Uvicorn 
 CMD ["python", "app.py"]
