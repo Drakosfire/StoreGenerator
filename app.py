@@ -3,8 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse
-from auth_router import router as auth_router
 from store_operations import router as store_operations
 import os
 
@@ -34,4 +32,4 @@ app.include_router(store_operations)
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="localhost", port=3001)
+    uvicorn.run(app, host="0.0.0.0", port=3001)
