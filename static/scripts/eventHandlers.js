@@ -13,6 +13,7 @@ import { getState, updateState } from './state.js';
 import { loadHandler, saveHandler, fetchSavedStores } from './saveLoadHandler.js';
 import { convertToBlockFormat } from './jsonToBlocks.js';
 import { loadSelectedStore, initializeSavedStoresDropdown } from './saveLoadHandler.js';
+import { getConfig } from './config.js';
 
 // Function to handle click events
 export function handleClick(event, elements) {
@@ -26,6 +27,18 @@ export function handleClick(event, elements) {
         captionText.innerHTML = event.target.alt;
     }
 
+    if (event.target.id === 'dungeonmindButton') {
+        console.log('DungeonMind button clicked. Element ID:', event.target.id);
+        const { DUNGEONMIND_BASE_URL } = getConfig();
+
+        // Ensure the URL is absolute
+        if (DUNGEONMIND_BASE_URL.startsWith('http://') || DUNGEONMIND_BASE_URL.startsWith('https://')) {
+            window.location.href = DUNGEONMIND_BASE_URL;
+        } else {
+            // If it doesn't start with a protocol, assume http://
+            window.location.href = `http://${DUNGEONMIND_BASE_URL}`;
+        }
+    }
     // Handle modal close button
     if (event.target.id === 'closeModal') {
         console.log('Close button clicked for modal. Element ID:', event.target.id);
