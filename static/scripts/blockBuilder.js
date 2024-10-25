@@ -1,5 +1,5 @@
 import { handleDragStart, handleDragEnd } from "/static/scripts/dragDropHandler.js";
-import { getDungeonMindApiUrl } from '/static/scripts/config.js';
+import { getConfig } from '/static/scripts/config.js';
 
 
 
@@ -85,11 +85,11 @@ export function buildTitleBlock(block, blockId) {
 }
 
 export function buildImageBlock(block, blockId) {
-    const DUNGEONMIND_API_URL = getDungeonMindApiUrl();
+    const config = getConfig();
 
     // Prepend the DUNGEONMIND_API_URL to the image source if it's a relative URL
     const imageUrl = block.imgUrl && !block.imgUrl.startsWith('http')
-        ? `${DUNGEONMIND_API_URL}${block.imgUrl}`
+        ? `${config.DUNGEONMIND_API_URL}${block.imgUrl}`
         : block.imgUrl || '';
 
     let imageBlockHtml = `
