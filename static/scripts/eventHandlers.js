@@ -39,6 +39,16 @@ export function handleClick(event, elements) {
             window.location.href = `http://${DUNGEONMIND_BASE_URL}`;
         }
     }
+
+    if (event.target.id === 'loginButton') {
+        console.log('Login button clicked. Element ID:', event.target.id);
+        window.location.href = '/auth/login';
+    }
+
+    if (event.target.id === 'logoutButton') {
+        console.log('Logout button clicked. Element ID:', event.target.id);
+        window.location.href = '/auth/logout';
+    }
     // Handle modal close button
     if (event.target.id === 'closeModal') {
         console.log('Close button clicked for modal. Element ID:', event.target.id);
@@ -218,7 +228,6 @@ export function generateImage(blockId) {
 export function setupEventListeners(elements) {
     // Click event listener
     document.addEventListener('click', (event) => handleClick(event, elements));
-
     // Event listeners for drag and drop functionality
     elements.blockContainer.addEventListener('dragover', handleDragOver);
 

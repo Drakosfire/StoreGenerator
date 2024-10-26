@@ -115,6 +115,16 @@
             cursor: pointer;
         }
 
+        #loginButton {
+            background-image: url('/static/images/loginButton.png');
+            width: 150px;
+        }
+
+        #logoutButton {
+            background-image: url('/static/images/logoutButton.png');
+            width: 150px;
+        }
+
         #submitButton {
             background-image: url('/static/images/StoreGeneratorSubmitButton.png');
 
@@ -226,9 +236,11 @@
                 <button id="printButton" class="button-with-image">Print</button>
                 <button id="resetButton" class="button-with-image">Reset</button>
                 <button id="toggleButton" class="button-with-image">Toggle Image Descriptions</button>
-                <button id="saveButton" class="button-with-image">Print</button>
-                <button id="loadButton" class="button-with-image">Load</button>
-                <select id="savedStoresDropdown">
+                <button id="loginButton" class="button-with-image">Login</button>
+                <button id="logoutButton" class="button-with-image" style="display: none;">Logout</button>
+                <button id="saveButton" class="button-with-image" style="display: none;">Save</button>
+                <button id="loadButton" class="button-with-image" style="display: none;">Load</button>
+                <select id="savedStoresDropdown" style="display: none;">
                     <option value="">Select a saved store</option>
                 </select>
 
@@ -277,8 +289,6 @@
     </div>
     <script type="module" src="./static/scripts/main.js"></script>
 
-
-    </script>
 </body>
 
 </html>

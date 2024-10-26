@@ -5,12 +5,42 @@ import { getState, updateState } from './state.js';
 import { setupEventListeners } from './eventHandlers.js';
 import { loadHandler } from './saveLoadHandler.js';
 import { fetchLoadingImages } from '/static/scripts/loadingImage.js';
-import { loadConfig } from './config.js';
+import { loadConfig, getConfig } from './config.js';
 
-
+// Function to check authentication status and update UI
+async function checkAuthAndUpdateUI() {
+    try {
+        const response = await fetch('/auth/current-user', {
+            credentials: 'include'
+        });
+        if (response.ok) {
+            // User is authenticated
+            const userData = await response.json();
+            console.log('User authenticated:', userData);
+            document.getElementById('loginButton').style.display = 'none';
+            document.getElementById('logoutButton').style.display = 'inline-block';
+            document.getElementById('saveButton').style.display = 'inline-block';
+            document.getElementById('loadButton').style.display = 'inline-block';
+            document.getElementById('savedStoresDropdown').style.display = 'inline-block';
+            // Optionally, update UI with user info (e.g., display user's name)
+        } else {
+            // User is not authenticated
+            console.log('User not authenticated');
+            document.getElementById('loginButton').style.display = 'inline-block';
+            document.getElementById('logoutButton').style.display = 'none';
+            document.getElementById('saveButton').style.display = 'none';
+            document.getElementById('loadButton').style.display = 'none';
+            document.getElementById('savedStoresDropdown').style.display = 'none';
+        }
+    } catch (error) {
+        console.error('Error checking authentication status:', error);
+    }
+}
 document.addEventListener('DOMContentLoaded', async function () {
     // Initialize DOM elements
     await loadConfig();
+    console.log('Configuration loaded:', getConfig());
+    checkAuthAndUpdateUI();
     const elements = initializeDOMElements();
     if (!elements) {
         console.error('DOM initialization failed.');
