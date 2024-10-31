@@ -14,3 +14,8 @@ export function getState() {
 export function updateState(key, value) {
     initialState[key] = value;
 }
+
+// Function to reset the state
+export function resetState() {
+    initialState = { ...initialState };
+}

@@ -8,7 +8,7 @@ import { clearBlocks } from "./utils.js";
 
 // Function to save JSON data to the server
 async function saveJson(dataToSend) {
-    return fetch('/save-json', {
+    return fetch('store/save-store', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -31,14 +31,17 @@ export async function saveHandler() {
     let jsonData = state.jsonData;
     console.log('JSON Data:', jsonData);
     let title = '';
+
     for (const blockId in jsonData.storeData) {
+        console.log('Block ID:', blockId, 'Type:', jsonData.storeData[blockId].type);
         if (jsonData.storeData[blockId].type === 'title') {
+            console.log('Title found:', jsonData.storeData[blockId].title);
             title = jsonData.storeData[blockId].title;
             break;
         }
     }
     let sanitizedTitle = title.replace(/\W+/g, '_').trim('_');
-
+    // console.log('Sanitized title:', sanitizedTitle)
     // Prepare image data for upload
     let imagesToUpload = [];
     for (const blockId in jsonData.storeData) {
@@ -54,17 +57,14 @@ export async function saveHandler() {
     try {
         // Upload images and get new URLs
         if (imagesToUpload.length > 0) {
-            const uploadedImages = await uploadImages(imagesToUpload, sanitizedTitle);
+            const uploadedImages = await uploadImages(imagesToUpload);
             uploadedImages.forEach(({ blockId, fileUrl }) => {
                 jsonData.storeData[blockId].imgUrl = fileUrl;
             });
         }
 
         // Prepare data to send to the backend
-        let dataToSend = {
-            filename: sanitizedTitle,
-            jsonData: jsonData
-        };
+        let dataToSend = jsonData;
 
         // Save the JSON data to the server
         await saveJson(dataToSend);
@@ -79,9 +79,9 @@ export async function saveHandler() {
 export function loadHandler() {
     clearBlocks();
     let state = getState();
-    console.log('State:', state);
+    // console.log('State:', state);
     let blocks = state.jsonData.storeData;
-    console.log('jsonData:', state.jsonData);
+    // console.log('jsonData:', state.jsonData);
     console.log('Blocks:', blocks);
     let ownerCount = 0;
     let employeeCount = 0;
@@ -108,7 +108,7 @@ export function loadHandler() {
 // Function to fetch the list of saved stores from the server
 export async function fetchSavedStores() {
     try {
-        const response = await fetch(`/list-saved-stores`);
+        const response = await fetch(`store/list-saved-stores`);
         if (response.ok) {
             const data = await response.json();
             console.log('Fetched saved stores:', data);
@@ -166,7 +166,7 @@ export async function loadSelectedStore() {
 
     if (selectedStore) {
         try {
-            const response = await fetch(`/load-store?storeName=${encodeURIComponent(selectedStore)}`);
+            const response = await fetch(`/store/load-store?storeName=${encodeURIComponent(selectedStore)}`);
             if (response.ok) {
                 const responseData = await response.json();
                 console.log('Loaded response data:', responseData);
