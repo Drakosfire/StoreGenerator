@@ -47,7 +47,7 @@ export function iterateThroughBlocks(blocks, ownerCount, employeeCount) {
     };
 
     for (const [blockId, block] of Object.entries(blocks)) {
-        console.log(`Processing Block ID: ${blockId}, Type: ${block.type}`);
+        // console.log(`Processing Block ID: ${blockId}, Type: ${block.type}`);
 
         if (blockTypeMap[block.type]) {
             const blockHtml = blockTypeMap[block.type](block, blockId);  // Call the appropriate function
@@ -227,7 +227,7 @@ export function convertToBlockFormat(originalJson) {
         miscellaneous_items: originalJson.inventory.miscellaneous_items
     };
     // console.log('Container blocks:', containerBlocks);
-    console.log('Converted to block format:', containerBlocks);
+    // console.log('Converted to block format:', containerBlocks);
     return { storeData: containerBlocks };
 
 }

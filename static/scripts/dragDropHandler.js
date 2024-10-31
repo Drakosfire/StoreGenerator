@@ -7,17 +7,17 @@ export function handleDragStart(e) {
     lockTextareas();
     const target = e.target.closest('.block-item, .block-page');
     if (!target) {
-        console.error('Drag started for an element without a valid target');
+        // console.error('Drag started for an element without a valid target');
         return;
     }
     const blockId = target.getAttribute('data-block-id');
     const pageId = target.getAttribute('data-page-id');
     if (!blockId) {
-        console.error('Drag started for an element without a data-block-id');
+        // console.error('Drag started for an element without a data-block-id');
         return;
     }
     if (!pageId) {
-        console.error('Drag started for an element without a data-page-id');
+        // console.error('Drag started for an element without a data-page-id');
         return;
     }
     
@@ -37,7 +37,7 @@ export function handleDragStart(e) {
     document.body.appendChild(dragImage);
     e.dataTransfer.setDragImage(dragImage, 0, 0);
 
-    console.log(`Drag started for block ID: ${blockId} page ID: ${pageId}`);
+    // console.log(`Drag started for block ID: ${blockId} page ID: ${pageId}`);
 }
 
 export function handleDragEnd(e) {
@@ -45,7 +45,7 @@ export function handleDragEnd(e) {
     if (target) {
         target.style.opacity = '1'; // Reset the opacity
         const blockId = target.getAttribute('data-block-id');
-        console.log(`Drag ended for block ID: ${blockId}`);
+        // console.log(`Drag ended for block ID: ${blockId}`);
     }
 
     // Remove highlight classes from pages and blocks
@@ -88,7 +88,7 @@ export function handleDrop(e, elements) {
     e.preventDefault();
     // Ensure we are not dropping into a textarea or another block
     if (e.target.classList.contains('block-item', 'block-page', 'description-textarea') || e.target.tagName === 'TEXTAREA') {
-        console.log('Cannot drop block inside another block or textarea');
+        // console.log('Cannot drop block inside another block or textarea');
         return;
     }
     const blockId = e.dataTransfer.getData('data-block-id');
@@ -97,47 +97,47 @@ export function handleDrop(e, elements) {
     if (blockId && originalPageId) {
         const originalBlock = document.querySelector(`[data-block-id="${blockId}"]`);
         const newPage = e.target.closest('.page');
-        console.log(`Over page ${newPage} from page ID: ${originalPageId}`);
+        // console.log(`Over page ${newPage} from page ID: ${originalPageId}`);
         const newPageId = newPage.getAttribute('data-page-id');
         
         // Ensure the original block exists before proceeding
         if (!originalBlock || !newPage) {
-            console.error(`Block with ID ${blockId} on page ${originalPageId} not found`);
+            // console.error(`Block with ID ${blockId} on page ${originalPageId} not found`);
             
             return;
         }   
         let newBlockContent;
         if (state.jsonData.storeData[blockId]) {
-            console.log('state.jsonData.storeData[blockId]:', state.jsonData.storeData[blockId]);
+            // console.log('state.jsonData.storeData[blockId]:', state.jsonData.storeData[blockId]);
             newBlockContent = buildBlock(state.jsonData.storeData[blockId], blockId);
             if (newBlockContent) {
                 newBlockContent.setAttribute('data-page-id', newPageId);
             } else {
-                console.error(`Failed to build block for blockId: ${blockId}`);
+                // console.error(`Failed to build block for blockId: ${blockId}`);
             }
         } else {
-            console.error(`No data found for blockId: ${blockId}`);
+            // console.error(`No data found for blockId: ${blockId}`);
         }
         const target = e.target.closest('.block-item, .block-page');
-        console.log('target:', target);
+        // console.log('target:', target);
         let targetColumn = 1;
         if (target) {
             const bounding = target.getBoundingClientRect();
             const offset = e.clientY - bounding.top;
 
-            console.log('Drop target found:', target);
-            console.log('Bounding rectangle:', bounding);
-            console.log('Offset from top:', offset);
-            console.log('Target height:', bounding.height);
-            console.log('Insert before or after decision point (height / 2):', bounding.height / 2);
+            // console.log('Drop target found:', target);
+            // console.log('Bounding rectangle:', bounding);
+            // console.log('Offset from top:', offset);
+            // console.log('Target height:', bounding.height);
+            // console.log('Insert before or after decision point (height / 2):', bounding.height / 2);
 
             targetColumn = getColumnFromOffset(target, offset);
             if (offset > bounding.height / 2) {
-                console.log('Inserting after the target');
+                // console.log('Inserting after the target');
                 target.parentNode.insertBefore(newBlockContent, target.nextSibling);
                
             } else {
-                console.log('Inserting before the target');
+                // console.log('Inserting before the target');
                 target.parentNode.insertBefore(newBlockContent, target);
             }
 
@@ -145,7 +145,7 @@ export function handleDrop(e, elements) {
             target.style['border-bottom'] = '';
             target.style['border-top'] = '';
         } else {
-            console.log('No valid drop target found, appending to the end');
+            // console.log('No valid drop target found, appending to the end');
             newPage.querySelector('.block.monster.frame.wide').appendChild(newBlockContent);
         }
 
@@ -154,7 +154,7 @@ export function handleDrop(e, elements) {
 
         // Reset opacity of dragged element
         newBlockContent.style.opacity = '1';
-        console.log(`Moved existing block with ID: ${blockId} to page ID: ${newPageId}`);
+        // console.log(`Moved existing block with ID: ${blockId} to page ID: ${newPageId}`);
         initializeTextareaResizing();
         // Adjust layouts
         if (originalPageId !== 'block-container') {
@@ -162,7 +162,7 @@ export function handleDrop(e, elements) {
         }
         adjustPageLayout(newPageId, elements);
     } else {
-    console.log('No data transferred');
+        //console.log('No data transferred');
     }   
 }
 
