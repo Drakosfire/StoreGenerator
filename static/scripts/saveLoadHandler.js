@@ -25,6 +25,31 @@ async function saveJson(dataToSend) {
         });
 }
 
+// Function to upload image to Cloudflare
+async function uploadImageToCloudflare(image_url) {
+    console.log('Uploading image:', image_url);
+    try {
+        const response = await fetch('store/upload-image', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ image_url: image_url })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Uploaded image:', data);
+        return data; // Ensure the function returns the data
+    } catch (error) {
+        console.error('Error uploading image:', error);
+        throw error; // Re-throw the error to handle it in the calling function
+    }
+}
+
 // Main save handler
 export async function saveHandler() {
     let state = getState();
@@ -38,6 +63,23 @@ export async function saveHandler() {
             console.log('Title found:', jsonData.storeData[blockId].title);
             title = jsonData.storeData[blockId].title;
             break;
+        }
+    }
+    // iterate through the blocks and upload the image to cloudflare
+    for (const blockId in jsonData.storeData) {
+        const block = jsonData.storeData[blockId];
+        const { type, imgUrl, isNewImage } = block;
+
+        // Check if the block should be processed
+        if (type === 'image' && imgUrl && isNewImage) {
+            console.log('New Image URL:', imgUrl);
+            // upload the image to cloudflare
+            let uploaded_image = await uploadImageToCloudflare(imgUrl);
+            console.log('Uploaded image:', uploaded_image);
+            // replace the image_url in the jsonData with the uploaded_image
+            block.imgUrl = uploaded_image.image_url;
+            // Remove the isNewImage flag after processing
+            delete block.isNewImage;
         }
     }
     // Prepare data to send to the backend

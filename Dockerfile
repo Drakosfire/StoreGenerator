@@ -37,4 +37,4 @@ ENV APP_HOST=0.0.0.0
 ENV APP_PORT=3001
 
 # Define the command to run the FastAPI app with Uvicorn 
-CMD ["python", "app.py"]
+CMD ["python", "app.py", "--host", "dev.dungeonmind.net/storegenerator", "--port", "3001"]
