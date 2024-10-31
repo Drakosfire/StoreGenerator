@@ -16,13 +16,13 @@ load_dotenv()
 
 router = APIRouter()
 
-# Set up logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# # Set up logging
+# logging.basicConfig(level=logging.INFO)
+# logger = logging.getLogger(__name__)
 
 # Get the DUNGEONMIND_API_URL with a default value
-DUNGEONMIND_API_URL = os.getenv("DUNGEONMIND_API_URL", "http://localhost:7860")
-logger.info(f"DUNGEONMIND_API_URL set to: {DUNGEONMIND_API_URL}")
+DUNGEONMIND_API_URL = os.getenv("DUNGEONMIND_API_URL", "https://dev.dungeonmind.net")
+# logger.info(f"DUNGEONMIND_API_URL set to: {DUNGEONMIND_API_URL}")
 
 CURRENT_USER_URL = f"{DUNGEONMIND_API_URL}/auth/current-user"  # Add /auth/ to the path
 
@@ -42,7 +42,7 @@ class SaveJsonRequest(BaseModel):
 
 # Add this new function to get the current user
 async def get_current_user(request: Request):
-    logger.info(f"Attempting to get current user from {DUNGEONMIND_API_URL}/auth/current-user")
+    # logger.info(f"Attempting to get current user from {DUNGEONMIND_API_URL}/auth/current-user")
     
     # Extract cookies from the incoming request
     cookies = request.cookies
@@ -55,37 +55,38 @@ async def get_current_user(request: Request):
                 follow_redirects=True,
                 headers={"Origin": "http://localhost:3001"},  # Add this line
             )
-            logger.info(f"Response status code: {response.status_code}")
-            logger.debug(f"Response content: {response.text}")
+            # logger.info(f"Response status code: {response.status_code}")
+            # logger.debug(f"Response content: {response.text}")
             
             if response.status_code == 200:
                 user_data = response.json()
-                logger.info(f"Successfully retrieved user data: {user_data}")
+                # logger.info(f"Successfully retrieved user data: {user_data}")
                 return user_data
             elif response.status_code == 401:
-                logger.warning("User not authenticated")
+                # logger.warning("User not authenticated")
                 return None
             else:
-                logger.error(f"Unexpected status code: {response.status_code}")
+                # logger.error(f"Unexpected status code: {response.status_code}")
                 return None
         except Exception as e:
-            logger.error(f"An error occurred while getting current user: {str(e)}")
+            # logger.error(f"An error occurred while getting current user: {str(e)}")
             return None
 
 # Route to serve the main page
-@router.get("/storegenerator", response_class=HTMLResponse)
+@router.get("/", response_class=HTMLResponse)
+@router.get("/storegenerator/", response_class=HTMLResponse)
 async def index(request: Request):
     css_files = {
-        'all_css': '/static/css/all.css',
-        'font_css': '/static/css/css.css?family=Open+Sans:400,300,600,700',
-        'bundle_css': '/static/css/bundle.css',
-        'style_css': '/static/css/style.css',
-        'phb_style_css': '/static/css/5ePHBstyle.css',
-        'store_ui_css': '/static/css/storeUI.css'
+        'all_css': '/static/storegenerator/css/all.css',
+        'font_css': '/static/storegenerator/css/css.css?family=Open+Sans:400,300,600,700',
+        'bundle_css': '/static/storegenerator/css/bundle.css',
+        'style_css': '/static/storegenerator/css/style.css',
+        'phb_style_css': '/static/storegenerator/css/5ePHBstyle.css',
+        'store_ui_css': '/static/storegenerator/css/storeUI.css'
     }
     return templates.TemplateResponse('storeUI.html', {"request": request, "css_files": css_files})
 # Routes for store generator
-@router.post('/process-description')
+@router.post('storegenerator/process-description')
 async def process_description(data: DescriptionRequest):
     user_input = data.user_input
     llm_output = store_helper.call_llm_and_cleanup(user_input)
@@ -182,7 +183,7 @@ async def list_loading_images():
         # List all files in the directory
         files = os.listdir(loading_images_folder)
         # Filter and get only the image files
-        image_files = [f"/static/images/loadingMimic/{file}" for file in files if file.endswith(('.png', '.jpg', '.jpeg', '.gif'))]
+        image_files = [f"/static/storegenerator/images/loadingMimic/{file}" for file in files if file.endswith(('.png', '.jpg', '.jpeg', '.gif'))]
         return {"images": image_files}
     except FileNotFoundError:
         return {"images": []}

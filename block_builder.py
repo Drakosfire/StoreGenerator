@@ -167,7 +167,7 @@ def build_image_block(sd_prompt, block_id):
                   hx-post="/update-stats" hx-trigger="change" hx-target="#sd-prompt-{block_id}" hx-swap="outerHTML"
                   title="Storefront image description">{sd_prompt}</textarea>
         <button class="generate-image-button" data-block-id="{block_id}" >
-            <img src="/static/images/StoreGeneratorGenerateButton.png" alt="Generate Image">
+            <img src="/static/storegenerator/images/StoreGeneratorGenerateButton.png" alt="Generate Image">
         </button>
         <img id="generated-image-{block_id}" alt="" style="display: none; cursor: pointer;">
     </div>
