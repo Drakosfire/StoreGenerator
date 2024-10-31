@@ -40,30 +40,8 @@ export async function saveHandler() {
             break;
         }
     }
-    let sanitizedTitle = title.replace(/\W+/g, '_').trim('_');
-    // console.log('Sanitized title:', sanitizedTitle)
-    // Prepare image data for upload
-    let imagesToUpload = [];
-    for (const blockId in jsonData.storeData) {
-        const block = jsonData.storeData[blockId];
-        if (block.type === 'image' && block.imgUrl !== '') {
-            console.log('Image block:', block);
-            imagesToUpload.push({
-                blockId: blockId, imgUrl: block.imgUrl
-            });
-        }
-    }
-
+    // Prepare data to send to the backend
     try {
-        // Upload images and get new URLs
-        if (imagesToUpload.length > 0) {
-            const uploadedImages = await uploadImages(imagesToUpload);
-            uploadedImages.forEach(({ blockId, fileUrl }) => {
-                jsonData.storeData[blockId].imgUrl = fileUrl;
-            });
-        }
-
-        // Prepare data to send to the backend
         let dataToSend = jsonData;
 
         // Save the JSON data to the server

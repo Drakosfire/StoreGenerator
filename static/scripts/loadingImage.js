@@ -41,12 +41,12 @@ export function stopLoadingAnimation() {
 // Fetch the list of loading images from the server and preload them
 export async function fetchLoadingImages() {
     try {
-        const response = await fetch('/list-loading-images');
+        const response = await fetch('/store/list-loading-images');
         if (response.ok) {
             const data = await response.json();
             // Preload images to cache
             preloadImages(data.images);
-            console.log('Loading images preloaded');
+            console.log(`Loading images preloaded: ${data.images}`);
         } else {
             console.error('Failed to load loading images');
         }
