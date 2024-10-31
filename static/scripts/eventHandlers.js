@@ -116,6 +116,7 @@ export function handleClick(event, elements) {
     if (event.target.id === 'loadButton') {
         // console.log('Load button clicked. Element ID:', event.target.id);
         loadSelectedStore();
+
     }
 
     if (event.target.id === 'submitButton') {
@@ -217,6 +218,7 @@ export function generateImage(blockId) {
 
             // Update the block and the image element
             block['imgUrl'] = data.image_url;
+            block['isNewImage'] = true;
             imageElement.src = data.image_url;
             imageElement.style.display = 'block';
 
