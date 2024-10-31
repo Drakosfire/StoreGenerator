@@ -22,7 +22,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Get the DUNGEONMIND_API_URL with a default value
-DUNGEONMIND_API_URL = os.getenv("DUNGEONMIND_API_URL", "http://localhost:7860")
+DUNGEONMIND_API_URL = os.getenv("DUNGEONMIND_API_URL", "https://dev.dungeonmind.net")
 logger.info(f"DUNGEONMIND_API_URL set to: {DUNGEONMIND_API_URL}")
 
 CURRENT_USER_URL = f"{DUNGEONMIND_API_URL}/auth/current-user"  # Add /auth/ to the path

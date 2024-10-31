@@ -1,146 +1,146 @@
 @font-face {
     font-family: BookInsanityRemake;
-    src: url('/static/themes/5e/Bookinsanity.woff2');
+    src: url('/static/storegenerator/themes/5e/Bookinsanity.woff2');
     font-weight: normal;
     font-style: normal
 }
 
 @font-face {
     font-family: BookInsanityRemake;
-    src: url('/static/themes/5e/Bookinsanity Bold.woff2');
+    src: url('/static/storegenerator/themes/5e/Bookinsanity Bold.woff2');
     font-weight: bold;
     font-style: normal
 }
 
 @font-face {
     font-family: BookInsanityRemake;
-    src: url('/static/themes/fonts/5e/Bookinsanity Italic.woff2');
+    src: url('/static/storegenerator/themes/fonts/5e/Bookinsanity Italic.woff2');
     font-weight: normal;
     font-style: italic
 }
 
 @font-face {
     font-family: BookInsanityRemake;
-    src: url('/static/themes/5e/Bookinsanity Bold Italic.woff2');
+    src: url('/static/storegenerator/themes/5e/Bookinsanity Bold Italic.woff2');
     font-weight: bold;
     font-style: italic
 }
 
 @font-face {
     font-family: ScalySansRemake;
-    src: url('/static/themes/5e/Scaly Sans.woff2');
+    src: url('/static/storegenerator/themes/5e/Scaly Sans.woff2');
     font-weight: normal;
     font-style: normal
 }
 
 @font-face {
     font-family: ScalySansRemake;
-    src: url('/static/themes/5e/Scaly Sans Bold.woff2');
+    src: url('/static/storegenerator/themes/5e/Scaly Sans Bold.woff2');
     font-weight: bold;
     font-style: normal
 }
 
 @font-face {
     font-family: ScalySansRemake;
-    src: url('/static/themes/5e/Scaly Sans Italic.woff2');
+    src: url('/static/storegenerator/themes/5e/Scaly Sans Italic.woff2');
     font-weight: normal;
     font-style: italic
 }
 
 @font-face {
     font-family: ScalySansRemake;
-    src: url('/static/themes/5e/Scaly Sans Bold Italic.woff2');
+    src: url('/static/storegenerator/themes/5e/Scaly Sans Bold Italic.woff2');
     font-weight: bold;
     font-style: italic
 }
 
 @font-face {
     font-family: ScalySansSmallCapsRemake;
-    src: url('/static/themes/5e/Scaly Sans Caps.woff2');
+    src: url('/static/storegenerator/themes/5e/Scaly Sans Caps.woff2');
     font-weight: normal;
     font-style: normal
 }
 
 @font-face {
     font-family: WalterTurncoat;
-    src: url('/static/themes/5e/WalterTurncoat-Regular.woff2');
+    src: url('/static/storegenerator/themes/5e/WalterTurncoat-Regular.woff2');
     font-weight: normal;
     font-style: normal
 }
 
 @font-face {
     font-family: MrEavesRemake;
-    src: url('/static/themes/5e/Mr Eaves Small Caps.woff2');
+    src: url('/static/storegenerator/themes/5e/Mr Eaves Small Caps.woff2');
     font-weight: normal;
     font-style: normal
 }
 
 @font-face {
     font-family: SolberaImitationRemake;
-    src: url('/static/themes/5e/Solbera Imitation Tweak.woff2');
+    src: url('/static/storegenerator/themes/5e/Solbera Imitation Tweak.woff2');
     font-weight: normal;
     font-style: normal
 }
 
 @font-face {
     font-family: NodestoCapsCondensed;
-    src: url('/static/themes/5e/Nodesto Caps Condensed.woff2');
+    src: url('/static/storegenerator/themes/5e/Nodesto Caps Condensed.woff2');
     font-weight: normal;
     font-style: normal
 }
 
 @font-face {
     font-family: NodestoCapsCondensed;
-    src: url('/static/themes/5e/Nodesto Caps Condensed Bold.woff2');
+    src: url('/static/storegenerator/themes/5e/Nodesto Caps Condensed Bold.woff2');
     font-weight: bold;
     font-style: normal
 }
 
 @font-face {
     font-family: NodestoCapsCondensed;
-    src: url('/static/themes/5e/Nodesto Caps Condensed Italic.woff2');
+    src: url('/static/storegenerator/themes/5e/Nodesto Caps Condensed Italic.woff2');
     font-weight: normal;
     font-style: italic
 }
 
 @font-face {
     font-family: NodestoCapsCondensed;
-    src: url('/static/themes/5e/Nodesto Caps Condensed Bold Italic.woff2');
+    src: url('/static/storegenerator/themes/5e/Nodesto Caps Condensed Bold Italic.woff2');
     font-weight: bold;
     font-style: italic
 }
 
 @font-face {
     font-family: NodestoCapsWide;
-    src: url('/static/themes/5e/Nodesto Caps Wide.woff2');
+    src: url('/static/storegenerator/themes/5e/Nodesto Caps Wide.woff2');
     font-weight: normal;
     font-style: normal
 }
 
 @font-face {
     font-family: Overpass;
-    src: url('/static/themes/5e/Overpass Medium.woff2');
+    src: url('/static/storegenerator/themes/5e/Overpass Medium.woff2');
     font-weight: 500;
     font-style: normal
 }
 
 @font-face {
     font-family: Davek;
-    src: url('/static/themes/5e/Davek.woff2');
+    src: url('/static/storegenerator/themes/5e/Davek.woff2');
     font-weight: 500;
     font-style: normal
 }
 
 @font-face {
     font-family: Iokharic;
-    src: url('/static/themes/5e/Iokharic.woff2');
+    src: url('/static/storegenerator/themes/5e/Iokharic.woff2');
     font-weight: 500;
     font-style: normal
 }
 
 @font-face {
     font-family: Rellanic;
-    src: url('/static/themes/5e/Rellanic.woff2');
+    src: url('/static/storegenerator/themes/5e/Rellanic.woff2');
     font-weight: 500;
     font-style: normal
 }
@@ -179,10 +179,6 @@ body {
     column-count: 2;
     column-fill: auto;
     column-width: 8cm;
-    -webkit-column-count: 2;
-    -moz-column-count: 2;
-    -webkit-column-width: 8cm;
-    -moz-column-width: 8cm;
     position: relative;
     z-index: 15;
     box-sizing: border-box;
@@ -194,7 +190,7 @@ body {
     font-size: .34cm;
     counter-increment: phb-page-numbers;
     background-color: var(--HB_Color_Background);
-    background-image: url('/static/themes/assets/parchmentBackground.jpg');
+    background-image: url('/static/storegenerator/themes/assets/parchmentBackground.jpg');
     text-rendering: optimizeLegibility;
     page-break-before: always;
     page-break-after: always
@@ -275,8 +271,6 @@ body {
     column-span: all;
     font-size: .89cm;
     line-height: 1em;
-    -webkit-column-span: all;
-    -moz-column-span: all
 }
 
 .page h1+p::first-letter {
@@ -436,7 +430,7 @@ body {
     background-color: var(--HB_Color_Accent);
     border-style: solid;
     border-width: 1px;
-    border-image: url('/static/themes/assets/noteBorder.png') 12 stretch;
+    border-image: url('/static/storegenerator/themes/assets/noteBorder.png') 12 stretch;
     border-image-width: 11px;
     border-image-outset: 9px 0px;
     box-shadow: 1px 4px 14px #888888
@@ -496,7 +490,7 @@ body {
     background-color: #FAF7EA;
     border-style: solid;
     border-width: 7px;
-    border-image: url('/static/themes/assets/descriptiveBorder.png') 12 stretch;
+    border-image: url('/static/storegenerator/themes/assets/descriptiveBorder.png') 12 stretch;
     border-image-outset: 4px;
     box-shadow: 0 0 6px #FAF7EA
 }
@@ -613,55 +607,55 @@ body {
     mask-image: var(--wc);
     mask-size: contain;
     mask-repeat: no-repeat;
-    --wc: url('/static/themes/assets/watercolor/watercolor1.png')
+    --wc: url('/static/storegenerator/themes/assets/watercolor/watercolor1.png')
 }
 
 .page .watercolor1 {
-    --wc: url('/static/themes/assets/watercolor/watercolor1.png')
+    --wc: url('/static/storegenerator/themes/assets/watercolor/watercolor1.png')
 }
 
 .page .watercolor2 {
-    --wc: url('/static/themes/assets/watercolor/watercolor2.png')
+    --wc: url('/static/storegenerator/themes/assets/watercolor/watercolor2.png')
 }
 
 .page .watercolor3 {
-    --wc: url('/static/themes/assets/watercolor/watercolor3.png')
+    --wc: url('/static/storegenerator/themes/assets/watercolor/watercolor3.png')
 }
 
 .page .watercolor4 {
-    --wc: url('/static/themes/assets/watercolor/watercolor4.png')
+    --wc: url('/static/storegenerator/themes/assets/watercolor/watercolor4.png')
 }
 
 .page .watercolor5 {
-    --wc: url('/static/themes/assets/watercolor/watercolor5.png')
+    --wc: url('/static/storegenerator/themes/assets/watercolor/watercolor5.png')
 }
 
 .page .watercolor6 {
-    --wc: url('/static/themes/assets/watercolor/watercolor6.png')
+    --wc: url('/static/storegenerator/themes/assets/watercolor/watercolor6.png')
 }
 
 .page .watercolor7 {
-    --wc: url('/static/themes/assets/watercolor/watercolor7.png')
+    --wc: url('/static/storegenerator/themes/assets/watercolor/watercolor7.png')
 }
 
 .page .watercolor8 {
-    --wc: url('/static/themes/assets/watercolor/watercolor8.png')
+    --wc: url('/static/storegenerator/themes/assets/watercolor/watercolor8.png')
 }
 
 .page .watercolor9 {
-    --wc: url('/static/themes/assets/watercolor/watercolor9.png')
+    --wc: url('/static/storegenerator/themes/assets/watercolor/watercolor9.png')
 }
 
 .page .watercolor10 {
-    --wc: url('/static/themes/assets/watercolor/watercolor10.png')
+    --wc: url('/static/storegenerator/themes/assets/watercolor/watercolor10.png')
 }
 
 .page .watercolor11 {
-    --wc: url('/static/themes/assets/watercolor/watercolor11.png')
+    --wc: url('/static/storegenerator/themes/assets/watercolor/watercolor11.png')
 }
 
 .page .watercolor12 {
-    --wc: url('/static/themes/assets/watercolor/watercolor12.png')
+    --wc: url('/static/storegenerator/themes/assets/watercolor/watercolor12.png')
 }
 
 .page .monster {
@@ -704,12 +698,12 @@ body {
     margin-right: -0.16cm;
     margin-left: -0.16cm;
     background-color: var(--HB_Color_MonsterStatBackground);
-    background-image: url('/static/themes/assets/parchmentBackgroundGrayscale.jpg');
+    background-image: url('/static/storegenerator/themes/assets/parchmentBackgroundGrayscale.jpg');
     background-attachment: fixed;
     background-blend-mode: overlay;
     border-style: solid;
     border-width: 7px 6px;
-    border-image: url('/static/themes/assets/monsterBorderFancy.png') 14 round;
+    border-image: url('/static/storegenerator/themes/assets/monsterBorderFancy.png') 14 round;
     border-image-outset: 0px 2px;
     box-shadow: 1px 4px 14px #888888
 }
@@ -737,7 +731,7 @@ body {
     height: 6px;
     margin: .12cm 0;
     visibility: visible;
-    background-image: url('/static/themes/assets/redTriangle.png');
+    background-image: url('/static/storegenerator/themes/assets/redTriangle.png');
     background-size: 100% 100%;
     border: none
 }
@@ -781,10 +775,6 @@ body {
     column-count: 2;
     column-fill: balance;
     column-width: 7.68cm;
-    -webkit-column-count: 2;
-    -moz-column-count: 2;
-    -webkit-column-width: 7.68cm;
-    -moz-column-width: 7.68cm;
 }
 
 .page:after {
@@ -795,7 +785,7 @@ body {
     width: 100%;
     height: 50px;
     content: '';
-    background-image: url('/static/themes/assets/PHB_footerAccent.png');
+    background-image: url('/static/storegenerator/themes/assets/PHB_footerAccent.png');
     background-size: cover
 }
 
@@ -857,7 +847,7 @@ body {
     border-style: solid;
     border-width: 1px;
     border-radius: 12px;
-    border-image: url('/static/themes/assets/codeBorder.png') 26 stretch;
+    border-image: url('/static/storegenerator/themes/assets/codeBorder.png') 26 stretch;
     border-image-width: 10px;
     border-image-outset: 2px
 }
@@ -877,9 +867,7 @@ body {
 
 .page .columnSplit {
     visibility: hidden;
-    -webkit-column-break-after: always;
     break-after: always;
-    -moz-column-break-after: always
 }
 
 .page blockquote,
@@ -978,7 +966,7 @@ body {
     background-color: white;
     border: initial;
     border-style: solid;
-    border-image-source: url('/static/themes/assets/frameBorder.png');
+    border-image-source: url('/static/storegenerator/themes/assets/frameBorder.png');
     border-image-slice: 200;
     border-image-width: 47px;
     border-image-outset: .4cm .3cm;
@@ -1005,7 +993,7 @@ body {
     width: 7.75cm;
     height: calc(100% + 3.3cm);
     content: '';
-    background-image: url('/static/themes/assets/classTableDecoration.png'), url('/static/themes/assets/classTableDecoration.png');
+    background-image: url('/static/storegenerator/themes/assets/classTableDecoration.png'), url('/static/storegenerator/themes/assets/classTableDecoration.png');
     filter: drop-shadow(0 0 1px #C8C5C080);
     background-repeat: no-repeat, no-repeat;
     background-position: top, bottom;
@@ -1061,7 +1049,7 @@ body {
     height: .5cm;
     margin: auto;
     visibility: visible;
-    background-image: url('/static/themes/assets/horizontalRule.svg');
+    background-image: url('/static/storegenerator/themes/assets/horizontalRule.svg');
     filter: drop-shadow(0 0 3px black);
     background-size: 100% 100%;
     border: none
@@ -1084,7 +1072,7 @@ body {
     color: white;
     text-align: left;
     letter-spacing: .014cm;
-    background-image: url('/static/themes/assets/coverPageBanner.svg');
+    background-image: url('/static/storegenerator/themes/assets/coverPageBanner.svg');
     filter: drop-shadow(2px 2px 2px black)
 }
 
@@ -1149,7 +1137,7 @@ body {
     height: .5cm;
     margin: auto;
     visibility: visible;
-    background-image: url('/static/themes/assets/horizontalRule.svg');
+    background-image: url('/static/storegenerator/themes/assets/horizontalRule.svg');
     background-size: 100% 100%;
     border: none
 }
@@ -1186,7 +1174,7 @@ body {
     inset: 0;
     z-index: -1;
     width: 11cm;
-    background-image: url('/static/themes/assets/backCover.png');
+    background-image: url('/static/storegenerator/themes/assets/backCover.png');
     background-repeat: no-repeat;
     background-size: contain
 }
@@ -1223,7 +1211,7 @@ body {
     margin-right: auto;
     margin-left: auto;
     visibility: visible;
-    background-image: url('/static/themes/assets/horizontalRule.svg');
+    background-image: url('/static/storegenerator/themes/assets/horizontalRule.svg');
     background-size: 100% 100%;
     border: none
 }
@@ -1279,7 +1267,7 @@ body {
     left: 0;
     width: 100%;
     height: 6cm;
-    background-image: url('/static/themes/assets/partCoverHeaderPHB.png');
+    background-image: url('/static/storegenerator/themes/assets/partCoverHeaderPHB.png');
     background-repeat: no-repeat;
     background-size: 100%
 }
@@ -1391,12 +1379,6 @@ body {
     column-fill: balance;
     column-gap: .9cm;
     column-width: 7.68cm;
-    -webkit-column-count: 2;
-    -moz-column-count: 2;
-    -webkit-column-width: 7.68cm;
-    -moz-column-width: 7.68cm;
-    -webkit-column-gap: .9cm;
-    -moz-column-gap: .9cm
 }
 
 .page dl {
@@ -1471,7 +1453,7 @@ body {
 .page .runeTable.frame {
     border: initial;
     border-style: solid;
-    border-image-source: url('/static/themes/assets/scriptBorder.png');
+    border-image-source: url('/static/storegenerator/themes/assets/scriptBorder.png');
     border-image-slice: 170;
     border-image-width: 1.4cm;
     border-image-outset: .45cm .35cm .4cm .4cm;

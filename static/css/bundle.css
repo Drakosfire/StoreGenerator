@@ -129,8 +129,6 @@
 }
 
 .brewItem .links {
-    -webkit-transition: opacity .25s ease;
-    -moz-transition: opacity .25s ease;
     -o-transition: opacity .25s ease;
     transition: opacity .25s ease;
     position: absolute;
@@ -144,8 +142,6 @@
 }
 
 .brewItem .links a {
-    -webkit-transition: opacity .25s ease;
-    -moz-transition: opacity .25s ease;
     -o-transition: opacity .25s ease;
     transition: opacity .25s ease;
     display: block;
@@ -595,8 +591,6 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
 
 .CodeMirror pre.CodeMirror-line,
 .CodeMirror pre.CodeMirror-line-like {
-    -moz-border-radius: 0;
-    -webkit-border-radius: 0;
     border-radius: 0;
     border-width: 0;
     background: transparent;
@@ -3077,8 +3071,6 @@ span.CodeMirror-selectedtext {
 
 .splitPane .arrow.left:before,
 .splitPane .arrow.left:after {
-    -webkit-transition: all .25s ease;
-    -moz-transition: all .25s ease;
     -o-transition: all .25s ease;
     transition: all .25s ease;
     position: absolute;
@@ -3131,8 +3123,6 @@ span.CodeMirror-selectedtext {
 .splitPane .arrow.left:hover:before,
 .splitPane .arrow.left:focus:after,
 .splitPane .arrow.left:focus:before {
-    -webkit-transform: translateX(-8px);
-    -moz-transform: translateX(-8px);
     -o-transform: translateX(-8px);
     -ms-transform: translateX(-8px);
     transform: translateX(-8px)
@@ -3144,8 +3134,6 @@ span.CodeMirror-selectedtext {
 
 .splitPane .arrow.right:before,
 .splitPane .arrow.right:after {
-    -webkit-transition: all .25s ease;
-    -moz-transition: all .25s ease;
     -o-transition: all .25s ease;
     transition: all .25s ease;
     position: absolute;
@@ -3198,8 +3186,6 @@ span.CodeMirror-selectedtext {
 .splitPane .arrow.right:hover:before,
 .splitPane .arrow.right:focus:after,
 .splitPane .arrow.right:focus:before {
-    -webkit-transform: translateX(8px);
-    -moz-transform: translateX(8px);
     -o-transform: translateX(8px);
     -ms-transform: translateX(8px);
     transform: translateX(8px)
@@ -3440,8 +3426,6 @@ nav .navLogo span.name small {
 }
 
 nav .navItem {
-    -webkit-transition: background-color .25s ease;
-    -moz-transition: background-color .25s ease;
     -o-transition: background-color .25s ease;
     transition: background-color .25s ease;
     padding: 8px 12px;
@@ -4032,8 +4016,6 @@ nav .navDropdownContainer .navDropdown .navItem {
 
 .editor .brewJump:before,
 .editor .brewJump:after {
-    -webkit-transition: all .25s ease;
-    -moz-transition: all .25s ease;
     -o-transition: all .25s ease;
     transition: all .25s ease;
     position: absolute;
@@ -4086,8 +4068,6 @@ nav .navDropdownContainer .navDropdown .navItem {
 .editor .brewJump:hover:before,
 .editor .brewJump:focus:after,
 .editor .brewJump:focus:before {
-    -webkit-transform: translateX(-8px);
-    -moz-transform: translateX(-8px);
     -o-transform: translateX(-8px);
     -ms-transform: translateX(-8px);
     transform: translateX(-8px)
@@ -4168,8 +4148,6 @@ nav .navDropdownContainer .navDropdown .navItem {
     background-color: #333;
     display: inline-block;
     border-left: 1px solid #666;
-    -webkit-transition: background-color .25s ease;
-    -moz-transition: background-color .25s ease;
     -o-transition: background-color .25s ease;
     transition: background-color .25s ease
 }
@@ -4185,8 +4163,6 @@ nav .navDropdownContainer .navDropdown .navItem {
     background-color: #333;
     display: inline-block;
     color: white;
-    -webkit-transition: background-color .25s ease;
-    -moz-transition: background-color .25s ease;
     -o-transition: background-color .25s ease;
     transition: background-color .25s ease
 }
@@ -4214,8 +4190,6 @@ nav .navDropdownContainer .navDropdown .navItem {
 }
 
 .homebrew nav .homebrewLogo {
-    -webkit-transition: color .25s ease;
-    -moz-transition: color .25s ease;
     -o-transition: color .25s ease;
     transition: color .25s ease;
     font-family: CodeBold;
@@ -4296,8 +4270,6 @@ nav .navDropdownContainer .navDropdown .navItem {
 }
 
 .homebrew nav .patreon.navItem i {
-    -webkit-transition: color .25s ease;
-    -moz-transition: color .25s ease;
     -o-transition: color .25s ease;
     transition: color .25s ease;
     animation-name: pinkColoring;
@@ -4314,8 +4286,6 @@ nav .navDropdownContainer .navDropdown .navItem {
     max-height: calc(100vh - 28px);
     scrollbar-color: #666 #333;
     scrollbar-width: thin;
-    -webkit-transition: background-color .25s ease;
-    -moz-transition: background-color .25s ease;
     -o-transition: background-color .25s ease;
     transition: background-color .25s ease;
     position: relative;
@@ -4757,8 +4727,6 @@ nav .navDropdownContainer .navDropdown .navItem {
 }
 
 .homePage a.floatingNewButton {
-    -webkit-transition: background-color .25s ease;
-    -moz-transition: background-color .25s ease;
     -o-transition: background-color .25s ease;
     transition: background-color .25s ease;
     position: absolute;
@@ -4780,8 +4748,6 @@ nav .navDropdownContainer .navDropdown .navItem {
 }
 
 .homePage .floatingSaveButton {
-    -webkit-transition: all .25s ease;
-    -moz-transition: all .25s ease;
     -o-transition: all .25s ease;
     transition: all .25s ease;
     position: absolute;
@@ -4817,8 +4783,6 @@ nav .navDropdownContainer .navDropdown .navItem {
 
 [data-tooltip]:before,
 [data-tooltip]:after {
-    -webkit-transition: all .25s ease;
-    -moz-transition: all .25s ease;
     -o-transition: all .25s ease;
     transition: all .25s ease;
     position: absolute;
@@ -4870,8 +4834,6 @@ nav .navDropdownContainer .navDropdown .navItem {
 [data-tooltip]:hover:before,
 [data-tooltip]:focus:after,
 [data-tooltip]:focus:before {
-    -webkit-transform: translateY(8px);
-    -moz-transform: translateY(8px);
     -o-transform: translateY(8px);
     -ms-transform: translateY(8px);
     transform: translateY(8px)
@@ -4879,8 +4841,6 @@ nav .navDropdownContainer .navDropdown .navItem {
 
 [data-tooltip-top]:before,
 [data-tooltip-top]:after {
-    -webkit-transition: all .25s ease;
-    -moz-transition: all .25s ease;
     -o-transition: all .25s ease;
     transition: all .25s ease;
     position: absolute;
@@ -4932,8 +4892,6 @@ nav .navDropdownContainer .navDropdown .navItem {
 [data-tooltip-top]:hover:before,
 [data-tooltip-top]:focus:after,
 [data-tooltip-top]:focus:before {
-    -webkit-transform: translateY(-8px);
-    -moz-transform: translateY(-8px);
     -o-transform: translateY(-8px);
     -ms-transform: translateY(-8px);
     transform: translateY(-8px)
@@ -4941,8 +4899,6 @@ nav .navDropdownContainer .navDropdown .navItem {
 
 [data-tooltip-bottom]:before,
 [data-tooltip-bottom]:after {
-    -webkit-transition: all .25s ease;
-    -moz-transition: all .25s ease;
     -o-transition: all .25s ease;
     transition: all .25s ease;
     position: absolute;
@@ -4994,8 +4950,6 @@ nav .navDropdownContainer .navDropdown .navItem {
 [data-tooltip-bottom]:hover:before,
 [data-tooltip-bottom]:focus:after,
 [data-tooltip-bottom]:focus:before {
-    -webkit-transform: translateY(8px);
-    -moz-transform: translateY(8px);
     -o-transform: translateY(8px);
     -ms-transform: translateY(8px);
     transform: translateY(8px)
@@ -5003,8 +4957,6 @@ nav .navDropdownContainer .navDropdown .navItem {
 
 [data-tooltip-left]:before,
 [data-tooltip-left]:after {
-    -webkit-transition: all .25s ease;
-    -moz-transition: all .25s ease;
     -o-transition: all .25s ease;
     transition: all .25s ease;
     position: absolute;
@@ -5057,8 +5009,6 @@ nav .navDropdownContainer .navDropdown .navItem {
 [data-tooltip-left]:hover:before,
 [data-tooltip-left]:focus:after,
 [data-tooltip-left]:focus:before {
-    -webkit-transform: translateX(-8px);
-    -moz-transform: translateX(-8px);
     -o-transform: translateX(-8px);
     -ms-transform: translateX(-8px);
     transform: translateX(-8px)
@@ -5066,8 +5016,6 @@ nav .navDropdownContainer .navDropdown .navItem {
 
 [data-tooltip-right]:before,
 [data-tooltip-right]:after {
-    -webkit-transition: all .25s ease;
-    -moz-transition: all .25s ease;
     -o-transition: all .25s ease;
     transition: all .25s ease;
     position: absolute;
@@ -5120,8 +5068,6 @@ nav .navDropdownContainer .navDropdown .navItem {
 [data-tooltip-right]:hover:before,
 [data-tooltip-right]:focus:after,
 [data-tooltip-right]:focus:before {
-    -webkit-transform: translateX(8px);
-    -moz-transform: translateX(8px);
     -o-transform: translateX(8px);
     -ms-transform: translateX(8px);
     transform: translateX(8px)
@@ -5151,8 +5097,6 @@ body,
 }
 
 button {
-    -webkit-transition: background-color .25s ease;
-    -moz-transition: background-color .25s ease;
     -o-transition: background-color .25s ease;
     transition: background-color .25s ease;
     display: inline-block;
