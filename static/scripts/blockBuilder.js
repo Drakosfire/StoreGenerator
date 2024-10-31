@@ -1,5 +1,5 @@
-import { handleDragStart, handleDragEnd } from "/static/scripts/dragDropHandler.js";
-import { getConfig } from '/static/scripts/config.js';
+import { handleDragStart, handleDragEnd } from "./dragDropHandler.js";
+import { getConfig } from './config.js';
 
 
 
@@ -97,7 +97,7 @@ export function buildImageBlock(block, blockId) {
         <img id="generated-image-${blockId}" alt="" src="${imageUrl}" class="store-image" style="cursor: pointer; ${imageUrl ? '' : 'display: none;'}">
         <textarea class="image-textarea" data-property="sdprompt" id="sd-prompt-${blockId}" hx-post="/update-stats" hx-trigger="change" hx-target="#user-store-image" hx-swap="outerHTML" title="Store Image">${block.sdprompt || ''}</textarea>
         <button class="generate-image-button" data-block-id="${blockId}">
-            <img src="/static/images/StoreGeneratorGenerateButton.png" alt="Generate Image">
+            <img src="/static/storegenerator/images/StoreGeneratorGenerateButton.png" alt="Generate Image">
         </button>        
     </div>`;
     const newBlock = finishBlockProcessing(imageBlockHtml);
@@ -229,7 +229,7 @@ export function buildEmployeeBlock(block, blockId, employeeCount, employeeId) {
 }
 // Function to build a section block block in HTML
 export function buildEntryBlock(section, block, blockId, entryId) {
-    console.log('Building entry block:', section, block, blockId, entryId);
+    // console.log('Building entry block:', section, block, blockId, entryId);
     let sectionBlockHtml = '';
     // Begin the HTML block
     sectionBlockHtml += `<div class="block-item" type=${blockId} "${blockId}Id"=${entryId} data-block-id=${blockId} data-page-id=${block.dataPageId} draggable="true">`;
@@ -307,12 +307,12 @@ export function buildInventoryBlock(block, blockId) {
                 if (Array.isArray(item.properties)) {
                     properties = item.properties.join(", ");
                 } else {
-                    console.warn(`item.properties is not an array for item:`, item);
+                    // console.warn(`item.properties is not an array for item:`, item);
                     properties = item.properties; // Handle as a string or another type
                 }
 
                 // Log the processed properties
-                console.log(`Processed properties:`, properties);
+                // console.log(`Processed properties:`, properties);
 
                 // Create the HTML for each inventory item
                 inventoryBlockHtml += `<tr>

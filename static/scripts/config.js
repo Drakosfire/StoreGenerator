@@ -1,12 +1,14 @@
 let config = {
     DUNGEONMIND_BASE_URL: '',
     DUNGEONMIND_API_URL: '',
-    ENVIRONMENT: ''
+    ENVIRONMENT: '',
+    CLOUDFLARE_ACCOUNT_ID: '',
+    CLOUDFLARE_IMAGES_API_TOKEN: ''
 };
 
 export async function loadConfig() {
     try {
-        const response = await fetch('http://localhost:7860/config');
+        const response = await fetch('https://dev.dungeonmind.net/config');
         if (!response.ok) {
             throw new Error('Failed to load configuration');
         }

@@ -26,8 +26,7 @@ export async function initialLoadJSON() {
     console.log('Loading JSON data from the server');
     try {
         console.log('DUNGEONMIND_BASE_URL:', config.DUNGEONMIND_BASE_URL);
-        console.log('DUNGEONMIND_API_URL:', config.DUNGEONMIND_API_URL);
-        const response = await fetch(`${config.DUNGEONMIND_API_URL}/static/Enchanted_Roots_Gear_Emporium/Enchanted_Roots_Gear_Emporium.json`);
+        const response = await fetch(`${config.DUNGEONMIND_API_URL}/static/root_store/Enchanted_Roots_Gear_Emporium/Enchanted_Roots_Gear_Emporium.json`);
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
         }
