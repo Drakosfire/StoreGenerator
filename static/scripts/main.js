@@ -44,7 +44,6 @@ async function checkAuthAndUpdateUI() {
 }
 document.addEventListener('DOMContentLoaded', async function () {
     // Initialize DOM elements
-    await loadConfig();
     config = getConfig();
     checkAuthAndUpdateUI();
     const elements = initializeDOMElements();
