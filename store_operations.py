@@ -3,10 +3,6 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 import os
-import json
-import block_builder as block_builder
-import store_helper as store_helper
-import sd_generator as sd
 import httpx
 import logging
 from dotenv import load_dotenv
@@ -16,13 +12,13 @@ load_dotenv()
 
 router = APIRouter()
 
-# # Set up logging
-# logging.basicConfig(level=logging.INFO)
-# logger = logging.getLogger(__name__)
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Get the DUNGEONMIND_API_URL with a default value
 DUNGEONMIND_API_URL = os.getenv("DUNGEONMIND_API_URL", "https://dev.dungeonmind.net")
-# logger.info(f"DUNGEONMIND_API_URL set to: {DUNGEONMIND_API_URL}")
+logger.info(f"DUNGEONMIND_API_URL set to: {DUNGEONMIND_API_URL}")
 
 CURRENT_USER_URL = f"{DUNGEONMIND_API_URL}/auth/current-user"  # Add /auth/ to the path
 
@@ -85,24 +81,6 @@ async def index(request: Request):
         'store_ui_css': '/static/storegenerator/css/storeUI.css'
     }
     return templates.TemplateResponse('storeUI.html', {"request": request, "css_files": css_files})
-# Routes for store generator
-@router.post('storegenerator/process-description')
-async def process_description(data: DescriptionRequest):
-    user_input = data.user_input
-    llm_output = store_helper.call_llm_and_cleanup(user_input)
-    processed_blocks = block_builder.build_blocks(llm_output, block_builder.block_id)
-    return {"html_blocks": processed_blocks, "llm_output": llm_output}
-
-@router.post('/generate-image')
-async def generate_image(data: GenerateImageRequest):
-    sd_prompt = data.sd_prompt
-    if not sd_prompt:
-        raise HTTPException(status_code=400, detail="Missing sd_prompt")
-    try:
-        image_url = sd.preview_and_generate_image(sd_prompt)
-        return {"image_url": image_url}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
 @router.post('/save-json')
 async def save_generated_data(request: Request, data: SaveJsonRequest, current_user: dict = Depends(get_current_user)):

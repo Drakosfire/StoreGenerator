@@ -10,12 +10,9 @@ import logging
 
 app = FastAPI()
 
-allowed_hosts = ["localhost",
-                     "127.0.0.1",
-                     "0.0.0.0",
-                     "http://0.0.0.0:3001",
-                     "https://dev.dungeonmind.net",
-                     "storegenerator"]
+# Set allowed hosts based on the environment
+# This is a comma-separated list of hosts, so we need to split it
+allowed_hosts = os.environ.get('ALLOWED_HOSTS', '').split(',')
 # CORS Middleware
 app.add_middleware(
     CORSMiddleware,
@@ -33,7 +30,7 @@ app.add_middleware(
     max_age=3600,
     path="/",
     # secure=True, # This is not a kwarg for SessionMiddleware
-    https_only=False,
+    https_only=True,
     same_site="None",
     domain=".dungeonmind.net"  # Allow cross-site requests
 )
