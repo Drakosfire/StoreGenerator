@@ -82,6 +82,16 @@ async def index(request: Request):
     }
     return templates.TemplateResponse('storeUI.html', {"request": request, "css_files": css_files})
 
+@router.get('/config')
+async def get_config(request: Request):
+    logger.info(f"Getting config from {DUNGEONMIND_API_URL}/config")
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f"{DUNGEONMIND_API_URL}/config", cookies=request.cookies)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            raise HTTPException(status_code=response.status_code, detail="Error fetching config")        
+
 @router.post('/save-json')
 async def save_generated_data(request: Request, data: SaveJsonRequest, current_user: dict = Depends(get_current_user)):
     if not current_user:
