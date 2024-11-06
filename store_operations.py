@@ -163,16 +163,16 @@ async def load_store(storeName: str, request: Request, current_user: dict = Depe
         else:
             raise HTTPException(status_code=response.status_code, detail="Error loading store")
 
-@router.get("/list-loading-images")
-async def list_loading_images():
-    # Path to the folder containing loading images
-    loading_images_folder = os.path.join('static', 'images', 'loadingMimic')
-    try:
-        # List all files in the directory
-        files = os.listdir(loading_images_folder)
-        # Filter and get only the image files
-        image_files = [f"/static/storegenerator/images/loadingMimic/{file}" for file in files if file.endswith(('.png', '.jpg', '.jpeg', '.gif'))]
-        return {"images": image_files}
-    except FileNotFoundError:
-        return {"images": []}
+# @router.get("/list-loading-images")
+# async def list_loading_images():
+#     # Path to the folder containing loading images
+#     loading_images_folder = os.path.join('static', 'images', 'loadingMimic')
+#     try:
+#         # List all files in the directory
+#         files = os.listdir(loading_images_folder)
+#         # Filter and get only the image files
+#         image_files = [f"/static/storegenerator/images/loadingMimic/{file}" for file in files if file.endswith(('.png', '.jpg', '.jpeg', '.gif'))]
+#         return {"images": image_files}
+#     except FileNotFoundError:
+#         return {"images": []}
 
