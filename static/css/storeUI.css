@@ -67,7 +67,7 @@ textarea {
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    max-height: 80px;
+    max-height: 100px;
     z-index: 1001;
     background-color: #f9f9f9;
     padding: 15px 20px;
@@ -133,7 +133,7 @@ textarea {
     /* Take up available space */
     min-width: 200px;
     /* Minimum width */
-    max-width: 800px;
+    max-width: 400px;
     /* Maximum width */
     height: auto;
     /* Auto height */
@@ -187,12 +187,38 @@ textarea {
     font-size: .34cm;
     counter-increment: phb-page-numbers;
     background-color: var(--HB_Color_Background);
-    background-image: url('/static/storegenerator/storegenerator/themes/assets/parchmentBackground.jpg');
+    background-image: url('https://imagedelivery.net/SahcvrNe_-ej4lTB6vsAZA/a45523f4-8616-4dee-44f2-602cca99d400/public');
     text-rendering: optimizeLegibility;
     page-break-before: always;
     page-break-after: always;
     contain: size;
 
+}
+
+.page .classTable.frame {
+    width: calc(100% + .2cm);
+    margin-top: .7cm;
+    margin-right: -0.1cm;
+    margin-bottom: .9cm;
+    margin-left: -0.1cm;
+    border-collapse: separate;
+    background-color: white;
+    border: initial;
+    border-top-style: initial;
+    border-right-style: initial;
+    border-bottom-style: initial;
+    border-left-style: initial;
+    border-image-outset: initial;
+    border-image-repeat: initial;
+    border-image-slice: initial;
+    border-image-source: initial;
+    border-image-width: initial;
+    border-style: solid;
+    border-image-source: url('https://imagedelivery.net/SahcvrNe_-ej4lTB6vsAZA/356fe093-3cb9-45f6-8f2e-cbe81dd1ee00/blogpost');
+    border-image-slice: 200;
+    border-image-width: 47px;
+    border-image-outset: .4cm .3cm;
+    border-image-repeat: stretch;
 }
 
 .page .monster hr:last-of-type+* {
@@ -639,6 +665,7 @@ div[contenteditable="true"] p::first-letter {
     /* Ensure content overflow is visible */
     width: 100%;
     /* Ensure it takes the full width of the container */
+    border-image: url('https://imagedelivery.net/SahcvrNe_-ej4lTB6vsAZA/556fe3f0-c0a3-46d9-6930-6bc3ab07f000/public') 14 round;
 
 }
 
@@ -688,7 +715,7 @@ div[contenteditable="true"] p::first-letter {
     justify-content: center;
 
     cursor: pointer;
-    background-image: url('/static/storegenerator/images/closed-mimic-trashcan.png');
+    background-image: url('https://imagedelivery.net/SahcvrNe_-ej4lTB6vsAZA/af6623b4-6096-4b3f-af24-34d56bc73000/blogpost');
     /* Adjust the path to your image file */
     background-size: contain;
     background-repeat: no-repeat;
@@ -696,25 +723,25 @@ div[contenteditable="true"] p::first-letter {
 }
 
 .trash-area:hover {
-    background-image: url('/static/storegenerator/images/mimic_trashcan.png');
+    background-image: url('https://imagedelivery.net/SahcvrNe_-ej4lTB6vsAZA/bb561156-18cb-4206-5e88-2509f13f7c00/blogpost');
 }
 
 .trash-area.over {
     color: white;
-    background-image: url('/static/storegenerator/images/mimic_trashcan.png');
+    background-image: url('https://imagedelivery.net/SahcvrNe_-ej4lTB6vsAZA/af6623b4-6096-4b3f-af24-34d56bc73000/blogpost');
     /* Example image change */
 }
 
 .button-with-image {
-    min-width: 60px;
+    min-width: 70px;
     /* Set minimum width */
-    min-height: 60px;
+    min-height: 70px;
     /* Set minimum height */
     width: auto;
     /* Allow natural sizing */
     height: auto;
     /* Allow natural sizing */
-    max-width: 100px;
+    max-width: 150px;
     /* Maximum width */
     max-height: 100px;
     /* Maximum height */
