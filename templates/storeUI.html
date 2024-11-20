@@ -12,6 +12,14 @@
     <link href="{{ css_files.store_ui_css }}" rel="stylesheet">
     <title>DnD Store Generator</title>
     <script src="https://unpkg.com/htmx.org@1.7.0/dist/htmx.min.js"></script>
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://www.youtube-nocookie.com;
+        frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com;
+        img-src 'self' https://imagedelivery.net https://www.youtube.com https://www.youtube-nocookie.com;
+        style-src 'self' 'unsafe-inline';
+        connect-src 'self';
+    ">
 
     <style>
         @media print {
@@ -349,7 +357,8 @@
                 <span class="close-video">&times;</span>
                 <div class="video-container">
                     <iframe id="youtubeFrame" width="853" height="480"
-                        src="https://www.youtube-nocookie.com/embed/n9lj8wRDVgE?rel=0&modestbranding=1" frameborder="0"
+                        src="https://www.youtube-nocookie.com/embed/n9lj8wRDVgE?rel=0&modestbranding=1&enablejsapi=0&origin=https://dungeonmind.net"
+                        frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen>
                     </iframe>
