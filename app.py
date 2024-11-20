@@ -10,16 +10,23 @@ import logging
 
 app = FastAPI()
 
-# Set allowed hosts based on the environment
-# This is a comma-separated list of hosts, so we need to split it
-allowed_hosts = os.environ.get('ALLOWED_HOSTS', '').split(',')
-# CORS Middleware
+# Combine your allowed hosts with YouTube domains
+youtube_domains = [
+    "https://www.youtube.com",
+    "https://www.youtube-nocookie.com",
+    "https://googleads.g.doubleclick.net"
+]
+allowed_hosts = os.environ.get('ALLOWED_HOSTS', '').split(',') + youtube_domains
+
+# Update CORS Middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_hosts,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
+    max_age=3600,
 )
 
 # Add SessionMiddleware
