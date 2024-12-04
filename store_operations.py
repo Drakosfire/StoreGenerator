@@ -46,7 +46,7 @@ async def get_current_user(request: Request):
     async with httpx.AsyncClient() as client:
         try:
             response = await client.get(
-                f"{DUNGEONMIND_API_URL}/auth/current-user",
+                f"{DUNGEONMIND_API_URL}api/auth/current-user",
                 cookies=cookies,
                 follow_redirects=True,
                 headers={"Origin": "http://localhost:3001"},  # Add this line
@@ -99,7 +99,7 @@ async def save_generated_data(request: Request, data: SaveJsonRequest, current_u
     
     async with httpx.AsyncClient() as client:
         response = await client.post(
-            f"{DUNGEONMIND_API_URL}/store/save-store",
+            f"{DUNGEONMIND_API_URL}api/store/save-store",
             json={"name": data.filename, **data.jsonData},
             cookies=request.cookies
         )
@@ -123,7 +123,7 @@ async def upload_image(
         files = {"image": (image.filename, image.file, image.content_type)}
         data = {"directoryName": directoryName, "blockId": blockId}
         response = await client.post(
-            f"{DUNGEONMIND_API_URL}/store/upload-image",
+            f"{DUNGEONMIND_API_URL}api/store/upload-image",
             files=files,
             data=data,
             cookies=request.cookies
@@ -139,7 +139,7 @@ async def list_saved_stores(request: Request, current_user: dict = Depends(get_c
         raise HTTPException(status_code=401, detail="Unauthorized")
 
     async with httpx.AsyncClient() as client:
-        response = await client.get(f"{DUNGEONMIND_API_URL}/store/list-saved-stores", cookies=request.cookies)
+        response = await client.get(f"{DUNGEONMIND_API_URL}api/store/list-saved-stores", cookies=request.cookies)
         if response.status_code == 200:
             return response.json()
         else:
@@ -152,7 +152,7 @@ async def load_store(storeName: str, request: Request, current_user: dict = Depe
     
     async with httpx.AsyncClient() as client:
         response = await client.get(
-            f"{DUNGEONMIND_API_URL}/store/load-store",
+            f"{DUNGEONMIND_API_URL}api/store/load-store",
             params={"storeName": storeName},
             cookies=request.cookies
         )

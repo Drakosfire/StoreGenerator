@@ -1,5 +1,5 @@
 // eventHandlers.js
-import { printScreen, handleReset } from './utils.js';
+import { printScreen, handleReset, shareStore } from './utils.js';
 import { addPage, removePage } from './pageHandler.js';
 import {
     toggleAllTextBlocks,
@@ -16,30 +16,40 @@ import { loadSelectedStore, initializeSavedStoresDropdown } from './saveLoadHand
 import { getConfig } from './config.js';
 import { preloadedLoadingGeneratedImage } from './loadingImage.js';
 
-// More comprehensive cookie management
-function getCookie(name) {
-    return document.cookie
-        .split('; ')
-        .find(row => row.startsWith(`${name}=`))
-        ?.split('=')[1];
-}
-
-function setCookie(name, value, days) {
-    const maxAge = days * 24 * 60 * 60; // Convert days to seconds
-    document.cookie = `${name}=${value}; max-age=${maxAge}; path=/`;
-}
-
-function hasSeenVideo() {
-    return getCookie('hasSeenVideo') === 'true';
-}
-
-function setVideoSeen() {
-    setCookie('hasSeenVideo', 'true', 365); // Expires in 1 year
-}
-
 // Function to handle click events
 export function handleClick(event, elements) {
     console.log('Click detected:', event.target);
+
+    const videoModal = document.getElementById('videoModal');
+    const closeVideo = document.getElementsByClassName('close-video')[0];
+
+    // Check if user has seen the video
+    function hasSeenVideo() {
+        return document.cookie.split('; ').some(row => row.startsWith('hasSeenVideo='));
+    }
+
+    // Set cookie that user has seen the video
+    function setVideoSeen() {
+        document.cookie = 'hasSeenVideo=true; max-age=31536000; path=/'; // Expires in 1 year
+    }
+
+    // Show video if user hasn't seen it
+    if (!hasSeenVideo()) {
+        videoModal.style.display = 'block';
+        setVideoSeen();
+    }
+
+    // Close modal when clicking X
+    closeVideo.onclick = function () {
+        videoModal.style.display = 'none';
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function (event) {
+        if (event.target == videoModal) {
+            videoModal.style.display = 'none';
+        }
+    }
 
     // Handle image clicks for modal display
     if (event.target.tagName === 'IMG' && event.target.id.startsWith('generated-image-')) {
@@ -51,15 +61,8 @@ export function handleClick(event, elements) {
 
     if (event.target.id === 'dungeonmindButton') {
         console.log('DungeonMind button clicked. Element ID:', event.target.id);
-        const { DUNGEONMIND_BASE_URL } = getConfig();
-
-        // Ensure the URL is absolute
-        if (DUNGEONMIND_BASE_URL.startsWith('http://') || DUNGEONMIND_BASE_URL.startsWith('https://')) {
-            window.location.href = DUNGEONMIND_BASE_URL;
-        } else {
-            // If it doesn't start with a protocol, assume http://
-            window.location.href = `http://${DUNGEONMIND_BASE_URL}`;
-        }
+        // Redirect to the DUNGEONMIND_API_URL that is stored in the window object
+        window.location.href = window.DUNGEONMIND_CONFIG.DUNGEONMIND_API_URL;
     }
 
     if (event.target.id === 'loginButton') {
@@ -88,6 +91,13 @@ export function handleClick(event, elements) {
         // console.log('Print button clicked. Element ID:', event.target.id);
         printScreen();
     }
+
+    // Handle share button click
+    if (event.target.id === 'shareButton') {
+        console.log('Share button clicked. Element ID:', event.target.id);
+        shareStore();
+    }
+
     // Handle generate image button click
 
     const button = event.target.closest('.generate-image-button');
@@ -141,6 +151,19 @@ export function handleClick(event, elements) {
 
     }
 
+    if (event.target.id === 'tutorialButton') {
+        console.log('Tutorial button clicked');
+        const videoModal = document.getElementById('videoModal');
+        const youtubeFrame = document.getElementById('youtubeFrame');
+
+        // Reset video src to restart it
+        const videoSrc = youtubeFrame.src;
+        youtubeFrame.src = videoSrc;
+
+        // Show modal
+        videoModal.style.display = 'block';
+    }
+
     if (event.target.id === 'submitButton') {
         let state = getState();
         // console.log('Submit description button clicked. Element ID:', event.target.id);
@@ -150,7 +173,7 @@ export function handleClick(event, elements) {
         // console.log('State before:', state);
 
 
-        fetch('/store/process-description', {
+        fetch('api/store/process-description', {
 
             method: 'POST',
             headers: {
@@ -162,8 +185,6 @@ export function handleClick(event, elements) {
             .then(data => {
                 // console.log('Success:', data);
                 // Store the llm_output in the state for future use
-
-
 
                 updateState('jsonData', convertToBlockFormat(data.llm_output));
 
@@ -178,19 +199,6 @@ export function handleClick(event, elements) {
             .finally(() => {
                 stopLoadingAnimation();
             });
-    }
-
-    if (event.target.id === 'tutorialButton') {
-        console.log('Tutorial button clicked');
-        const videoModal = document.getElementById('videoModal');
-        const youtubeFrame = document.getElementById('youtubeFrame');
-
-        // Reset video src to restart it
-        const videoSrc = youtubeFrame.src;
-        youtubeFrame.src = videoSrc;
-
-        // Show modal
-        videoModal.style.display = 'block';
     }
 }
 
@@ -226,7 +234,7 @@ export function generateImage(blockId) {
     const sdPrompt = sdPromptElement.value;
 
     // Proceed with generating the image
-    fetch('/store/generate-image', {
+    fetch('api/store/generate-image', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -256,28 +264,6 @@ export function generateImage(blockId) {
 
 
 export function setupEventListeners(elements) {
-    // Add video modal initialization
-    const videoModal = document.getElementById('videoModal');
-    const closeVideo = document.getElementsByClassName('close-video')[0];
-
-    // Show video if user hasn't seen it
-    if (!hasSeenVideo()) {
-        videoModal.style.display = 'block';
-        setVideoSeen();
-    }
-
-    // Close video modal when clicking X
-    closeVideo.addEventListener('click', () => {
-        videoModal.style.display = 'none';
-    });
-
-    // Close video modal when clicking outside
-    window.addEventListener('click', (event) => {
-        if (event.target === videoModal) {
-            videoModal.style.display = 'none';
-        }
-    });
-
     // Click event listener
     document.addEventListener('click', (event) => handleClick(event, elements));
     // Event listeners for drag and drop functionality
