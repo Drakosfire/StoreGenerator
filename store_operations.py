@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 DUNGEONMIND_API_URL = os.getenv("DUNGEONMIND_API_URL", "https://dev.dungeonmind.net")
 logger.info(f"DUNGEONMIND_API_URL set to: {DUNGEONMIND_API_URL}")
 
-CURRENT_USER_URL = f"{DUNGEONMIND_API_URL}/auth/current-user"  # Add /auth/ to the path
+CURRENT_USER_URL = f"{DUNGEONMIND_API_URL}/api/auth/current-user"  # Standardized API path
 
 templates = Jinja2Templates(directory="templates")
 
@@ -36,36 +36,83 @@ class SaveJsonRequest(BaseModel):
     jsonData: dict
 
 
-# Add this new function to get the current user
-async def get_current_user(request: Request):
-    # logger.info(f"Attempting to get current user from {DUNGEONMIND_API_URL}/auth/current-user")
-    
-    # Extract cookies from the incoming request
-    cookies = request.cookies
+# Import centralized auth service utilities
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'DungeonMindServer'))
 
+try:
+    from auth_serCURRENT_USER_URL = f"{DUNGEONMIND_API_URL}/api/auth/current-user"  # Standardized API path
+
+templates = Jinja2Templates(directory="templates")
+
+# Models
+class DescriptionRequest(BaseModel):
+    user_input: str
+
+class GenerateImageRequest(BaseModel):
+    sd_prompt: str
+
+class SaveJsonRequest(BaseModel):
+    filename: str
+    jsonData: dict
+
+
+# Import centralized auth service utilities
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'DungeonMindServer'))
+
+try:
+    from auth_service import auth_service, AuthResult, User
+    AUTH_SERVICE_AVAILABLE = True
+    logger.info("Using centralized auth service")
+except ImportError:
+    AUTH_SERVICE_AVAILABLE = False
+    logger.warning("Centralized auth service not available, using fallback")
+
+# Unified function to get the current user
+async def get_current_user(request: Request):
+    """
+    Get current authenticated user using centralized auth service.
+    Falls back to legacy method if auth service unavailable.
+    """
+    cookies = request.cookies
+    
+    if AUTH_SERVICE_AVAILABLE:
+        try:
+            auth_result = await auth_service.get_current_user_from_cookies(cookies)
+            if auth_result.authenticated:
+                logger.info(f"User authenticated: {auth_result.user.email}")
+                return auth_result.user.dict()
+            else:
+                logger.info(f"User not authenticated: {auth_result.error}")
+                return None
+        except Exception as e:
+            logger.error(f"Auth service error, falling back: {str(e)}")
+    
+    # Fallback to legacy HTTP request method
     async with httpx.AsyncClient() as client:
         try:
             response = await client.get(
-                f"{DUNGEONMIND_API_URL}api/auth/current-user",
+                f"{DUNGEONMIND_API_URL}/api/auth/current-user",
                 cookies=cookies,
                 follow_redirects=True,
-                headers={"Origin": "http://localhost:3001"},  # Add this line
+                timeout=30.0
             )
-            # logger.info(f"Response status code: {response.status_code}")
-            # logger.debug(f"Response content: {response.text}")
             
             if response.status_code == 200:
                 user_data = response.json()
-                # logger.info(f"Successfully retrieved user data: {user_data}")
+                logger.info(f"Successfully retrieved user data (fallback): {user_data.get('email', 'unknown')}")
                 return user_data
             elif response.status_code == 401:
-                # logger.warning("User not authenticated")
+                logger.info("User not authenticated (fallback)")
                 return None
             else:
-                # logger.error(f"Unexpected status code: {response.status_code}")
+                logger.error(f"Unexpected status code (fallback): {response.status_code}")
                 return None
         except Exception as e:
-            # logger.error(f"An error occurred while getting current user: {str(e)}")
+            logger.error(f"Fallback auth request failed: {str(e)}")
             return None
 
 # Route to serve the main page

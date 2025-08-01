@@ -29,18 +29,9 @@ app.add_middleware(
     max_age=3600,
 )
 
-# Add SessionMiddleware
-app.add_middleware(
-    SessionMiddleware, 
-    secret_key=os.getenv("SESSION_SECRET_KEY"),
-    session_cookie="dungeonmind_session",
-    max_age=3600,
-    path="/",
-    # secure=True, # This is not a kwarg for SessionMiddleware
-    https_only=True,
-    same_site="None",
-    domain=".dungeonmind.net"  # Allow cross-site requests
-)
+# Add standardized session middleware
+from session_config import add_session_middleware
+add_session_middleware(app)
 
 # Static files
 app.mount("/storegenerator/static", StaticFiles(directory="static"), name="static")
