@@ -7,8 +7,11 @@ sdk: docker
 app_port: 7860
 ---
 
-#Store Generator
-## Another DnD Tool from Drakosfire
+# Store Generator
+
+See [AGENTS.md](AGENTS.md) for checkout and runtime guidance.
+
+## Prototype history
 
 This is a work in progress. I got about 80% of the way to rendering the the Chat GPT 4o generated store into a static html format. 
 When a friend suggested a different format choice. 3 weeks later I'm writing JavaScript because I've decided what I want is a drag and drop DnD Page formatting tool. 
